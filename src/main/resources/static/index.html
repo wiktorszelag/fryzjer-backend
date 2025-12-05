@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zakład Fryzjerski</title>
+</head>
+<body>
+    <h1>Zakład Fryzjerski</h1>
+    <nav>
+        <a href="index.html">Strona główna</a> |
+        <a href="klienci.html">Klienci</a> |
+        <a href="fryzjerzy.html">Fryzjerzy</a> |
+        <a href="uslugi.html">Usługi</a> |
+        <a href="wizyty.html">Wizyty</a> |
+        <a href="rezerwacja.html">Ustaw wizytę</a>
+    </nav>
+    <hr>
+    <h2>Witamy w naszym salonie!</h2>
+    <p>Oferujemy profesjonalne usługi fryzjerskie.</p>
+    <h3>Nasze usługi:</h3>
+    <div id="uslugi"></div>
+    <h3>Nasi fryzjerzy:</h3>
+    <div id="fryzjerzy"></div>
+    <script>
+        const API = 'http://localhost:8080/api';
+
+        async function loadUslugi() {
+            const res = await fetch(API + '/uslugi');
+            const data = await res.json();
+            let html = '<ul>';
+            data.forEach(u => {
+                const brutto = (u.cenaNetto * (1 + u.stawkaVat/100)).toFixed(2);
+                html += '<li>' + u.nazwa + ' - ' + brutto + ' zł (' + u.czasTrwaniaMin + ' min)</li>';
+            });
+            html += '</ul>';
+            document.getElementById('uslugi').innerHTML = html;
+        }
+
+        async function loadFryzjerzy() {
+            const res = await fetch(API + '/fryzjerzy');
+            const data = await res.json();
+            let html = '<ul>';
+            data.forEach(f => {
+                html += '<li>' + f.imie + ' ' + f.nazwisko + ' - ' + f.specjalizacja + '</li>';
+            });
+            html += '</ul>';
+            document.getElementById('fryzjerzy').innerHTML = html;
+        }
+
+        loadUslugi();
+        loadFryzjerzy();
+    </script>
+</body>
+</html>

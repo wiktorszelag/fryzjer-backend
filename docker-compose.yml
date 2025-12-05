@@ -1,0 +1,28 @@
+services:
+  fryzjer-app:
+    image: ghcr.io/wiktorszelag/fryzjer-backend:latest
+    container_name: fryzjer_app
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://fryzjer_db:5432/fryzjer_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - fryzjer-db
+    restart: always
+
+  fryzjer-db:
+    image: postgres:15-alpine
+    container_name: fryzjer_db
+    environment:
+      - POSTGRES_DB=fryzjer_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - fryzjer_postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  fryzjer_postgres_data:

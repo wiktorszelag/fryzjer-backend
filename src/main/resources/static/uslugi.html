@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usługi - Zakład Fryzjerski</title>
+</head>
+<body>
+    <h1>Zarządzanie Usługami</h1>
+    <nav>
+        <a href="index.html">Strona główna</a> |
+        <a href="klienci.html">Klienci</a> |
+        <a href="fryzjerzy.html">Fryzjerzy</a> |
+        <a href="uslugi.html">Usługi</a> |
+        <a href="wizyty.html">Wizyty</a> |
+        <a href="rezerwacja.html">Ustaw wizytę</a>
+    </nav>
+    <hr>
+    <h2>Dodaj nową usługę</h2>
+    <form id="formUsluga">
+        <label>Nazwa: <input type="text" id="nazwa" required></label><br><br>
+        <label>Opis: <textarea id="opis" rows="3" cols="40"></textarea></label><br><br>
+        <label>Czas trwania (min): <input type="number" id="czasTrwaniaMin" required></label><br><br>
+        <label>Cena netto (zł): <input type="number" step="0.01" id="cenaNetto" required></label><br><br>
+        <label>Stawka VAT (%): <input type="number" step="0.01" id="stawkaVat" value="23" required></label><br><br>
+        <button type="submit">Dodaj usługę</button>
+    </form>
+    <div id="message"></div>
+    <hr>
+    <h2>Lista usług</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Opis</th>
+                <th>Czas (min)</th>
+                <th>Cena netto</th>
+                <th>VAT %</th>
+                <th>Cena brutto</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody id="uslugiTable"></tbody>
+    </table>
+    <script>
+        const API = 'http://localhost:8080/api';
+
+        async function loadUslugi() {
+            const res = await fetch(API + '/uslugi');
+            const data = await res.json();
+            let html = '';
+            data.forEach(u => {
+                const brutto = (u.cenaNetto * (1 + u.stawkaVat/100)).toFixed(2);
+                html += '<tr>';
+                html += '<td>' + u.uslugaId + '</td>';
+                html += '<td>' + u.nazwa + '</td>';
+                html += '<td>' + (u.opis || '-') + '</td>';
+                html += '<td>' + u.czasTrwaniaMin + '</td>';
+                html += '<td>' + u.cenaNetto.toFixed(2) + ' zł</td>';
+                html += '<td>' + u.stawkaVat + '%</td>';
+                html += '<td>' + brutto + ' zł</td>';
+                html += '<td><button onclick="deleteUsluga(' + u.uslugaId + ')">Usuń</button></td>';
+                html += '</tr>';
+            });
+            document.getElementById('uslugiTable').innerHTML = html;
+        }
+
+        document.getElementById('formUsluga').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const usluga = {
+                nazwa: document.getElementById('nazwa').value,
+                opis: document.getElementById('opis').value,
+                czasTrwaniaMin: parseInt(document.getElementById('czasTrwaniaMin').value),
+                cenaNetto: parseFloat(document.getElementById('cenaNetto').value),
+                stawkaVat: parseFloat(document.getElementById('stawkaVat').value)
+            };
+            const res = await fetch(API + '/uslugi', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(usluga)
+            });
+            if (res.ok) {
+                document.getElementById('message').innerHTML = '<p>Usługa dodana!</p>';
+                document.getElementById('formUsluga').reset();
+                document.getElementById('stawkaVat').value = '23';
+                loadUslugi();
+            } else {
+                document.getElementById('message').innerHTML = '<p>Błąd!</p>';
+            }
+        });
+
+        async function deleteUsluga(id) {
+            if (confirm('Czy na pewno usunąć usługę?')) {
+                await fetch(API + '/uslugi/' + id, {method: 'DELETE'});
+                loadUslugi();
+            }
+        }
+
+        loadUslugi();
+    </script>
+</body>
+</html>

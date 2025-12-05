@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klienci - Zakład Fryzjerski</title>
+</head>
+<body>
+    <h1>Zarządzanie Klientami</h1>
+    <nav>
+        <a href="index.html">Strona główna</a> |
+        <a href="klienci.html">Klienci</a> |
+        <a href="fryzjerzy.html">Fryzjerzy</a> |
+        <a href="uslugi.html">Usługi</a> |
+        <a href="wizyty.html">Wizyty</a> |
+        <a href="rezerwacja.html">Ustaw wizytę</a>
+    </nav>
+    <hr>
+    <h2>Dodaj nowego klienta</h2>
+    <form id="formKlient">
+        <label>Imię: <input type="text" id="imie" required></label><br><br>
+        <label>Nazwisko: <input type="text" id="nazwisko" required></label><br><br>
+        <label>Telefon: <input type="text" id="telefon" required></label><br><br>
+        <button type="submit">Dodaj klienta</button>
+    </form>
+    <div id="message"></div>
+    <hr>
+    <h2>Lista klientów</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Telefon</th>
+                <th>Data rejestracji</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody id="klienciTable"></tbody>
+    </table>
+    <script>
+        const API = 'http://localhost:8080/api';
+
+        async function loadKlienci() {
+            const res = await fetch(API + '/klienci');
+            const data = await res.json();
+            let html = '';
+            data.forEach(k => {
+                html += '<tr>';
+                html += '<td>' + k.klientId + '</td>';
+                html += '<td>' + k.imie + '</td>';
+                html += '<td>' + k.nazwisko + '</td>';
+                html += '<td>' + k.telefon + '</td>';
+                html += '<td>' + (k.dataRejestracji || '-') + '</td>';
+                html += '<td><button onclick="deleteKlient(' + k.klientId + ')">Usuń</button></td>';
+                html += '</tr>';
+            });
+            document.getElementById('klienciTable').innerHTML = html;
+        }
+
+        document.getElementById('formKlient').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const klient = {
+                imie: document.getElementById('imie').value,
+                nazwisko: document.getElementById('nazwisko').value,
+                telefon: document.getElementById('telefon').value
+            };
+            const res = await fetch(API + '/klienci', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(klient)
+            });
+            if (res.ok) {
+                document.getElementById('message').innerHTML = '<p>Klient dodany!</p>';
+                document.getElementById('formKlient').reset();
+                loadKlienci();
+            } else {
+                document.getElementById('message').innerHTML = '<p>Błąd!</p>';
+            }
+        });
+
+        async function deleteKlient(id) {
+            if (confirm('Czy na pewno usunąć klienta?')) {
+                await fetch(API + '/klienci/' + id, {method: 'DELETE'});
+                loadKlienci();
+            }
+        }
+
+        loadKlienci();
+    </script>
+</body>
+</html>
