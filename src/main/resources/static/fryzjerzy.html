@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fryzjerzy - Zakład Fryzjerski</title>
+</head>
+<body>
+    <h1>Zarządzanie Fryzjerami</h1>
+    <nav>
+        <a href="index.html">Strona główna</a> |
+        <a href="klienci.html">Klienci</a> |
+        <a href="fryzjerzy.html">Fryzjerzy</a> |
+        <a href="uslugi.html">Usługi</a> |
+        <a href="wizyty.html">Wizyty</a> |
+        <a href="rezerwacja.html">Ustaw wizytę</a>
+    </nav>
+    <hr>
+    <h2>Dodaj nowego fryzjera</h2>
+    <form id="formFryzjer">
+        <label>Imię: <input type="text" id="imie" required></label><br><br>
+        <label>Nazwisko: <input type="text" id="nazwisko" required></label><br><br>
+        <label>Telefon: <input type="text" id="telefon" required></label><br><br>
+        <label>Specjalizacja: <input type="text" id="specjalizacja" required></label><br><br>
+        <label>Data zatrudnienia: <input type="date" id="dataZatrudnienia" required></label><br><br>
+        <button type="submit">Dodaj fryzjera</button>
+    </form>
+    <div id="message"></div>
+    <hr>
+    <h2>Lista fryzjerów</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Telefon</th>
+                <th>Specjalizacja</th>
+                <th>Data zatrudnienia</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody id="fryzjerzyTable"></tbody>
+    </table>
+    <hr>
+    <h2>Przypisz usługę do fryzjera</h2>
+    <form id="formPrzypisz">
+        <label>Fryzjer: <select id="fryzjerId" required></select></label><br><br>
+        <label>Usługa: <select id="uslugaId" required></select></label><br><br>
+        <label>Cena fryzjera: <input type="number" step="0.01" id="cenaFryzjera" required></label><br><br>
+        <button type="submit">Przypisz</button>
+    </form>
+    <div id="message2"></div>
+    <script>
+        const API = 'http://localhost:8080/api';
+
+        async function loadFryzjerzy() {
+            const res = await fetch(API + '/fryzjerzy');
+            const data = await res.json();
+            let html = '';
+            let options = '<option value="">Wybierz...</option>';
+            data.forEach(f => {
+                html += '<tr>';
+                html += '<td>' + f.fryzjerId + '</td>';
+                html += '<td>' + f.imie + '</td>';
+                html += '<td>' + f.nazwisko + '</td>';
+                html += '<td>' + f.telefon + '</td>';
+                html += '<td>' + f.specjalizacja + '</td>';
+                html += '<td>' + (f.dataZatrudnienia || '-') + '</td>';
+                html += '<td><button onclick="deleteFryzjer(' + f.fryzjerId + ')">Usuń</button></td>';
+                html += '</tr>';
+                options += '<option value="' + f.fryzjerId + '">' + f.imie + ' ' + f.nazwisko + '</option>';
+            });
+            document.getElementById('fryzjerzyTable').innerHTML = html;
+            document.getElementById('fryzjerId').innerHTML = options;
+        }
+
+        async function loadUslugi() {
+            const res = await fetch(API + '/uslugi');
+            const data = await res.json();
+            let options = '<option value="">Wybierz...</option>';
+            data.forEach(u => {
+                options += '<option value="' + u.uslugaId + '">' + u.nazwa + '</option>';
+            });
+            document.getElementById('uslugaId').innerHTML = options;
+        }
+
+        document.getElementById('formFryzjer').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fryzjer = {
+                imie: document.getElementById('imie').value,
+                nazwisko: document.getElementById('nazwisko').value,
+                telefon: document.getElementById('telefon').value,
+                specjalizacja: document.getElementById('specjalizacja').value,
+                dataZatrudnienia: document.getElementById('dataZatrudnienia').value
+            };
+            const res = await fetch(API + '/fryzjerzy', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(fryzjer)
+            });
+            if (res.ok) {
+                document.getElementById('message').innerHTML = '<p>Fryzjer dodany!</p>';
+                document.getElementById('formFryzjer').reset();
+                loadFryzjerzy();
+            } else {
+                document.getElementById('message').innerHTML = '<p>Błąd!</p>';
+            }
+        });
+
+        document.getElementById('formPrzypisz').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                fryzjerId: parseInt(document.getElementById('fryzjerId').value),
+                uslugaId: parseInt(document.getElementById('uslugaId').value),
+                cenaFryzjera: parseFloat(document.getElementById('cenaFryzjera').value)
+            };
+            const res = await fetch(API + '/fryzjer-uslugi', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                document.getElementById('message2').innerHTML = '<p>Usługa przypisana!</p>';
+                document.getElementById('formPrzypisz').reset();
+            } else {
+                document.getElementById('message2').innerHTML = '<p>Błąd!</p>';
+            }
+        });
+
+        async function deleteFryzjer(id) {
+            if (confirm('Czy na pewno usunąć fryzjera?')) {
+                await fetch(API + '/fryzjerzy/' + id, {method: 'DELETE'});
+                loadFryzjerzy();
+            }
+        }
+
+        loadFryzjerzy();
+        loadUslugi();
+    </script>
+</body>
+</html>

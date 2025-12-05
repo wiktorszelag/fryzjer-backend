@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Fryzur - Logowanie</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('background.png') no-repeat center center/cover;
+            color: #fff;
+            position: relative;
+        }
+
+        /* Overlay to make text readable against complex backgrounds */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 15, 0.7);
+            z-index: 0;
+        }
+
+        .login-wrapper {
+            position: relative;
+            z-index: 1;
+            background: rgba(20, 20, 25, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-wrapper h1 {
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #d4af37, #fdfbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-wrapper p {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #ccc;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #d4af37;
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #b8860b, #d4af37);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(45deg, #d4af37, #fdfbfb);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #ff4c4c;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <h1>Studio Fryzur</h1>
+        <p>Zaloguj się do panelu zarządzania</p>
+        
+        <div class="error-message" id="error-msg">Nieprawidłowy login lub hasło.</div>
+
+        <form id="login-form">
+            <div class="input-group">
+                <label for="username">Login użytkownika</label>
+                <input type="text" id="username" name="username" required placeholder="np. admin123">
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Hasło</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn-login">Wejdź do systemu</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            
+            errorMsg.style.display = 'none'; // hide error initially
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`Zalogowano pomyślnie jako: ${data.rola}`);
+                    // Redirect to a dashboard or Swagger
+                    window.location.href = '/swagger-ui/index.html';
+                } else {
+                    errorMsg.style.display = 'block';
+                    errorMsg.textContent = 'Błędne dane logowania. Spróbuj ponownie.';
+                }
+            } catch (error) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Błąd połączenia z serwerem.';
+            }
+        });
+    </script>
+</body>
+</html>
