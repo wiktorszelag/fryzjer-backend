@@ -27,7 +27,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/wiktorszelag/fryzjer-backend:latest
+          tags: ghcr.io/wiktorszelag/pbutune-web:latest
 
   deploy:
     name: Deploy to Server
@@ -35,8 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      # Copy docker-compose.yml to the server
+
       - name: Copy docker-compose to server
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -46,7 +45,6 @@ jobs:
           source: "docker-compose.yml"
           target: "/home/${{ secrets.SSH_USERNAME }}/"
 
-      # Connect and Deploy
       - name: Connect to server and deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -54,8 +52,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Login to GHCR (User needs to add GHCR_USERNAME and GHCR_TOKEN secrets)
-            # If checking using specific token:
+            # Using GITHUB_TOKEN for pulling might be tricky on server without config.
+            # Best to use the PAT (GHCR_TOKEN) if user has it, as per their previous workflow.
             echo ${{ secrets.GHCR_TOKEN }} | sudo docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
             
             cd /home/${{ secrets.SSH_USERNAME }}

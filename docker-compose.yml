@@ -1,6 +1,6 @@
 services:
   site:
-    image: ghcr.io/wiktorszelag/fryzjer-backend:latest
+    image: ghcr.io/wiktorszelag/pbutune-web:latest
     container_name: pbutune_site
     ports:
       - "80:80"
