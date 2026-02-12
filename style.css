@@ -1,0 +1,774 @@
+/* MODERN OVERHAUL - "Curtain Overlay" Design */
+
+:root {
+    --primary-color: #e60000;
+    /* Głęboka wyścigowa czerwień */
+    --text-white: #ffffff;
+    --text-muted: #cccccc;
+    --bg-overlay: rgba(20, 20, 20, 0.82);
+    /* Ciemne tło sekcji, bardziej przezroczyste */
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --glass-blur: 15px;
+    --transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-white);
+    line-height: 1.6;
+    background-color: #050505;
+    overflow-x: hidden;
+}
+
+/* --- Hero Background Slider (Ken Burns Effect) --- */
+.hero-background-slider {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    /* Zoom + Fade Animation loop */
+    animation: zoomFade 24s infinite;
+}
+
+/* Poszczególne slajdy */
+.slide-1 {
+    background-image: url('img/hero-bg.jpg');
+    animation-delay: 0s;
+}
+
+.slide-2 {
+    background-image: url('img/audi.jpg');
+    animation-delay: 8s;
+}
+
+.slide-3 {
+    background-image: url('img/porsche.jpg');
+    animation-delay: 16s;
+}
+
+@keyframes zoomFade {
+    0% {
+        opacity: 0;
+        transform: scale(1);
+    }
+
+    5% {
+        opacity: 1;
+    }
+
+    33% {
+        opacity: 1;
+    }
+
+    38% {
+        opacity: 0;
+        /* Fade overlap */
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.15);
+        /* Gentle zoom */
+    }
+}
+
+
+/* Overlay Scanlines (optional, keeping minimal for clean photos) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    /* Tylko przyciemnienie */
+    z-index: -1;
+    pointer-events: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: 'Orbitron', sans-serif;
+    /* Zachowujemy charakter motoryzacyjny */
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+ul {
+    list-style: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.highlight {
+    color: var(--primary-color);
+}
+
+/* --- CURSOR SPOTLIGHT --- */
+.cursor-spotlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10000;
+    mix-blend-mode: screen;
+    /* Makes the light add up nicely */
+}
+
+/* --- HERO ANIMATIONS --- */
+/* New 'Over-title' Brand Styling */
+.hero-brand {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 0px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(230, 0, 0, 0.4);
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: 0.1s;
+    /* Starts first */
+}
+
+/* High-tech text reveal */
+.hero-title {
+    opacity: 0;
+    animation: glitchReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.3s;
+    /* Delayed slightly */
+}
+
+.hero-subtitle {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: 0.6s;
+}
+
+.hero-buttons {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: 0.8s;
+}
+
+@keyframes glitchReveal {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px) skewX(20deg);
+        filter: blur(10px);
+        letter-spacing: 10px;
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateX(10px) skewX(-10deg);
+        filter: blur(0);
+    }
+
+    80% {
+        transform: translateX(-5px) skewX(5deg);
+        letter-spacing: normal;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0) skewX(0);
+        letter-spacing: normal;
+    }
+}
+
+
+
+
+/* --- NAVIGATION --- */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 20px 0;
+    transition: all 0.4s ease;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+}
+
+.navbar.scrolled {
+    background: rgba(10, 10, 10, 0.9);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo-img {
+    height: 60px;
+    /* Adjust height based on actual logo appearance */
+    width: auto;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    /* Subtle glow */
+}
+
+.logo:hover .nav-logo-img {
+    transform: scale(1.08);
+    /* Enhance hover effect */
+    filter: drop-shadow(0 0 15px rgba(230, 0, 0, 0.6));
+    /* Red glow on hover */
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links li a {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.8);
+    position: relative;
+    padding: 5px 0;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+    color: white;
+}
+
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.nav-links li a:hover::after {
+    width: 100%;
+}
+
+.btn-nav {
+    border: 1px solid var(--primary-color);
+    padding: 8px 20px;
+    color: var(--primary-color) !important;
+    border-radius: 2px;
+}
+
+.btn-nav:hover {
+    background: var(--primary-color);
+    color: white !important;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* --- HERO SECTION --- */
+/* Hero jest teraz "oknem" na tło body. Nie ma własnego tła. */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    /* Ważne: pozwala widzieć tło body */
+}
+
+/* Overlay gradientowy tylko na dole Hero, aby płynnie przejść w sekcje */
+.hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, var(--bg-overlay) 10%, transparent 100%);
+    pointer-events: none;
+}
+
+.hero-content {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+    z-index: 2;
+    /* Start state for animation */
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 1px;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn {
+    padding: 15px 35px;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+    background: transparent;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+
+/* --- SEKCJE "NACHODZĄCE" --- */
+/* Wszystkie sekcje `section` i `footer` mają tło, które zasłania body */
+.section,
+.footer {
+    background-color: var(--bg-overlay);
+    backdrop-filter: blur(var(--glass-blur));
+    /* Border top dla efektu odcięcia */
+    border-top: 1px solid var(--border-color);
+    position: relative;
+    z-index: 2;
+    /* Wyżej niż tło */
+    padding: 100px 0;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 60px;
+    text-align: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--primary-color);
+    margin: 20px auto 0;
+}
+
+/* Services */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.service-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 40px;
+    transition: transform 0.1s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+.service-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+}
+
+.service-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+}
+
+.service-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.service-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* Realizations */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.gallery-item {
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+    /* Frame style */
+    border: 1px solid var(--border-color);
+}
+
+.gallery-img-container,
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+}
+
+.placeholder-img {
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.6s ease;
+}
+
+.gallery-item:hover .placeholder-img {
+    transform: scale(1.05);
+    /* Gentle zoom */
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    background: linear-gradient(to top, black, transparent);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: var(--transition);
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gallery-overlay h4 {
+    font-size: 1.4rem;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.gallery-overlay p {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+
+/* Location & About */
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.about-text h2 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+}
+
+.address {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-left: 4px solid var(--primary-color);
+    display: inline-block;
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 30px;
+    border: 1px solid white;
+    margin-top: 20px;
+    transition: var(--transition);
+}
+
+.btn-outline:hover {
+    background: white;
+    color: black;
+}
+
+.map-container {
+    height: 350px;
+    border: 1px solid var(--border-color);
+    filter: grayscale(1);
+    transition: var(--transition);
+}
+
+.map-container:hover {
+    filter: grayscale(0);
+}
+
+/* Footer (is also a .section overlay technically) */
+.footer {
+    padding: 60px 0 30px;
+    border-top: 1px solid var(--border-color);
+    background-color: #000;
+    /* Fully dark footer */
+}
+
+.footer-logo-img {
+    height: 100px;
+    /* Larger than nav logo */
+    width: auto;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.phone-large {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.phone-large:hover {
+    color: var(--primary-color);
+}
+
+.footer-bottom {
+    margin-top: 50px;
+    text-align: center;
+    color: #444;
+    font-size: 0.8rem;
+}
+
+
+/* --- ANIMATIONS & UTILS --- */
+.hero-content.visible {
+    animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.animate-in {
+    animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Media Queries */
+/* Media Queries */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 30px;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 0;
+        background: rgba(0, 0, 0, 0.95);
+        /* Darker on mobile by default */
+    }
+
+    .hero-brand {
+        font-size: 1.5rem;
+        /* Smaller for mobile */
+        letter-spacing: 3px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: 280px;
+        /* Nice width on mobile */
+        padding: 12px 20px;
+    }
+
+    /* Mobile Navigation */
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: #000000;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        /* Below toggle button */
+        gap: 30px;
+    }
+
+    .nav-links.active {
+        display: flex;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .nav-links li a {
+        font-size: 1.5rem;
+        /* Larger touch targets */
+    }
+
+    .menu-toggle {
+        display: block;
+        z-index: 1001;
+        /* Above nav menu */
+        font-size: 1.8rem;
+    }
+
+    /* Sections */
+    .section {
+        padding: 60px 0;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 40px;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .map-container {
+        height: 250px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .footer-logo-img {
+        margin: 0 auto 15px;
+        /* Center footer logo */
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

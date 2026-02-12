@@ -1,0 +1,8 @@
+services:
+  fryzjer-app:
+    build: .
+    image: ghcr.io/wiktorszelag/fryzjer-backend:latest
+    container_name: fryzjer_app
+    ports:
+      - "8081:80"
+    restart: always
