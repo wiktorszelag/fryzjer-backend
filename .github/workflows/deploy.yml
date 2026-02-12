@@ -1,8 +1,8 @@
-name: Deploy
+name: Deploy to Server
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ "master" ]
 
 jobs:
   build_and_push:
@@ -27,23 +27,39 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/wiktorszelag/pbutune-site:latest
+          tags: ghcr.io/wiktorszelag/fryzjer-backend:latest
 
   deploy:
     name: Deploy to Server
     needs: build_and_push
     runs-on: ubuntu-latest
-    # Assuming user has SSH secrets configured (HOST, USER, KEY)
-    # If not, this step will fail or be skipped.
-    if: false  # Disabled by default until user sets up secrets, but structure provided.
     steps:
-      - name: Deploy via SSH
+      - uses: actions/checkout@v4
+      
+      # Copy docker-compose.yml to the server
+      - name: Copy docker-compose to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "docker-compose.yml"
+          target: "/home/${{ secrets.SSH_USERNAME }}/"
+
+      # Connect and Deploy
+      - name: Connect to server and deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull ghcr.io/wiktorszelag/pbutune-site:latest
-            docker rm -f pbutune_site || true
-            docker run -d --name pbutune_site -p 80:80 --restart always ghcr.io/wiktorszelag/pbutune-site:latest
+            # Login to GHCR (User needs to add GHCR_USERNAME and GHCR_TOKEN secrets)
+            # If checking using specific token:
+            echo ${{ secrets.GHCR_TOKEN }} | sudo docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+            
+            cd /home/${{ secrets.SSH_USERNAME }}
+            
+            sudo docker compose pull
+            sudo docker compose up -d --force-recreate
+            sudo docker image prune -f
