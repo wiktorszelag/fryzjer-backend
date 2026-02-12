@@ -52,12 +52,16 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Using GITHUB_TOKEN for pulling might be tricky on server without config.
-            # Best to use the PAT (GHCR_TOKEN) if user has it, as per their previous workflow.
             echo ${{ secrets.GHCR_TOKEN }} | sudo docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
             
             cd /home/${{ secrets.SSH_USERNAME }}
             
+            # Stop and remove potential conflicting containers
+            sudo docker rm -f fryzjer_app pbutune_site || true
+            
+            # Pull new image and start
             sudo docker compose pull
-            sudo docker compose up -d --force-recreate
+            sudo docker compose up -d --force-recreate --remove-orphans
+            
+            # Clean up space
             sudo docker image prune -f
