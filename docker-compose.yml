@@ -1,8 +1,7 @@
 services:
-  fryzjer-app:
-    build: .
-    image: ghcr.io/wiktorszelag/fryzjer-backend:latest
-    container_name: fryzjer_app
+  pbutune-site:
+    image: ghcr.io/wiktorszelag/pbutune-site:latest
+    container_name: pbutune_site
     ports:
-      - "8081:80"
+      - "80:80"
     restart: always
