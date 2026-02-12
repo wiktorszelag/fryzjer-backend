@@ -3,5 +3,5 @@ services:
     image: ghcr.io/wiktorszelag/pbutune-web:latest
     container_name: pbutune_site
     ports:
-      - "80:80"
+      - "8090:80"
     restart: always
