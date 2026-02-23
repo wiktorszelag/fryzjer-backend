@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="FRYZJER-STYLE Barber Shop - Ekskluzywne strzyżenie męskie, pielęgnacja brody i tradycyjne golenie brzytwą. Pocuj klimat prawdziwego barberingu.">
+    <title>FRYZJER-STYLE | Barber Shop & Gentlemen's Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Bebas+Neue&family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --accent-color: #d4af37;
+            /* Gold/Brass */
+            --bg-deep: #080808;
+            --bg-card: #121212;
+            --text-white: #f5f5f5;
+            --text-muted: #888;
+            --border: rgba(212, 175, 55, 0.2);
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .brand-font {
+            font-family: 'Bebas Neue', cursice;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 25px 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 15px 0;
+            background: rgba(8, 8, 8, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- Hero --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .hero-title {
+            font-size: 6rem;
+            line-height: 1;
+            margin-bottom: 10px;
+            animation: fallIn 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 40px;
+            letter-spacing: 5px;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fallIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .btn {
+            padding: 15px 45px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            text-decoration: none;
+            border-radius: 0;
+            transition: var(--transition);
+            display: inline-block;
+            border: 2px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            color: #000;
+            background: var(--accent-color);
+        }
+
+        .btn-primary:hover {
+            color: var(--accent-color);
+            background: transparent;
+            transform: scale(1.05);
+        }
+
+        /* --- Services --- */
+        .services {
+            padding: 120px 0;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 50px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .service-card:hover {
+            background: #1a1a1a;
+            transform: translateY(-10px);
+            border-color: var(--accent-color);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+        }
+
+        .service-card h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .service-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* --- Price List --- */
+        .price-list {
+            padding: 100px 0;
+            background: #0c0c0c;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .price-name {
+            font-size: 1.5rem;
+        }
+
+        .price-val {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        /* --- Contact --- */
+        .contact {
+            padding: 120px 0;
+            background-color: var(--bg-deep);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .business-hours h3 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            background: #050505;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            color: #fff;
+            font-size: 1.5rem;
+            transition: 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">FRYZJER-<span class="highlight">STYLE</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Portal</a></li>
+                <li><a href="#services">Usługi</a></li>
+                <li><a href="#prices">Cennik</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1 class="hero-title">TRUE <span class="highlight">BARBER</span> SHOP</h1>
+            <p class="hero-subtitle">MĘSKI KLASYK • BRODA • KLIMAT</p>
+            <a href="#contact" class="btn btn-primary">UMÓW WIZYTĘ</a>
+        </div>
+    </header>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">NASZ <span class="highlight">FACH</span></h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-cut service-icon"></i>
+                    <h3>STRZYŻENIE MĘSKIE</h3>
+                    <span class="price">od 70 PLN</span>
+                    <p class="service-desc">Klasyczne cięcie, fade, mycie i stylizacja woskiem/pomadą.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-hand-sparkles service-icon"></i>
+                    <h3>TRYMOWANIE BRODY</h3>
+                    <span class="price">od 50 PLN</span>
+                    <p class="service-desc">Kształtowanie zarostu, konturowanie brzytwą i gorący ręcznik.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-user-tie service-icon"></i>
+                    <h3>COMBO (WŁOSY + BRODA)</h3>
+                    <span class="price">110 PLN</span>
+                    <p class="service-desc">Pełny serwis dla prawdziwego dżentelmena. Najlepszy wybór.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="prices" class="price-list">
+        <div class="container">
+            <h2 class="section-title">MENU <span class="highlight">USŁUG</span></h2>
+            <div style="max-width: 700px; margin: 0 auto;">
+                <div class="price-item">
+                    <span class="price-name">Strzyżenie Standard</span>
+                    <span class="price-val">70 PLN</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-name">Strzyżenie Maszynką</span>
+                    <span class="price-val">40 PLN</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-name">Trymowanie Brody</span>
+                    <span class="price-val">50 PLN</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-name">Combo (Włosy + Broda)</span>
+                    <span class="price-val">110 PLN</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-name">Golenie Brzytwą</span>
+                    <span class="price-val">60 PLN</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-name">Młody Dżentelmen (do 12 lat)</span>
+                    <span class="price-val">50 PLN</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="business-hours">
+                    <h3>GODZINY <span class="highlight">OTWARCIA</span></h3>
+                    <div class="hours-row"><span>PONIEDZIAŁEK - PIĄTEK</span><span>09:00 - 19:00</span></div>
+                    <div class="hours-row"><span>SOBOTA</span><span>08:00 - 15:00</span></div>
+                    <div class="hours-row"><span>NIEDZIELA</span><span class="highlight">ZAMKNIĘTE</span></div>
+
+                    <div style="margin-top: 50px;">
+                        <p style="font-size: 1.5rem; margin-bottom: 10px;"><i class="fas fa-phone-alt highlight"></i>
+                            +48 12 444 55 66</p>
+                        <p style="color: var(--text-muted);"><i class="fas fa-map-marker-alt highlight"></i> ul. Estery
+                            12, 31-056 Kraków (Kazimierz)</p>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://maps.google.com/maps?q=Estery+12+Krakow&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                        width="100%" height="450" style="border:0; filter: grayscale(1) invert(1);" allowfullscreen=""
+                        loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p>&copy; 2026 FRYZJER-STYLE | BARBER SHOP BY WS</p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+
+</html>

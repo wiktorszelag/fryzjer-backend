@@ -31,22 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
-            // Calculate rotation
-            // Center is (rect.width/2, rect.height/2)
-            // Max rotation is roughly +/- 10deg
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
 
-            const rotateX = ((y - centerY) / centerY) * -10; // Invert logic for correct tilt (mouse down -> rotates up? No, standard tilt: top goes back)
-            // Actually: mouse at top (y < centerY) -> rotateX should be positive (top comes forward/bottom goes back?? No wait).
-            // CSS rotateX: positive = top goes back.
-            // If mouse is at top, we want top to go BACK (pushed away). So positive rotateX.
-            // (y - centerY) is negative. So we need to multiply by -1.
-
+            // Calculate rotation
+            const rotateX = ((y - centerY) / centerY) * -10;
             const rotateY = ((x - centerX) / centerX) * 10;
-            // CSS rotateY: positive = right goes back.
-            // If mouse is right, we want right to go back. So positive rotateY.
-            // (x - centerX) is positive. So simply multiply by 10.
 
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
         });
@@ -55,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
         });
     });
+
+    // --- Garage Door Cleanup ---
+
 
     // Immediate reveal of hero content since preloader is gone
     const heroContent = document.querySelector('.hero-content');
@@ -134,34 +127,57 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- Intersection Observer for Fade-In Animations ---
+    // --- In-View Animation Observer (Modern 'Lift & Focus' Effect) ---
     const observerOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
+        threshold: 0.1, // Trigger earlier
+        rootMargin: "0px 0px -20px 0px"
     };
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
+        // Sort by DOM order
+        const sortedEntries = entries.filter(e => e.isIntersecting).sort((a, b) => {
+            return a.target.compareDocumentPosition(b.target) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+        });
+
+        sortedEntries.forEach((entry, index) => {
+            // Unobserve immediately so we don't trigger again
+            observer.unobserve(entry.target);
+
+            // Dynamic stagger delay based on index
+            const delay = index * 150;
+
+            setTimeout(() => {
                 entry.target.classList.add('animate-in');
-                observer.unobserve(entry.target);
-            }
+            }, delay);
         });
     }, observerOptions);
 
-    document.querySelectorAll('.service-card, .gallery-item, .section-title, .about-content').forEach(el => {
+    // Initial setup for animated elements: 3D Start State
+    // We target service cards specifically for the "kafelki" effect, but also others
+    const animatedElements = document.querySelectorAll('.service-card, .gallery-item, .section-title, .about-content');
+
+    animatedElements.forEach(el => {
+        // Initial "Hidden" State
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+        // 3D Tilt + Push down + Blur + Scale down
+        el.style.transform = 'perspective(1000px) rotateX(20deg) translateY(60px) scale(0.9)';
+        el.style.filter = 'blur(5px)';
+        el.style.willChange = 'opacity, transform, filter'; // Performance optimization
+
+        // CSS Transition for smooth animating to "Visible" state
+        // Using a custom spring-like bezier for that "modern" snap
+        el.style.transition = 'all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+
         observer.observe(el);
     });
 
-    // Add animation class style dynamically
+    // Inject the "Visible" State Class
     const styleSheet = document.createElement("style");
     styleSheet.innerText = `
         .animate-in {
             opacity: 1 !important;
-            transform: translateY(0) !important;
+            transform: perspective(1000px) rotateX(0) translateY(0) scale(1) !important;
+            filter: blur(0) !important;
         }
     `;
     document.head.appendChild(styleSheet);
