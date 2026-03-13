@@ -212,6 +212,80 @@
         }
 
         .login-footer-bar span { color: #ffc107; }
+
+        /* Kafelki Style */
+        .projects-nav {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #dee2e6;
+            padding: 25px 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: #ffc107;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+
+        .project-icon-wrapper {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .project-icon {
+            font-size: 1.4rem;
+            color: #ffc107;
+        }
+
+        .project-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #212529;
+            font-weight: bold;
+        }
+
+        .project-card p {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
@@ -223,7 +297,38 @@
     </nav>
 
     <div class="login-wrapper">
-        <div class="login-box">
+        <div style="width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center;">
+            
+            <!-- KAFELKI NAWIGACYJNE -->
+            <div class="projects-nav">
+                <div class="projects-grid">
+                    <a href="https://onthespotted.pl" class="project-card">
+                        <div class="project-icon-wrapper">
+                            <i class="fas fa-microchip project-icon"></i>
+                        </div>
+                        <h3>PBU-TUNE</h3>
+                        <p>Elektronika samochodowa i chiptuning.</p>
+                    </a>
+
+                    <a href="https://onthespotted.pl/fryzjer.html" class="project-card">
+                        <div class="project-icon-wrapper">
+                            <i class="fas fa-chair project-icon"></i>
+                        </div>
+                        <h3>FRYZJER-STYLE</h3>
+                        <p>Ekskluzywny Barber Shop w Krakowie.</p>
+                    </a>
+
+                    <a href="https://onthespotted.pl" class="project-card">
+                        <div class="project-icon-wrapper">
+                            <i class="fas fa-server project-icon"></i>
+                        </div>
+                        <h3>ONTHESPOTTED.PL</h3>
+                        <p>Backend & Platforma społecznościowa.</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="login-box">
 
             <!-- Nagłówek -->
             <div class="login-header">
