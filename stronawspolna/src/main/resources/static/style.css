@@ -52,6 +52,10 @@ label {
 /* Wszystkie inputy i selecty */
 input[type="text"],
 input[type="datetime-local"],
+input[type="number"],
+input[type="date"],
+input[type="tel"],
+input[type="password"],
 select {
     width: 100%;
     padding: 10px;
@@ -79,7 +83,6 @@ button:hover {
 }
 
 /* --- TABELA --- */
-/* --- TABELA --- */
 .content-table {
     width: 100%;
     border-collapse: collapse;
@@ -104,7 +107,6 @@ button:hover {
     margin: 0;
     font-size: 14px;
 }
-
 
 /* Pudełko główne */
 .multiselect-wrapper {
@@ -264,7 +266,6 @@ button:hover {
     gap: 10px;
     /* Odstęp między grupą strzałek a przyciskiem Dzisiaj */
 }
-
 
 .fc-event {
     cursor: pointer;
