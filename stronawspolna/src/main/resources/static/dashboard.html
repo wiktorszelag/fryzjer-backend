@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <title>Panel Główny - Kalendarz</title>
     <link rel="stylesheet" href="style.css">
-
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <style>
+        #userInfo {
+            color: #adb5bd;
+            font-size: 14px;
+            margin: 0 15px;
+        }
+        #btnWyloguj {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0 10px;
+            width: auto;
+            margin-top: 0;
+            vertical-align: middle;
+            transition: background 0.2s;
+        }
+        #btnWyloguj:hover { background: #c82333; }
+        nav {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
 </head>
 <body>
 
@@ -15,9 +48,13 @@
     <a href="fryzjerzy.html">Fryzjerzy</a>
     <a href="klienci.html">Klienci</a>
     <a href="wizyty.html">Wizyty</a>
+    <div class="nav-right">
+        <span id="userInfo"></span>
+        <button id="btnWyloguj" onclick="wyloguj()">Wyloguj</button>
+    </div>
 </nav>
 
-<div class="container" style="max-width: 1200px;"> <h1>Kalendarz Wizyt</h1>
+<div class="container" style="max-width: 1200px;"><h1>Kalendarz Wizyt</h1>
 
     <div style="margin-bottom: 15px;">
         <label for="fryzjerFilter">Filtruj wg fryzjera:</label>
@@ -29,7 +66,32 @@
     <div id='calendar'></div>
 </div>
 
-<script src="js/auth.js"></script><script>sprawdzSesje();</script><script src="js/api.js"></script>
+<script src="js/api.js"></script>
+<script>
+    // ── Ochrona strony – sprawdź sesję ────────────────────────────────────────
+    (async () => {
+        try {
+            const res = await fetch('/api/auth/me', { credentials: 'include' });
+            if (!res.ok) {
+                window.location.href = '/login.html';
+                return;
+            }
+            const data = await res.json();
+            const info = document.getElementById('userInfo');
+            if (info) info.textContent = `👤 ${data.username} (${data.rola})`;
+        } catch (_) {
+            window.location.href = '/login.html';
+        }
+    })();
+
+    // ── Wylogowanie ───────────────────────────────────────────────────────────
+    async function wyloguj() {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+        } catch (_) {}
+        window.location.href = '/login.html';
+    }
+</script>
 <script src="js/index.js"></script>
 </body>
 </html>

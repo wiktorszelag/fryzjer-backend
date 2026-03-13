@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie – Panel Fryzjer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0f1117;
+            --surface: rgba(255,255,255,0.05);
+            --border: rgba(255,255,255,0.1);
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --error: #ef4444;
+            --success: #22c55e;
+            --radius: 16px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 20%, rgba(245,158,11,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 80%, rgba(99,102,241,0.1) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Grid pattern */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(245,158,11,0.3);
+        }
+
+        .logo-section h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-section p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.05) inset,
+                0 24px 48px rgba(0,0,0,0.4);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 28px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #1a1a1a;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(245,158,11,0.4);
+        }
+
+        /* Form panels */
+        .form-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .form-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(8px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Form fields */
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .field input::placeholder { color: rgba(148,163,184,0.5); }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+        }
+
+        .field select option {
+            background: #1e293b;
+            color: var(--text);
+        }
+
+        /* Access code field – hidden by default */
+        #kodDostepuField {
+            display: none;
+        }
+
+        /* Submit button */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            color: #1a1a1a;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(245,158,11,0.35);
+        }
+
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Spinner inside button */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(26,26,26,0.3);
+            border-top-color: #1a1a1a;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Message box */
+        .message-box {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message-box.error {
+            display: flex;
+            background: rgba(239,68,68,0.12);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: #fca5a5;
+        }
+
+        .message-box.success {
+            display: flex;
+            background: rgba(34,197,94,0.12);
+            border: 1px solid rgba(34,197,94,0.3);
+            color: #86efac;
+        }
+
+        .message-box .msg-icon {
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+    <div class="logo-section">
+        <div class="logo-icon">✂️</div>
+        <h1>Panel Fryzjer</h1>
+        <p>System zarządzania salonem</p>
+    </div>
+
+    <div class="card">
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" id="tabLoginBtn" onclick="switchTab('login')">Logowanie</button>
+            <button class="tab-btn" id="tabRegisterBtn" onclick="switchTab('register')">Rejestracja</button>
+        </div>
+
+        <!-- FORMULARZ LOGOWANIA -->
+        <div class="form-panel active" id="panelLogin">
+            <div class="field">
+                <label for="loginUsername">Nazwa użytkownika</label>
+                <input type="text" id="loginUsername" placeholder="Wpisz login..." autocomplete="username">
+            </div>
+            <div class="field">
+                <label for="loginPassword">Hasło</label>
+                <input type="password" id="loginPassword" placeholder="Wpisz hasło..." autocomplete="current-password">
+            </div>
+            <button class="btn-primary" id="btnLogin" onclick="handleLogin()">Zaloguj się</button>
+            <div class="message-box" id="loginMsg"></div>
+        </div>
+
+        <!-- FORMULARZ REJESTRACJI -->
+        <div class="form-panel" id="panelRegister">
+            <div class="field">
+                <label for="regUsername">Nazwa użytkownika</label>
+                <input type="text" id="regUsername" placeholder="Min. 3 znaki..." autocomplete="username">
+            </div>
+            <div class="field">
+                <label for="regPassword">Hasło</label>
+                <input type="password" id="regPassword" placeholder="Min. 6 znaków..." autocomplete="new-password">
+            </div>
+            <div class="field">
+                <label for="regRola">Rola</label>
+                <select id="regRola" onchange="onRolaChange()">
+                    <option value="KLIENT">Klient</option>
+                    <option value="PRACOWNIK">Pracownik</option>
+                </select>
+            </div>
+            <div class="field" id="kodDostepuField">
+                <label for="regKod">Kod dostępu pracownika</label>
+                <input type="password" id="regKod" placeholder="Wpisz kod...">
+            </div>
+            <button class="btn-primary" id="btnRegister" onclick="handleRegister()">Zarejestruj się</button>
+            <div class="message-box" id="registerMsg"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = '/api/auth';
+
+    // ── Przełączanie zakładek ──────────────────────────────────────────────────
+    function switchTab(tab) {
+        document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+        document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
+        document.getElementById('tabLoginBtn').classList.toggle('active', tab === 'login');
+        document.getElementById('tabRegisterBtn').classList.toggle('active', tab === 'register');
+        hideMsg('loginMsg');
+        hideMsg('registerMsg');
+    }
+
+    // ── Pokazywanie/ukrywanie kodu dostępu ────────────────────────────────────
+    function onRolaChange() {
+        const rola = document.getElementById('regRola').value;
+        document.getElementById('kodDostepuField').style.display = rola === 'PRACOWNIK' ? 'block' : 'none';
+    }
+
+    // ── Komunikaty ────────────────────────────────────────────────────────────
+    function showMsg(id, text, type) {
+        const el = document.getElementById(id);
+        el.innerHTML = `<span class="msg-icon">${type === 'error' ? '⚠️' : '✅'}</span> ${text}`;
+        el.className = `message-box ${type}`;
+    }
+
+    function hideMsg(id) {
+        document.getElementById(id).style.display = 'none';
+        document.getElementById(id).className = 'message-box';
+    }
+
+    function setLoading(btnId, loading) {
+        const btn = document.getElementById(btnId);
+        if (loading) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Ładowanie...';
+        } else {
+            btn.disabled = false;
+        }
+    }
+
+    // ── Logowanie ─────────────────────────────────────────────────────────────
+    async function handleLogin() {
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        if (!username || !password) {
+            showMsg('loginMsg', 'Uzupełnij nazwę użytkownika i hasło.', 'error');
+            return;
+        }
+
+        setLoading('btnLogin', true);
+        hideMsg('loginMsg');
+
+        try {
+            const res = await fetch(`${API}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                showMsg('loginMsg', data.komunikat || 'Zalogowano!', 'success');
+                document.getElementById('btnLogin').innerHTML = '✅ Zalogowano!';
+                setTimeout(() => { window.location.href = '/dashboard.html'; }, 800);
+            } else {
+                showMsg('loginMsg', data.komunikat || 'Błąd logowania.', 'error');
+                document.getElementById('btnLogin').disabled = false;
+                document.getElementById('btnLogin').innerHTML = 'Zaloguj się';
+            }
+        } catch (err) {
+            showMsg('loginMsg', 'Błąd połączenia z serwerem.', 'error');
+            document.getElementById('btnLogin').disabled = false;
+            document.getElementById('btnLogin').innerHTML = 'Zaloguj się';
+        }
+    }
+
+    // ── Rejestracja ───────────────────────────────────────────────────────────
+    async function handleRegister() {
+        const username  = document.getElementById('regUsername').value.trim();
+        const password  = document.getElementById('regPassword').value;
+        const rola      = document.getElementById('regRola').value;
+        const kodDostepu = document.getElementById('regKod').value;
+
+        if (!username || !password) {
+            showMsg('registerMsg', 'Uzupełnij wszystkie pola.', 'error');
+            return;
+        }
+
+        setLoading('btnRegister', true);
+        hideMsg('registerMsg');
+
+        try {
+            const res = await fetch(`${API}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ username, password, rola, kodDostepu })
+            });
+
+            const data = await res.json();
+
+            if (res.ok || res.status === 201) {
+                showMsg('registerMsg', data.komunikat || 'Konto zostało utworzone!', 'success');
+                document.getElementById('btnRegister').innerHTML = '✅ Zarejestrowano!';
+                setTimeout(() => {
+                    switchTab('login');
+                    document.getElementById('loginUsername').value = username;
+                    document.getElementById('btnRegister').disabled = false;
+                    document.getElementById('btnRegister').innerHTML = 'Zarejestruj się';
+                }, 1200);
+            } else {
+                showMsg('registerMsg', data.komunikat || 'Błąd rejestracji.', 'error');
+                document.getElementById('btnRegister').disabled = false;
+                document.getElementById('btnRegister').innerHTML = 'Zarejestruj się';
+            }
+        } catch (err) {
+            showMsg('registerMsg', 'Błąd połączenia z serwerem.', 'error');
+            document.getElementById('btnRegister').disabled = false;
+            document.getElementById('btnRegister').innerHTML = 'Zarejestruj się';
+        }
+    }
+
+    // ── Enter submit ──────────────────────────────────────────────────────────
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const active = document.querySelector('.form-panel.active');
+            if (active.id === 'panelLogin') handleLogin();
+            else handleRegister();
+        }
+    });
+
+    // ── Sprawdź czy już zalogowany ────────────────────────────────────────────
+    (async () => {
+        try {
+            const res = await fetch(`${API}/me`, { credentials: 'include' });
+            if (res.ok) {
+                window.location.href = '/dashboard.html';
+            }
+        } catch (_) { /* nie zalogowany – zostań na login */ }
+    })();
+</script>
+</body>
+</html>
