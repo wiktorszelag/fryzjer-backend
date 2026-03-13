@@ -12,7 +12,7 @@ async function sprawdzSesje() {
             credentials: 'include'
         });
         if (resp.status === 401) {
-            window.location.replace('login.html');
+            window.location.replace('index.html');
             return null;
         }
         const data = await resp.json();
@@ -22,18 +22,18 @@ async function sprawdzSesje() {
         return data;
     } catch (e) {
         console.error('Błąd sprawdzania sesji:', e);
-        window.location.replace('login.html');
+        window.location.replace('index.html');
         return null;
     }
 }
 
 /**
- * Wylogowuje użytkownika i przekierowuje na login.html
+ * Wylogowuje użytkownika i przekierowuje na index.html
  */
 async function wyloguj() {
     await fetch(`${AUTH_API}/logout`, {
         method: 'POST',
         credentials: 'include'
     });
-    window.location.replace('login.html');
+    window.location.replace('index.html');
 }

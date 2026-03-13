@@ -1,14 +1,4 @@
 services:
-  # --- PBU-TUNE FRONTEND ---
-  site:
-    image: ghcr.io/wiktorszelag/fryzjer-backend-site:latest
-    container_name: pbutune_site
-    ports:
-      - "8090:80"
-    restart: always
-    networks:
-      - app_network
-
   # --- FRYZJER APP ---
   fryzjer_app_service:
     image: ghcr.io/wiktorszelag/fryzjer-backend:latest

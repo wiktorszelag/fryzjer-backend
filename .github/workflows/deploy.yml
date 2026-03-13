@@ -28,13 +28,6 @@ jobs:
           # Używamy GHCR_TOKEN zamiast GITHUB_TOKEN dla pewności uprawnień w prywatnym repo
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Build and Push Web (Frontend)
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_REPO }}-site:latest
-
       - name: Build and Push Fryzjer Backend
         uses: docker/build-push-action@v5
         with:
@@ -71,7 +64,7 @@ jobs:
             cd /home/${{ secrets.SSH_USERNAME }}
             
             # Usuń potencjalne konflikty i zresetuj wszystko razem (z OnTheSpotted)
-            sudo docker rm -f fryzjer_app pbutune_site fryzjer_db spotted_app spotted_db || true
+            sudo docker rm -f fryzjer_app fryzjer_db spotted_app spotted_db || true
             
             # Uruchom wszystko z użyciem pliku .env, który jest już na serwerze
             sudo docker compose --env-file .env pull
