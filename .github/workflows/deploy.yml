@@ -11,7 +11,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,7 +27,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/wiktorszelag/pbutune-web:latest
+          # Używamy sub-tagu dla strony głównej
+          tags: ghcr.io/${{ github.repository }}-site:latest
 
       - name: Build and Push Fryzjer Backend
         uses: docker/build-push-action@v5
@@ -36,7 +36,8 @@ jobs:
           context: ./stronawspolna
           file: ./stronawspolna/Dockerfile
           push: true
-          tags: ghcr.io/wiktorszelag/fryzjer-backend:latest
+          # Używamy nazwy repozytorium dla backendu
+          tags: ghcr.io/${{ github.repository }}:latest
 
   deploy:
     name: Deploy to Server
@@ -65,12 +66,12 @@ jobs:
             
             cd /home/${{ secrets.SSH_USERNAME }}
             
-            # Stop and remove potential conflicting containers
+            # Usuwamy stare kontenery
             sudo docker rm -f fryzjer_app pbutune_site fryzjer_db || true
             
-            # Pull new images and start
+            # Logowanie i start wszystkiego
             sudo docker compose pull
             sudo docker compose up -d --force-recreate --remove-orphans
             
-            # Clean up space
+            # Sprzątanie
             sudo docker image prune -f
