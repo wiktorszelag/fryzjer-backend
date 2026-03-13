@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     <style>
-        html, body { color-scheme: light !important; background-color: #cacecc !important; color: #333 !important; }
-
         /* Wymuś jasny motyw FullCalendar */
         .fc { background: white !important; color: #333 !important; }
         .fc-theme-standard td, .fc-theme-standard th { border-color: #ddd !important; }
@@ -20,12 +18,10 @@
         .fc-button:hover { background-color: #23272b !important; }
         .fc-button-primary:not(:disabled).fc-button-active { background-color: #ffc107 !important; border-color: #ffc107 !important; color: #333 !important; }
         .fc-toolbar-title { color: #333 !important; }
-        .fc-daygrid-day { background: white !important; }
-        .fc-timegrid-axis { background: white !important; color: #666 !important; }
         .fc-timegrid-slot-label { color: #666 !important; }
 
-        /* Nav */
-        nav { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; background-color: #343a40 !important; }
+        /* Nav dashboard – flex zamiast center */
+        nav { display: flex !important; align-items: center; flex-wrap: wrap; gap: 4px; text-align: left; }
         .nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
         #userInfo { color: #adb5bd; font-size: 14px; margin: 0 15px; }
         #btnWyloguj { background: #dc3545 !important; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 14px; width: auto; margin: 0 10px; }
