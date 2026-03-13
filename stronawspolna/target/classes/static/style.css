@@ -1,7 +1,7 @@
-/* --- STYLIZACJA ZALECANA PRZEZ UŻYTKOWNIKA --- */
+/* --- OGÓLNE STYLE --- */
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #cacecc !important;
+    background-color: #cacecc;
     margin: 0;
     color: #333;
 }
@@ -49,18 +49,16 @@ label {
     margin-bottom: 5px;
 }
 
+/* Wszystkie inputy i selecty */
 input[type="text"],
 input[type="datetime-local"],
-input[type="number"],
-input[type="date"],
-input[type="tel"],
-input[type="password"],
 select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    /* Ważne! */
     font-size: 14px;
 }
 
@@ -80,6 +78,7 @@ button:hover {
     background-color: #218838;
 }
 
+/* --- TABELA --- */
 /* --- TABELA --- */
 .content-table {
     width: 100%;
@@ -106,12 +105,15 @@ button:hover {
     font-size: 14px;
 }
 
-/* Pudełko główne multiselect */
+
+/* Pudełko główne */
 .multiselect-wrapper {
     position: relative;
+    /* Dzięki temu lista wie, gdzie się pojawić */
     user-select: none;
 }
 
+/* Przycisk, który udaje Selecta */
 .select-btn {
     display: flex;
     justify-content: space-between;
@@ -123,9 +125,12 @@ button:hover {
     cursor: pointer;
 }
 
+/* Lista, która jest ukryta */
 .list-items {
     display: none;
+    /* Domyślnie niewidoczna */
     position: absolute;
+    /* Unosi się nad resztą */
     top: 100%;
     left: 0;
     width: 100%;
@@ -136,13 +141,16 @@ button:hover {
     border-top: none;
     border-radius: 0 0 4px 4px;
     z-index: 999;
+    /* Musi być na wierzchu! */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Kiedy dodamy klasę 'open', lista się pokazuje */
 .multiselect-wrapper.open .list-items {
     display: block;
 }
 
+/* Pojedyncza opcja na liście */
 .item {
     display: flex;
     align-items: center;
@@ -156,6 +164,7 @@ button:hover {
     background-color: #f8f9fa;
 }
 
+/* Checkbox w środku */
 .item .checkbox {
     width: 18px;
     height: 18px;
@@ -171,33 +180,46 @@ button:hover {
     font-size: 12px;
     color: #666;
     margin-left: auto;
+    /* Pcha cenę do prawej */
 }
 
 .content-table td .actions {
     display: flex;
     gap: 5px;
+    /* Odstęp między przyciskami */
     justify-content: flex-start;
+    /* Wyrównaj do lewej */
 }
 
+/* Wspólny styl dla małych przycisków w tabeli */
 .btn-table {
     width: auto;
+    /* Nie rozciągaj na 100% */
     margin: 0;
+    /* Usuń marginesy z góry */
     padding: 6px 12px;
+    /* Mniejszy padding */
     font-size: 14px;
+    /* Mniejsza czcionka */
     font-weight: 500;
 }
 
+/* Kolor dla Edycji */
 .btn-edit {
     background-color: #ffc107;
+    /* Żółty */
     color: #212529;
+    /* Ciemny tekst dla kontrastu */
 }
 
 .btn-edit:hover {
     background-color: #e0a800;
 }
 
+/* Kolor dla Usuwania (nadpisujemy wcześniejszy .btn-usun) */
 .btn-delete {
     background-color: #dc3545;
+    /* Czerwony */
     color: white;
 }
 
@@ -211,37 +233,47 @@ button:hover {
     margin: 0 auto;
     background: white;
     padding: 0;
+    /* Usunięto padding */
 }
 
+/* Dostosowanie czcionki w kalendarzu */
 .fc {
     font-family: 'Segoe UI', sans-serif;
 }
 
 .fc-toolbar-title {
     font-size: 1.2em !important;
+    /* Mniejszy tytuł */
 }
 
+/* Poprawa układu przycisków */
 .fc-header-toolbar {
     display: flex !important;
     flex-wrap: nowrap !important;
+    /* Wymuś jedną linię */
     justify-content: space-between !important;
     align-items: center !important;
     margin-bottom: 1.5em !important;
     gap: 10px;
 }
 
+/* Wymuś, aby grupy przycisków też były w jednej linii */
 .fc-header-toolbar .fc-toolbar-chunk:first-child {
     display: flex;
     align-items: center;
     gap: 10px;
+    /* Odstęp między grupą strzałek a przyciskiem Dzisiaj */
 }
+
 
 .fc-event {
     cursor: pointer;
 }
 
+/* Usuń pustą przestrzeń nad 10:00 i napraw brakującą linię */
 .fc-timegrid-slots tr:first-child td {
     border-top: 1px solid #ddd !important;
+    /* Wymuś górną linię dla pierwszego wiersza */
 }
 
 .fc-timegrid-axis-frame,
@@ -249,9 +281,6 @@ button:hover {
     height: 100% !important;
 }
 
-.fc-scroller {
-    overflow: hidden !important;
-}
 
 /* --- DODATKOWE STYLE TYLKO DLA STRONY LOGOWANIA --- */
 .login-wrapper {
@@ -410,4 +439,4 @@ button:hover {
     font-size: 0.82rem;
 }
 
-.login-footer-bar span { color: #ffc107; }
+.login-footer-bar span { color: #ffc107; }
