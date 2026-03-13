@@ -348,7 +348,7 @@
         (async function () {
             try {
                 const r = await fetch('/api/auth/me', { credentials: 'include' });
-                if (r.ok) window.location.replace('index.html');
+                if (r.ok) window.location.replace('dashboard.html');
             } catch (e) {}
         })();
 
@@ -386,7 +386,7 @@
                 });
                 const data = await resp.json();
                 if (resp.ok) {
-                    window.location.replace('index.html');
+                    window.location.replace('dashboard.html');
                 } else {
                     document.getElementById('err-login-text').textContent = data.komunikat || 'Nieprawidłowe dane logowania.';
                     errDiv.classList.add('show');
