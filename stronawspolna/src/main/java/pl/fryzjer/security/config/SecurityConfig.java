@@ -17,6 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
+            .cors(cors -> {}) // Pozwala na konfigurację CORS z kontrolerów
             .authorizeHttpRequests(auth -> auth
                 // Pozwól na wszystko - autoryzacja jest obsługiwana przez sesję w AuthController
                 .anyRequest().permitAll()
