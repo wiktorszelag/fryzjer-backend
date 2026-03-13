@@ -6,9 +6,11 @@ services:
     ports:
       - "8090:80"
     restart: always
+    networks:
+      - app_network
 
   # --- FRYZJER APP ---
-  fryzjer_app_service: # Nazwa usługi zmieniona, żeby uniknąć myślników w hostach
+  fryzjer_app_service:
     image: ghcr.io/wiktorszelag/fryzjer-backend:latest
     container_name: fryzjer_app
     ports:
@@ -21,8 +23,10 @@ services:
     depends_on:
       - fryzjer_db
     restart: always
+    networks:
+      - app_network
 
-  fryzjer_db: # Kluczowe: zmiana z fryzjer-db na fryzjer_db
+  fryzjer_db:
     image: postgres:15-alpine
     container_name: fryzjer_db
     environment:
@@ -32,6 +36,8 @@ services:
     volumes:
       - fryzjer_postgres_data:/var/lib/postgresql/data
     restart: always
+    networks:
+      - app_network
 
   # --- ON THE SPOTTED ---
   spotted_app_service:
@@ -49,8 +55,10 @@ services:
     depends_on:
       - spotted_db
     restart: always
+    networks:
+      - app_network
 
-  spotted_db: # Kluczowe: zmiana z spotted-db na spotted_db
+  spotted_db:
     image: postgres:15-alpine
     container_name: spotted_db
     environment:
@@ -60,6 +68,12 @@ services:
     volumes:
       - spotted_postgres_data:/var/lib/postgresql/data
     restart: always
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
 
 volumes:
   fryzjer_postgres_data:
