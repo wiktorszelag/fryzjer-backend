@@ -25,6 +25,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
+          # Używamy GHCR_TOKEN zamiast GITHUB_TOKEN dla pewności uprawnień w prywatnym repo
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build and Push Web (Frontend)
@@ -69,7 +70,7 @@ jobs:
             
             cd /home/${{ secrets.SSH_USERNAME }}
             
-            # Usuń potencjalne konflikty i zrestuj wszystko razem (z OnTheSpotted)
+            # Usuń potencjalne konflikty i zresetuj wszystko razem (z OnTheSpotted)
             sudo docker rm -f fryzjer_app pbutune_site fryzjer_db spotted_app spotted_db || true
             
             # Uruchom wszystko z użyciem pliku .env, który jest już na serwerze
