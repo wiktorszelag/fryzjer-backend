@@ -1,4 +1,5 @@
 services:
+  # --- PBU-TUNE FRONTEND ---
   site:
     image: ghcr.io/wiktorszelag/fryzjer-backend-site:latest
     container_name: pbutune_site
@@ -6,6 +7,7 @@ services:
       - "8090:80"
     restart: always
 
+  # --- FRYZJER APP ---
   fryzjer-app:
     image: ghcr.io/wiktorszelag/fryzjer-backend:latest
     container_name: fryzjer_app
@@ -31,5 +33,34 @@ services:
       - fryzjer_postgres_data:/var/lib/postgresql/data
     restart: always
 
+  # --- ON THE SPOTTED (PRZYWRACANIE) ---
+  spotted-app:
+    image: ghcr.io/wiktorszelag/spotted-app-backend:latest
+    container_name: spotted_app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://spotted_db:5432/spotted_app_db
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    depends_on:
+      - spotted-db
+    restart: always
+
+  spotted-db:
+    image: postgres:15-alpine
+    container_name: spotted_db
+    environment:
+      - POSTGRES_DB=spotted_app_db
+      - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME}
+      - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    volumes:
+      - spotted_postgres_data:/var/lib/postgresql/data
+    restart: always
+
 volumes:
   fryzjer_postgres_data:
+  spotted_postgres_data:
