@@ -1,7 +1,7 @@
-/* --- OGÓLNE STYLE --- */
+/* --- STYLIZACJA ZALECANA PRZEZ UŻYTKOWNIKA --- */
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #cacecc;
+    background-color: #cacecc !important;
     margin: 0;
     color: #333;
 }
@@ -49,7 +49,6 @@ label {
     margin-bottom: 5px;
 }
 
-/* Wszystkie inputy i selecty */
 input[type="text"],
 input[type="datetime-local"],
 input[type="number"],
@@ -62,7 +61,6 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    /* Ważne! */
     font-size: 14px;
 }
 
@@ -108,14 +106,12 @@ button:hover {
     font-size: 14px;
 }
 
-/* Pudełko główne */
+/* Pudełko główne multiselect */
 .multiselect-wrapper {
     position: relative;
-    /* Dzięki temu lista wie, gdzie się pojawić */
     user-select: none;
 }
 
-/* Przycisk, który udaje Selecta */
 .select-btn {
     display: flex;
     justify-content: space-between;
@@ -127,12 +123,9 @@ button:hover {
     cursor: pointer;
 }
 
-/* Lista, która jest ukryta */
 .list-items {
     display: none;
-    /* Domyślnie niewidoczna */
     position: absolute;
-    /* Unosi się nad resztą */
     top: 100%;
     left: 0;
     width: 100%;
@@ -143,16 +136,13 @@ button:hover {
     border-top: none;
     border-radius: 0 0 4px 4px;
     z-index: 999;
-    /* Musi być na wierzchu! */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Kiedy dodamy klasę 'open', lista się pokazuje */
 .multiselect-wrapper.open .list-items {
     display: block;
 }
 
-/* Pojedyncza opcja na liście */
 .item {
     display: flex;
     align-items: center;
@@ -166,7 +156,6 @@ button:hover {
     background-color: #f8f9fa;
 }
 
-/* Checkbox w środku */
 .item .checkbox {
     width: 18px;
     height: 18px;
@@ -182,46 +171,33 @@ button:hover {
     font-size: 12px;
     color: #666;
     margin-left: auto;
-    /* Pcha cenę do prawej */
 }
 
 .content-table td .actions {
     display: flex;
     gap: 5px;
-    /* Odstęp między przyciskami */
     justify-content: flex-start;
-    /* Wyrównaj do lewej */
 }
 
-/* Wspólny styl dla małych przycisków w tabeli */
 .btn-table {
     width: auto;
-    /* Nie rozciągaj na 100% */
     margin: 0;
-    /* Usuń marginesy z góry */
     padding: 6px 12px;
-    /* Mniejszy padding */
     font-size: 14px;
-    /* Mniejsza czcionka */
     font-weight: 500;
 }
 
-/* Kolor dla Edycji */
 .btn-edit {
     background-color: #ffc107;
-    /* Żółty */
     color: #212529;
-    /* Ciemny tekst dla kontrastu */
 }
 
 .btn-edit:hover {
     background-color: #e0a800;
 }
 
-/* Kolor dla Usuwania (nadpisujemy wcześniejszy .btn-usun) */
 .btn-delete {
     background-color: #dc3545;
-    /* Czerwony */
     color: white;
 }
 
@@ -235,46 +211,37 @@ button:hover {
     margin: 0 auto;
     background: white;
     padding: 0;
-    /* Usunięto padding */
 }
 
-/* Dostosowanie czcionki w kalendarzu */
 .fc {
     font-family: 'Segoe UI', sans-serif;
 }
 
 .fc-toolbar-title {
     font-size: 1.2em !important;
-    /* Mniejszy tytuł */
 }
 
-/* Poprawa układu przycisków */
 .fc-header-toolbar {
     display: flex !important;
     flex-wrap: nowrap !important;
-    /* Wymuś jedną linię */
     justify-content: space-between !important;
     align-items: center !important;
     margin-bottom: 1.5em !important;
     gap: 10px;
 }
 
-/* Wymuś, aby grupy przycisków też były w jednej linii */
 .fc-header-toolbar .fc-toolbar-chunk:first-child {
     display: flex;
     align-items: center;
     gap: 10px;
-    /* Odstęp między grupą strzałek a przyciskiem Dzisiaj */
 }
 
 .fc-event {
     cursor: pointer;
 }
 
-/* Usuń pustą przestrzeń nad 10:00 i napraw brakującą linię */
 .fc-timegrid-slots tr:first-child td {
     border-top: 1px solid #ddd !important;
-    /* Wymuś górną linię dla pierwszego wiersza */
 }
 
 .fc-timegrid-axis-frame,
@@ -285,3 +252,162 @@ button:hover {
 .fc-scroller {
     overflow: hidden !important;
 }
+
+/* --- DODATKOWE STYLE TYLKO DLA STRONY LOGOWANIA --- */
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #cacecc !important;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 480px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h1 {
+    font-size: 1.8rem;
+    color: #343a40;
+    margin-bottom: 6px;
+}
+
+.login-header p {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+.tabs-nav {
+    display: flex;
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 0;
+    background: white;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+}
+
+.tab-link {
+    flex: 1;
+    padding: 14px 10px;
+    background: #f8f9fa;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 1rem;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-bottom: -2px;
+}
+
+.tab-link i { margin-right: 7px; }
+
+.tab-link.active {
+    background: white;
+    color: #343a40;
+    border-bottom-color: #ffc107;
+}
+
+.tab-link:hover:not(.active) {
+    background: #e9ecef;
+    color: #343a40;
+}
+
+.tab-panel {
+    display: none;
+    background: white;
+    padding: 30px;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.tab-panel.active { display: block; }
+
+.tab-panel label {
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #343a40;
+}
+
+.tab-panel label:first-of-type { margin-top: 0; }
+
+.tab-panel input {
+    width: 100%;
+    padding: 10px 10px 10px 38px !important;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.input-wrap i {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+    font-size: 0.85rem;
+}
+
+.btn-auth {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    width: 100%;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-auth:hover { background-color: #e0a800; }
+
+.alert {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+
+.alert.show { display: flex; }
+.alert-danger { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+.alert-success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+
+.spinner-sm {
+    width: 16px; height: 16px; border: 2px solid rgba(33,37,41,0.2);
+    border-top-color: #212529; border-radius: 50%;
+    animation: spin 0.7s linear infinite; display: none;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.login-footer-bar {
+    background-color: #343a40;
+    color: #adb5bd;
+    text-align: center;
+    padding: 14px;
+    font-size: 0.82rem;
+}
+
+.login-footer-bar span { color: #ffc107; }
