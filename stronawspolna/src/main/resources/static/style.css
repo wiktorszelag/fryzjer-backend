@@ -1,7 +1,5 @@
-/* --- BLOKADA DARK MODE – działa na wszystkich stronach --- */
-:root {
-    color-scheme: light;
-}
+/* --- BLOKADA DARK MODE --- */
+:root { color-scheme: light; }
 
 /* --- OGÓLNE STYLE --- */
 body {
@@ -13,8 +11,11 @@ body {
 
 nav {
     background-color: #343a40 !important;
-    padding: 15px;
-    text-align: center;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
 }
 
 nav a {
@@ -29,6 +30,58 @@ nav b {
     text-decoration: underline;
     margin: 0 15px;
     font-size: 18px;
+}
+
+/* --- PANEL NAWIGACJI – PRAWA STRONA --- */
+.nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#userInfo {
+    color: #adb5bd;
+    font-size: 14px;
+    margin: 0 10px;
+}
+
+#btnWyloguj {
+    background-color: #dc3545 !important;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+    width: auto;
+    margin: 0;
+    transition: background-color 0.2s;
+}
+
+#btnWyloguj:hover { background-color: #c82333 !important; }
+
+/* --- FULLCALENDAR – JASNY MOTYW --- */
+.fc { background: white !important; color: #333 !important; }
+.fc-theme-standard td,
+.fc-theme-standard th          { border-color: #ddd !important; }
+.fc-theme-standard .fc-scrollgrid { border-color: #ddd !important; }
+.fc-col-header-cell            { background: #f8f9fa !important; color: #333 !important; }
+.fc-timegrid-slot              { background: white !important; }
+.fc-timegrid-slot-label        { color: #666 !important; }
+.fc-day-today                  { background: rgba(255, 220, 40, 0.15) !important; }
+.fc-toolbar-title              { color: #333 !important; }
+.fc-button {
+    background-color: #343a40 !important;
+    border-color: #343a40 !important;
+    color: white !important;
+}
+.fc-button:hover               { background-color: #23272b !important; }
+.fc-button-primary:not(:disabled).fc-button-active {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #333 !important;
 }
 
 .container {
