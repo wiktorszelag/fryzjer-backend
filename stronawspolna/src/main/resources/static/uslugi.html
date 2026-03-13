@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Usługi - Fryzjer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html">Start</a>
+        <b>Usługi</b>
+        <a href="fryzjerzy.html">Fryzjerzy</a>
+        <a href="klienci.html">Klienci</a>
+        <a href="wizyty.html">Wizyty</a>
+        <span id="nav-username" style="color:#ffc107; margin: 0 15px; font-size:15px;"></span>
+        <a href="#" onclick="wyloguj()" style="color:#ff6b6b;">&#128274; Wyloguj</a>
+    </nav>
+
+    <div class="container">
+        <h1>Cennik Usług</h1>
+
+        <div class="panel-dodawania">
+            <h3>Dodaj nową usługę</h3>
+            <form id="form-usluga">
+                <label>Nazwa usługi:</label>
+                <input type="text" id="nazwa" placeholder="np. Strzyżenie brody" required>
+
+                <label>Opis:</label>
+                <input type="text" id="opis" placeholder="Krótki opis...">
+
+                <label>Cena Netto (PLN):</label>
+                <input type="number" id="cenaNetto" step="0.01" required>
+
+                <label>VAT (%):</label>
+                <input type="number" id="stawkaVat" value="23" required>
+
+                <label>Czas trwania (minuty):</label>
+                <input type="number" id="czasTrwaniaMin" required>
+
+                <button type="submit">Dodaj Usługę</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <h3>Dostępne Usługi</h3>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th>Cena Netto</th>
+                    <th>VAT</th>
+                    <th>Czas</th>
+                    <th>Akcja</th>
+                </tr>
+            </thead>
+            <tbody id="lista-uslug">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/uslugi.js"></script>
+    <script>sprawdzSesje();</script>
+</body>
+
+</html>

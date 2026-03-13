@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie – Fryzjer WS&BG</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Dodatkowe style tylko dla strony logowania */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .login-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        /* Nagłówek z logo */
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            color: #343a40;
+            margin-bottom: 6px;
+        }
+
+        .login-header p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        /* Zakładki */
+        .tabs-nav {
+            display: flex;
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 0;
+            background: white;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+
+        .tab-link {
+            flex: 1;
+            padding: 14px 10px;
+            background: #f8f9fa;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-size: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-bottom: -2px;
+        }
+
+        .tab-link i { margin-right: 7px; }
+
+        .tab-link.active {
+            background: white;
+            color: #343a40;
+            border-bottom-color: #ffc107;
+        }
+
+        .tab-link:hover:not(.active) {
+            background: #e9ecef;
+            color: #343a40;
+        }
+
+        /* Panele */
+        .tab-panel {
+            display: none;
+            background: white;
+            padding: 30px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .tab-panel.active { display: block; }
+
+        /* Pola formularza - nadpisujemy globalne z style.css */
+        .tab-panel label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #343a40;
+        }
+
+        .tab-panel label:first-of-type { margin-top: 0; }
+
+        .tab-panel input[type="text"],
+        .tab-panel input[type="password"],
+        .tab-panel select {
+            width: 100%;
+            padding: 10px 10px 10px 38px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: 'Segoe UI', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .tab-panel input[type="text"]:focus,
+        .tab-panel input[type="password"]:focus,
+        .tab-panel select:focus {
+            border-color: #ffc107;
+            box-shadow: 0 0 0 3px rgba(255,193,7,0.2);
+            outline: none;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+            font-size: 0.85rem;
+        }
+
+        /* Przycisk submit - nadpisujemy globalne */
+        .btn-auth {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Segoe UI', sans-serif;
+            margin-top: 20px;
+            width: 100%;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-auth:hover { background-color: #e0a800; }
+        .btn-auth:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Alerty */
+        .alert {
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert.show { display: flex; }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        /* Spinner */
+        .spinner-sm {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(33,37,41,0.2);
+            border-top-color: #212529;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Stopka strony */
+        .login-footer-bar {
+            background-color: #343a40;
+            color: #adb5bd;
+            text-align: center;
+            padding: 14px;
+            font-size: 0.82rem;
+        }
+
+        .login-footer-bar span { color: #ffc107; }
+    </style>
+</head>
+
+<body>
+    <!-- Górna nawigacja pasek – taki sam jak w całej aplikacji -->
+    <nav>
+        <b style="color: #ffc107; font-size: 20px;">⚡ Fryzjer WS&BG</b>
+        <span style="color: white; margin: 0 15px; font-size: 15px;">Panel logowania</span>
+    </nav>
+
+    <div class="login-wrapper">
+        <div class="login-box">
+
+            <!-- Nagłówek -->
+            <div class="login-header">
+                <h1><i class="fas fa-cut" style="color:#ffc107;"></i> Fryzjer WS&amp;BG</h1>
+                <p>System zarządzania salonem fryzjerskim</p>
+            </div>
+
+            <!-- Zakładki -->
+            <div class="tabs-nav">
+                <button class="tab-link active" id="tab-login" onclick="switchTab('login')">
+                    <i class="fas fa-sign-in-alt"></i>Logowanie
+                </button>
+                <button class="tab-link" id="tab-register" onclick="switchTab('register')">
+                    <i class="fas fa-user-plus"></i>Rejestracja
+                </button>
+            </div>
+
+            <!-- Panel: Logowanie -->
+            <div class="tab-panel active" id="panel-login">
+                <form onsubmit="handleLogin(event)">
+                    <label for="login-username">Nazwa użytkownika</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="login-username" placeholder="np. admin"
+                            autocomplete="username" required>
+                    </div>
+
+                    <label for="login-password">Hasło</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="login-password" placeholder="••••••••"
+                            autocomplete="current-password" required>
+                    </div>
+
+                    <button type="submit" class="btn-auth" id="btn-login">
+                        <div class="spinner-sm" id="spin-login"></div>
+                        <span id="btn-login-text"><i class="fas fa-sign-in-alt"></i> Zaloguj się</span>
+                    </button>
+
+                    <div class="alert alert-danger" id="err-login">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="err-login-text">Nieprawidłowe dane logowania.</span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Panel: Rejestracja -->
+            <div class="tab-panel" id="panel-register">
+                <form onsubmit="handleRegister(event)">
+                    <label for="reg-username">Nazwa użytkownika</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="reg-username" placeholder="min. 3 znaki"
+                            autocomplete="off" required>
+                    </div>
+
+                    <label for="reg-password">Hasło</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="reg-password" placeholder="min. 6 znaków"
+                            autocomplete="new-password" required>
+                    </div>
+
+                    <label for="reg-password2">Potwierdź hasło</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="reg-password2" placeholder="powtórz hasło"
+                            autocomplete="new-password" required>
+                    </div>
+
+                    <label for="reg-rola">Rola</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-id-badge"></i>
+                        <select id="reg-rola" onchange="toggleKodDostepu()">
+                            <option value="KLIENT" selected>Klient</option>
+                            <option value="PRACOWNIK">Pracownik</option>
+                        </select>
+                    </div>
+
+                    <div id="kod-dostepu-group" style="display:none;">
+                        <label for="reg-kod">Kod dostępu pracownika</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-key"></i>
+                            <input type="password" id="reg-kod" placeholder="wprowadź kod dostępu">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-auth" id="btn-register">
+                        <div class="spinner-sm" id="spin-register"></div>
+                        <span id="btn-register-text"><i class="fas fa-user-plus"></i> Utwórz konto</span>
+                    </button>
+
+                    <div class="alert alert-danger" id="err-register">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="err-register-text">Błąd rejestracji.</span>
+                    </div>
+                    <div class="alert alert-success" id="ok-register">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="ok-register-text">Konto zostało utworzone!</span>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Stopka -->
+    <div class="login-footer-bar">
+        &copy; 2026 <span>Fryzjer WS&amp;BG</span> &mdash; System Zarządzania Salonem
+    </div>
+
+    <script>
+        // Pokaż/ukryj pole kodu dostępu
+        function toggleKodDostepu() {
+            const rola = document.getElementById('reg-rola').value;
+            const group = document.getElementById('kod-dostepu-group');
+            group.style.display = rola === 'PRACOWNIK' ? 'block' : 'none';
+            if (rola !== 'PRACOWNIK') document.getElementById('reg-kod').value = '';
+        }
+
+        // Sprawdź czy już zalogowany → przekieruj
+        (async function () {
+            try {
+                const r = await fetch('/api/auth/me', { credentials: 'include' });
+                if (r.ok) window.location.replace('index.html');
+            } catch (e) {}
+        })();
+
+        // ===== ZAKŁADKI =====
+        function switchTab(tab) {
+            const isReg = tab === 'register';
+            document.getElementById('tab-login').classList.toggle('active', !isReg);
+            document.getElementById('tab-register').classList.toggle('active', isReg);
+            document.getElementById('panel-login').classList.toggle('active', !isReg);
+            document.getElementById('panel-register').classList.toggle('active', isReg);
+            ['err-login','err-register','ok-register'].forEach(id => document.getElementById(id).classList.remove('show'));
+        }
+
+        // ===== POMOCNICZE =====
+        function setLoading(btnId, spinId, textId, loading) {
+            document.getElementById(btnId).disabled = loading;
+            document.getElementById(spinId).style.display = loading ? 'block' : 'none';
+            document.getElementById(textId).style.display = loading ? 'none' : 'inline';
+        }
+
+        // ===== LOGOWANIE =====
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            const errDiv = document.getElementById('err-login');
+            errDiv.classList.remove('show');
+            setLoading('btn-login', 'spin-login', 'btn-login-text', true);
+            try {
+                const resp = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await resp.json();
+                if (resp.ok) {
+                    window.location.replace('index.html');
+                } else {
+                    document.getElementById('err-login-text').textContent = data.komunikat || 'Nieprawidłowe dane logowania.';
+                    errDiv.classList.add('show');
+                }
+            } catch (err) {
+                document.getElementById('err-login-text').textContent = 'Błąd połączenia z serwerem.';
+                errDiv.classList.add('show');
+            } finally {
+                setLoading('btn-login', 'spin-login', 'btn-login-text', false);
+            }
+        }
+
+        // ===== REJESTRACJA =====
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const password2 = document.getElementById('reg-password2').value;
+            const rola = document.getElementById('reg-rola').value;
+            const kod = document.getElementById('reg-kod').value;
+            const errDiv = document.getElementById('err-register');
+            const okDiv = document.getElementById('ok-register');
+            errDiv.classList.remove('show');
+            okDiv.classList.remove('show');
+
+            if (password !== password2) {
+                document.getElementById('err-register-text').textContent = 'Hasła nie są identyczne.';
+                errDiv.classList.add('show');
+                return;
+            }
+
+            if (rola === 'PRACOWNIK' && kod !== 'praca') {
+                document.getElementById('err-register-text').textContent = 'Nieprawidłowy kod dostępu pracownika.';
+                errDiv.classList.add('show');
+                return;
+            }
+
+            setLoading('btn-register', 'spin-register', 'btn-register-text', true);
+            try {
+                const resp = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password, rola, kodDostepu: kod })
+                });
+                const data = await resp.json();
+                if (resp.status === 201 || resp.ok) {
+                    document.getElementById('ok-register-text').textContent = `Konto "${username}" utworzone! Możesz się zalogować.`;
+                    okDiv.classList.add('show');
+                    // Auto-przełącz na logowanie po 1.8s
+                    setTimeout(() => {
+                        switchTab('login');
+                        document.getElementById('login-username').value = username;
+                        document.getElementById('login-password').focus();
+                    }, 1800);
+                } else {
+                    document.getElementById('err-register-text').textContent = data.komunikat || 'Błąd rejestracji.';
+                    errDiv.classList.add('show');
+                }
+            } catch (err) {
+                document.getElementById('err-register-text').textContent = 'Błąd połączenia z serwerem.';
+                errDiv.classList.add('show');
+            } finally {
+                setLoading('btn-register', 'spin-register', 'btn-register-text', false);
+            }
+        }
+    </script>
+</body>
+
+</html>

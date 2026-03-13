@@ -1,11 +1,4 @@
 services:
-  site:
-    image: ghcr.io/wiktorszelag/pbutune-web:latest
-    container_name: pbutune_site
-    ports:
-      - "8090:80"
-    restart: always
-
   fryzjer-app:
     image: ghcr.io/wiktorszelag/fryzjer-backend:latest
     container_name: fryzjer_app

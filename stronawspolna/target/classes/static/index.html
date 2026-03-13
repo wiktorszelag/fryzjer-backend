@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Główny - Kalendarz</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+</head>
+<body>
+
+<nav>
+    <b>Start</b>
+    <a href="uslugi.html">Usługi</a>
+    <a href="fryzjerzy.html">Fryzjerzy</a>
+    <a href="klienci.html">Klienci</a>
+    <a href="wizyty.html">Wizyty</a>
+    <span id="nav-username" style="color:#ffc107; margin: 0 15px; font-size:15px;"></span>
+    <a href="#" onclick="wyloguj()" style="color:#ff6b6b;">&#128274; Wyloguj</a>
+</nav>
+
+<div class="container" style="max-width: 1200px;"> <h1>Kalendarz Wizyt</h1>
+
+    <div style="margin-bottom: 15px;">
+        <label for="fryzjerFilter">Filtruj wg fryzjera:</label>
+        <select id="fryzjerFilter" style="max-width: 300px; display: inline-block;">
+            <option value="all">Wszyscy</option>
+        </select>
+    </div>
+
+    <div id='calendar'></div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/index.js"></script>
+<script>sprawdzSesje();</script>
+</body>
+</html>

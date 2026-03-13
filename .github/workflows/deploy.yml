@@ -6,7 +6,7 @@ on:
 
 jobs:
   build_and_push:
-    name: Build Docker Image
+    name: Build Docker Images
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,12 +22,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push
+      - name: Build and Push Web (Frontend)
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ghcr.io/wiktorszelag/pbutune-web:latest
+
+      - name: Build and Push Fryzjer Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./stronawspolna
+          file: ./stronawspolna/Dockerfile
+          push: true
+          tags: ghcr.io/wiktorszelag/fryzjer-backend:latest
 
   deploy:
     name: Deploy to Server
@@ -57,9 +65,9 @@ jobs:
             cd /home/${{ secrets.SSH_USERNAME }}
             
             # Stop and remove potential conflicting containers
-            sudo docker rm -f fryzjer_app pbutune_site || true
+            sudo docker rm -f fryzjer_app pbutune_site fryzjer_db || true
             
-            # Pull new image and start
+            # Pull new images and start
             sudo docker compose pull
             sudo docker compose up -d --force-recreate --remove-orphans
             
