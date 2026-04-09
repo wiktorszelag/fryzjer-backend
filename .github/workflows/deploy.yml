@@ -1,12 +1,16 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 name: Deploy to Server
 =======
 name: Deploy to VPS
 >>>>>>> bade66d (4)
+=======
+name: Deploy Fryzjer (Build on Server)
+>>>>>>> 40a5e4d (4)
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]  # Upewnij się, że Twój branch to master (czasem jest to main)
 
 jobs:
 <<<<<<< HEAD
@@ -70,15 +74,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to VPS via SSH
+      - name: Connect to server and deploy
         uses: appleboy/ssh-action@master
 >>>>>>> bade66d (4)
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
+<<<<<<< HEAD
 <<<<<<< HEAD
             echo ${{ secrets.GHCR_TOKEN }} | sudo docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
             
@@ -95,3 +100,18 @@ jobs:
             git pull origin main
             docker-compose up -d --build
 >>>>>>> bade66d (4)
+=======
+            # 1. Wejdź do katalogu
+            cd /home/wiktor/fryzjer-backend
+            
+            # 2. Pobierz najnowszy kod (to, co robiłeś ręcznie)
+            git pull origin master
+            
+            # 3. Zbuduj i uruchom (to, co robiłeś ręcznie)
+            # Używamy pełnej ścieżki do dockera, żeby uniknąć błędów
+            docker-compose down
+            docker-compose up -d --build
+            
+            # 4. Posprzątaj śmieci po budowaniu (opcjonalnie)
+            docker system prune -f
+>>>>>>> 40a5e4d (4)
