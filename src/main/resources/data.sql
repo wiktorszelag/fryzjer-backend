@@ -1,6 +1,3 @@
-ALTER TABLE IF EXISTS uzytkownik DROP CONSTRAINT IF EXISTS uzytkownik_rola_check;
-ALTER TABLE IF EXISTS uzytkownik DROP CONSTRAINT IF EXISTS uzytkownik_rola_check1;
-
 INSERT INTO uzytkownik (username, password, rola) VALUES
 ('admin', 'admin123', 'ADMIN'),
 ('pracownik', 'pracownik', 'PRACOWNIK'),
