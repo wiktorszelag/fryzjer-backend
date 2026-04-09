@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punkt Cięcia - Zarejestruj się</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --primary: #d4af37;
+            --primary-dark: #b8860b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('background.png') no-repeat center center/cover;
+            color: #fff;
+            position: relative;
+        }
+
+        /* Overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 15, 0.7);
+            z-index: 0;
+        }
+
+        .register-wrapper {
+            position: relative;
+            z-index: 1;
+            background: rgba(20, 20, 25, 0.65);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 15px; left: 15px;
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        .register-wrapper h1 {
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, var(--primary), #fdfbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .register-wrapper p {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #ccc;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group select option {
+            background: #2a2a35;
+            color: #fff;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-register:hover {
+            background: linear-gradient(45deg, var(--primary), #fdfbfb);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #ff4c4c;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-message {
+            color: #4cff60;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-wrapper">
+        <a href="index.html" class="back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Powrót
+        </a>
+        
+        <h1>Dołącz do nas</h1>
+        <p>Stwórz konto, aby rezerwować wizyty</p>
+        
+        <div class="error-message" id="error-msg">Wystąpił błąd podczas rejestracji.</div>
+        <div class="success-message" id="success-msg">Zarejestrowano pomyślnie. Za chwilę nastąpi przekierowanie...</div>
+
+        <form id="register-form">
+            <div class="input-group">
+                <label for="username">Nazwa użytkownika</label>
+                <input type="text" id="username" name="username" required placeholder="np. janek123">
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Hasło</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+
+            <!-- Ukryte pole wyboru roli - dla potrzeb laboratorium, tworzymy domyślnie Klienta -->
+            <input type="hidden" id="rola" name="rola" value="KLIENT">
+
+            <button type="submit" class="btn-register">Zarejestruj się</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rola = document.getElementById('rola').value;
+            
+            const errorMsg = document.getElementById('error-msg');
+            const successMsg = document.getElementById('success-msg');
+            const btnSubmit = document.querySelector('.btn-register');
+            
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            btnSubmit.disabled = true;
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, rola, kodDostepu: "" })
+                });
+
+                if (response.ok) {
+                    successMsg.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    errorMsg.style.display = 'block';
+                    errorMsg.textContent = 'Błąd rejestracji. Użytkownik prawdopodobnie już istnieje.';
+                    btnSubmit.disabled = false;
+                }
+            } catch (error) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Błąd połączenia z serwerem.';
+                btnSubmit.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
