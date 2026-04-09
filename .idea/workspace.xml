@@ -5,59 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="992382e4-c6eb-4b18-aaaf-9ac54513f3de" name="Changes" comment="sttyle">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/FryzjerApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/OpenApiConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/FryzjerController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/FryzjerUslugaController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/KlientController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/SzczegolyWizytyController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/UslugaController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/WizytaController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/FryzjerDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/FryzjerUslugaDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/KlientDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/SzczegolyWizytyDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/UslugaDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/WizytaDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Fryzjer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/FryzjerUsluga.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Klient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/SzczegolyWizyty.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Usluga.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Wizyta.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/FryzjerRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/FryzjerUslugaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/KlientRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/SzczegolyWizytyRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/UslugaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/WizytaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/FryzjerService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/FryzjerUslugaService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/KlientService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/SzczegolyWizytyService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/UslugaService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/WizytaService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/fryzjerzy.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/klienci.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/rezerwacja.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/uslugi.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/wizyty.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Fryzjer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Fryzjer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/FryzjerUsluga.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/FryzjerUsluga.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Klient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Klient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/SzczegolyWizyty.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/SzczegolyWizyty.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Usluga.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Usluga.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Wizyta.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Wizyta.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerUslugaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerUslugaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/KlientService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/KlientService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/SzczegolyWizytyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/SzczegolyWizytyService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/UslugaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/UslugaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/WizytaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/WizytaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Rebasing master",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/wikto/Desktop/Stronapbutune/tuwysylamy"
   }
