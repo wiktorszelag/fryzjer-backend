@@ -183,8 +183,8 @@
                 if (response.ok) {
                     const data = await response.json();
                     alert(`Zalogowano pomyślnie jako: ${data.rola}`);
-                    // Redirect to a dashboard or Swagger
-                    window.location.href = '/swagger-ui/index.html';
+                    // Redirect to the management panel
+                    window.location.href = 'panel.html';
                 } else {
                     errorMsg.style.display = 'block';
                     errorMsg.textContent = 'Błędne dane logowania. Spróbuj ponownie.';

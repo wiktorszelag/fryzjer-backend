@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Zarządzania - Punkt Cięcia</title>
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --primary: #d4af37;
+            --bg-dark: #0f0f12;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-dark);
+            color: #fff;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(0, 0, 0, 0.3);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #ccc;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--glass);
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--glass);
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        select {
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        select option {
+            background: #1a1a1f;
+        }
+
+        .calendar-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* FullCalendar Customization */
+        .fc {
+            --fc-border-color: rgba(255,255,255,0.1);
+            --fc-button-bg-color: transparent;
+            --fc-button-border-color: var(--primary);
+            --fc-button-hover-bg-color: rgba(212, 175, 55, 0.1);
+            --fc-button-active-bg-color: var(--primary);
+            --fc-today-bg-color: rgba(212, 175, 55, 0.05);
+        }
+
+        .fc-toolbar-title {
+            font-size: 1.2rem !important;
+            font-weight: 600;
+        }
+
+        .fc .fc-button-primary:not(:disabled).fc-button-active, 
+        .fc .fc-button-primary:not(:disabled):active {
+            color: #000;
+        }
+
+        .fc-event {
+            cursor: pointer;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>PUNKT CIĘCIA</h2>
+        <a href="panel.html" class="nav-item active">📅 Terminarz</a>
+        <a href="uslugi.html" class="nav-item">✂️ Usługi</a>
+        <a href="fryzjerzy.html" class="nav-item">💈 Fryzjerzy</a>
+        <a href="klienci.html" class="nav-item">👥 Klienci</a>
+        <a href="wizyty.html" class="nav-item">📝 Rezerwacje</a>
+        <div style="margin-top: auto;">
+            <a href="index.html" class="nav-item">🚪 Wyloguj</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Terminarz Wizyt</h1>
+            <div class="filter-group">
+                <span>Filtruj fryzjera:</span>
+                <select id="fryzjerFilter">
+                    <option value="all">Wszyscy pracownicy</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="calendar-card">
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pl.js'></script>
+    <script src="js/api.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
