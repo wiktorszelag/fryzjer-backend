@@ -15,17 +15,17 @@ public class SzczegolyWizyty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "SzczegolyWizytyID")
+    @Column(name = "szczegoly_wizyty_id")
     private Integer szczegolyWizytyId;
 
     @ManyToOne
-    @JoinColumn(name = "WizytaID")
+    @JoinColumn(name = "wizyta_id")
     private Wizyta wizyta;
 
     @ManyToOne
-    @JoinColumn(name = "UslugaID")
+    @JoinColumn(name = "usluga_id")
     private Usluga usluga;
 
-    @Column(name = "CenaLacznaUslugi")
+    @Column(name = "cena_laczna_uslugi")
     private BigDecimal cenaLacznaUslugi;
 }

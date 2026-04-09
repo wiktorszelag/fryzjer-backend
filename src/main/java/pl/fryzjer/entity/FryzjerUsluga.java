@@ -15,17 +15,17 @@ public class FryzjerUsluga {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FryzjerUslugaID")
+    @Column(name = "fryzjer_usluga_id")
     private Integer fryzjerUslugaId;
 
     @ManyToOne
-    @JoinColumn(name = "FryzjerID")
+    @JoinColumn(name = "fryzjer_id")
     private Fryzjer fryzjer;
 
     @ManyToOne
-    @JoinColumn(name = "UslugaID")
+    @JoinColumn(name = "usluga_id")
     private Usluga usluga;
 
-    @Column(name = "CenaFryzjera")
+    @Column(name = "cena_fryzjera")
     private BigDecimal cenaFryzjera;
 }

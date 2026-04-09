@@ -24,6 +24,23 @@ mvn clean spring-boot:run
 
 Tabele i dane testowe utworzą się automatycznie!
 
+## Frontend
+
+Frontend aplikacji został zintegrowany z backendem i znajduje się w katalogu `src/main/resources/static`.
+Aplikacja wykorzystuje czysty HTML, CSS oraz JavaScript (Vanilla JS).
+
+### Struktura Frontend
+- **index.html**: Strona główna z kalendarzem wizyt (FullCalendar).
+- **uslugi.html**: Lista dostępnych usług z możliwością dodawania, edycji i usuwania.
+- **fryzjerzy.html**: Zarządzanie listą fryzjerów.
+- **klienci.html**: Baza klientów zakładu.
+- **wizyty.html**: Szczegółowy widok i zarządzanie wizytami.
+
+### Funkcjonalności
+- Kalendarz wizyt z możliwością filtrowania po fryzjerze.
+- Zarządzanie usługami, klientami i personelem (CRUD).
+- Responsywny interfejs użytkownika.
+
 ## Linki
 - Aplikacja: http://localhost:8080/
 - Swagger UI: http://localhost:8080/swagger-ui.html
