@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 INSERT INTO uzytkownik (username, password, rola) VALUES
 ('admin', 'admin', 'ADMIN'),
 ('pracownik', 'pracownik', 'PRACOWNIK'),
@@ -44,6 +45,11 @@ INSERT INTO szczegoly_wizyty (wizytaid, uslugaid, cena_laczna_uslugi) VALUES
 (3, 3, 184.50),
 (3, 4, 49.20);
 =======
+=======
+-- Czyścimy tabele przed wstawieniem danych (kolejność ważna ze względu na klucze obce)
+TRUNCATE TABLE SZCZEGOLY_WIZYTY, FRYZJER_USLUGA, WIZYTA, KLIENT, FRYZJER, USLUGA RESTART IDENTITY CASCADE;
+
+>>>>>>> a532424 (FrontV1.1)
 -- Fryzjerzy
 INSERT INTO FRYZJER (imie, nazwisko, telefon, specjalizacja, data_zatrudnienia) VALUES 
 ('Anna', 'Nowak', '111-222-333', 'Strzyżenie damskie', '2023-01-15'),
