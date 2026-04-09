@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 name: Deploy to Server
+=======
+name: Deploy to VPS
+>>>>>>> bade66d (4)
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
+<<<<<<< HEAD
   build_and_push:
     name: Build Docker Images
     runs-on: ubuntu-latest
@@ -61,11 +66,20 @@ jobs:
 
       - name: Connect to server and deploy
         uses: appleboy/ssh-action@v1.0.3
+=======
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@master
+>>>>>>> bade66d (4)
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
           script: |
+<<<<<<< HEAD
             echo ${{ secrets.GHCR_TOKEN }} | sudo docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
             
             cd /home/${{ secrets.SSH_USERNAME }}
@@ -76,3 +90,8 @@ jobs:
             sudo docker compose --env-file .env up -d --force-recreate --remove-orphans
             
             sudo docker image prune -f
+=======
+            cd ~/fryzjer-backend
+            git pull origin main
+            docker-compose up -d --build
+>>>>>>> bade66d (4)
