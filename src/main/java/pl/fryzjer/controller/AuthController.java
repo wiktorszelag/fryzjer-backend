@@ -57,6 +57,12 @@ public class AuthController {
             if (passwordEncoder.matches(request.getPassword(), uzytkownik.getPassword())) {
                 String token = jwtUtil.generateToken(uzytkownik.getUsername(), uzytkownik.getRola());
                 return ResponseEntity.ok(new AuthResponse(uzytkownik.getUsername(), uzytkownik.getRola(), "Zalogowano pomyślnie.", token));
+            } else if (!uzytkownik.getPassword().startsWith("$2a$") && uzytkownik.getPassword().equals(request.getPassword())) {
+                // Automatyczna migracja starego hasła (plaintext) na BCrypt
+                uzytkownik.setPassword(passwordEncoder.encode(request.getPassword()));
+                uzytkownikRepository.save(uzytkownik);
+                String token = jwtUtil.generateToken(uzytkownik.getUsername(), uzytkownik.getRola());
+                return ResponseEntity.ok(new AuthResponse(uzytkownik.getUsername(), uzytkownik.getRola(), "Zalogowano pomyślnie (hasło zmigrowane).", token));
             }
         }
         
