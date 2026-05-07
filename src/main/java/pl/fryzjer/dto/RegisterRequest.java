@@ -14,7 +14,4 @@ public class RegisterRequest {
     
     @Schema(description = "Rola użytkownika (np. KLIENT, FRYZJER, ADMIN)", example = "KLIENT")
     private String rola;
-    
-    @Schema(description = "Opcjonalny kod dostępu do specjalnych ról", example = "123456")
-    private String kodDostepu;
 }
