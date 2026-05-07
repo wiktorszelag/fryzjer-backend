@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fryzjerzy - Zespół</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html">Start</a>
+        <a href="uslugi.html">Usługi</a>
+        <b>Fryzjerzy</b>
+        <a href="klienci.html">Klienci</a>
+        <a href="wizyty.html">Wizyty</a>
+    </nav>
+
+    <div class="container">
+        <h1>Zespół Fryzjerów</h1>
+
+        <div class="panel-dodawania">
+            <h3>Dodaj Fryzjera</h3>
+            <form id="form-fryzjer">
+                <label>Imię:</label>
+                <input type="text" id="imie" required placeholder="np. Adam">
+
+                <label>Nazwisko:</label>
+                <input type="text" id="nazwisko" required placeholder="np. Nowak">
+
+                <label>Telefon:</label>
+                <input type="text" id="telefon" required placeholder="np. 600-700-800">
+
+                <label>Data zatrudnienia:</label>
+                <input type="date" id="dataZatrudnienia" required>
+
+                <label>Główna Specjalizacja (wybierz z usług):</label>
+                <select id="specjalizacjaSelect" required>
+                    <option value="" disabled selected>-- Ładowanie usług... --</option>
+                </select>
+
+                <button type="submit">Zatrudnij Fryzjera</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <h3>Lista Pracowników</h3>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>Imię i Nazwisko</th>
+                    <th>Specjalizacja</th>
+                    <th>Telefon</th>
+                    <th>Zatrudniony od</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-fryzjerow">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/fryzjerzy.js"></script>
+</body>
+
+</html>

@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3c1e4f0-8743-47e0-8f84-bd60bf356696" name="Changes" comment="POPRAWKA" />
+    <list default="true" id="992382e4-c6eb-4b18-aaaf-9ac54513f3de" name="Changes" comment="sttyle">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Fryzjer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Fryzjer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/FryzjerUsluga.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/FryzjerUsluga.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Klient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Klient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/SzczegolyWizyty.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/SzczegolyWizyty.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Usluga.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Usluga.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Wizyta.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Wizyta.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerUslugaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerUslugaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/KlientService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/KlientService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/SzczegolyWizytyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/SzczegolyWizytyService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/UslugaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/UslugaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/WizytaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/WizytaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/style.css" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,6 +30,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -46,7 +65,7 @@
 }]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="b3c1e4f0-8743-47e0-8f84-bd60bf356696" name="Changes" comment="" />
+      <changelist id="992382e4-c6eb-4b18-aaaf-9ac54513f3de" name="Changes" comment="sttyle" />
       <created>1770924503064</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
