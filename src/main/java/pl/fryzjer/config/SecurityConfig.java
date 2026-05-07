@@ -53,6 +53,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/api/documents/sign", "/api/documents/verify").permitAll()
                 .requestMatchers("/api/auth/me").authenticated()
                 // Do testów i łatwego korzystania z frontendu, zostawiamy resztę otwartą (albo zabezpieczamy wybrane)
                 .anyRequest().permitAll() 

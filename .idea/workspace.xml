@@ -6,22 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="992382e4-c6eb-4b18-aaaf-9ac54513f3de" name="Changes" comment="sttyle">
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Fryzjer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Fryzjer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/FryzjerUsluga.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/FryzjerUsluga.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Klient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Klient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/SzczegolyWizyty.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/SzczegolyWizyty.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Usluga.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Usluga.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Wizyta.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Wizyta.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerUslugaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerUslugaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/KlientService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/KlientService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/SzczegolyWizytyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/SzczegolyWizytyService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/UslugaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/UslugaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/WizytaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/WizytaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,12 +22,12 @@
     &quot;assignee&quot;: &quot;wiktorszelag&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/wiktorszelag/fryzjer-backend.git&quot;,
-    &quot;accountId&quot;: &quot;6cf68f80-5333-4593-9705-c5d01f085d23&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/wiktorszelag/fryzjer-backend",
+    "accountId": "8004f5ff-839c-4037-949f-bf8314d9b1b2"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -60,7 +44,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/wikto/Desktop/Stronapbutune/tuwysylamy"
+    "last_opened_file_path": "E:/PROGRAMOWANIE/ANTIGRAVITY/FRYZ/fryzjer-backend"
   }
 }]]></component>
   <component name="TaskManager">
