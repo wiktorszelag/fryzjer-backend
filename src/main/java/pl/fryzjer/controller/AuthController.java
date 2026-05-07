@@ -9,6 +9,11 @@ import pl.fryzjer.dto.RegisterRequest;
 import pl.fryzjer.entity.Uzytkownik;
 import pl.fryzjer.repository.UzytkownikRepository;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import pl.fryzjer.config.JwtUtil;
+
 import java.util.Optional;
 
 @RestController
@@ -16,27 +21,31 @@ import java.util.Optional;
 public class AuthController {
 
     private final UzytkownikRepository uzytkownikRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(UzytkownikRepository uzytkownikRepository) {
+    public AuthController(UzytkownikRepository uzytkownikRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.uzytkownikRepository = uzytkownikRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         if (uzytkownikRepository.findByUsername(request.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AuthResponse(request.getUsername(), request.getRola(), "Użytkownik już istnieje."));
+                    .body(new AuthResponse(request.getUsername(), request.getRola(), "Użytkownik już istnieje.", null));
         }
 
         Uzytkownik uzytkownik = new Uzytkownik();
         uzytkownik.setUsername(request.getUsername());
-        uzytkownik.setPassword(request.getPassword()); // Wymagane hashowanie w produkcji!
+        uzytkownik.setPassword(passwordEncoder.encode(request.getPassword()));
         uzytkownik.setRola(request.getRola() != null ? request.getRola() : "KLIENT");
         
         uzytkownikRepository.save(uzytkownik);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new AuthResponse(uzytkownik.getUsername(), uzytkownik.getRola(), "Zarejestrowano pomyślnie."));
+                .body(new AuthResponse(uzytkownik.getUsername(), uzytkownik.getRola(), "Zarejestrowano pomyślnie.", null));
     }
 
     @PostMapping("/login")
@@ -45,9 +54,9 @@ public class AuthController {
 
         if (userOpt.isPresent()) {
             Uzytkownik uzytkownik = userOpt.get();
-            // Porównanie plaintextowe hasła - tylko do celów demonstracyjnych/lab
-            if (uzytkownik.getPassword().equals(request.getPassword())) {
-                return ResponseEntity.ok(new AuthResponse(uzytkownik.getUsername(), uzytkownik.getRola(), "Zalogowano pomyślnie."));
+            if (passwordEncoder.matches(request.getPassword(), uzytkownik.getPassword())) {
+                String token = jwtUtil.generateToken(uzytkownik.getUsername(), uzytkownik.getRola());
+                return ResponseEntity.ok(new AuthResponse(uzytkownik.getUsername(), uzytkownik.getRola(), "Zalogowano pomyślnie.", token));
             }
         }
         
@@ -61,7 +70,12 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<AuthResponse> me() {
-        // Mockowanie pobrania użytkownika z kontekstu Spring Security
-        return ResponseEntity.ok(new AuthResponse("aktualny_user", "KLIENT", "Pobrano dane."));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
+            String username = auth.getName();
+            String role = auth.getAuthorities().stream().findFirst().map(a -> a.getAuthority().replace("ROLE_", "")).orElse("KLIENT");
+            return ResponseEntity.ok(new AuthResponse(username, role, "Pobrano dane.", null));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
