@@ -462,9 +462,15 @@
                     body: formData
                 });
 
-                const data = await res.json();
+                let data;
+                const contentType = res.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    data = await res.json();
+                } else {
+                    throw new Error('Serwer zwrócił nieprawidłową odpowiedź (prawdopodobnie plik jest za duży). Kod: ' + res.status);
+                }
 
-                if (!res.ok) throw new Error(data.error || 'Błąd serwera');
+                if (!res.ok) throw new Error(data.error || data.message || 'Błąd serwera');
 
                 lastKey = data.key;
                 
