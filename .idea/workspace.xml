@@ -5,7 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="992382e4-c6eb-4b18-aaaf-9ac54513f3de" name="Changes" comment="sttyle">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/config/OpenApiConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/config/OpenApiConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/controller/AuthController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/controller/FryzjerUslugaController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/controller/SzczegolyWizytyController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/AuthResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/AuthResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/FryzjerDTO$FryzjerDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/FryzjerUslugaDTO$FryzjerUslugaDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/FryzjerUslugaDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/KlientDTO$KlientDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/RegisterRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/RegisterRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/SzczegolyWizytyDTO$SzczegolyWizytyDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/SzczegolyWizytyDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/UslugaDTO$UslugaDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/dto/WizytaDTO$WizytaDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Fryzjer$FryzjerBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/FryzjerUsluga$FryzjerUslugaBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/FryzjerUsluga.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Klient$KlientBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/SzczegolyWizyty$SzczegolyWizytyBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/SzczegolyWizyty.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Usluga$UslugaBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/entity/Wizyta$WizytaBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/repository/FryzjerUslugaRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/repository/SzczegolyWizytyRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/FryzjerUslugaService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/KlientService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/SzczegolyWizytyService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/UslugaService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/fryzjer/service/WizytaService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +56,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
-    "url": "https://github.com/wiktorszelag/fryzjer-backend",
-    "accountId": "8004f5ff-839c-4037-949f-bf8314d9b1b2"
+    "url": "https://github.com/wiktorszelag/fryzjer-backend.git",
+    "accountId": "6cf68f80-5333-4593-9705-c5d01f085d23"
   }
 }]]></component>
   <component name="ProjectColorInfo">{
@@ -43,10 +75,34 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/PROGRAMOWANIE/ANTIGRAVITY/FRYZ/fryzjer-backend"
+    "last_opened_file_path": "E:/PROGRAMOWANIE/ANTIGRAVITY/FRYZ/fryzjer-backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="FryzjerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="fryzjer-backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="pl.fryzjer.FryzjerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="992382e4-c6eb-4b18-aaaf-9ac54513f3de" name="Changes" comment="sttyle" />
@@ -54,6 +110,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770924503064</updated>
+      <workItem from="1778762338635" duration="320000" />
     </task>
     <task id="LOCAL-00001" summary="POPRAWKA">
       <option name="closed" value="true" />
@@ -105,6 +162,9 @@
     </task>
     <option name="localTasksCounter" value="7" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

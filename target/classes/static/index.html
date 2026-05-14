@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Fryzur - Logowanie</title>
+    <title>Punkt Cięcia - Salon Fryzjerski</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --primary: #d4af37;
+            --primary-dark: #b8860b;
+            --bg-dark: rgba(10, 10, 15, 0.85);
+            --glass-bg: rgba(20, 20, 25, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
 
         * {
             margin: 0;
@@ -15,178 +23,302 @@
         }
 
         body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: url('background.png') no-repeat center center/cover;
+            min-height: 100vh;
+            background: url('background.png') no-repeat center center fixed;
+            background-size: cover;
             color: #fff;
             position: relative;
         }
 
-        /* Overlay to make text readable against complex backgrounds */
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 10, 15, 0.7);
-            z-index: 0;
+            background: var(--bg-dark);
+            z-index: -1;
         }
 
-        .login-wrapper {
-            position: relative;
-            z-index: 1;
-            background: rgba(20, 20, 25, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 3rem;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        /* Navigation */
+        nav {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), #fdfbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-outline {
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-filled {
+            color: #000;
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+            border: none;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-filled:hover {
+            background: linear-gradient(45deg, var(--primary), #fdfbfb);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 5%;
             text-align: center;
-            animation: fadeIn 0.8s ease-out;
+            animation: fadeInDown 1s ease-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            line-height: 1.6;
+        }
+
+        /* Services Grid */
+        .services-container {
+            padding: 4rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .section-title::before, .section-title::after {
+            content: "";
+            height: 2px;
+            width: 50px;
+            background: var(--primary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .service-desc {
+            color: #aaa;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .service-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .service-time {
+            font-size: 0.9rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .service-price {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .loader {
+            text-align: center;
+            padding: 3rem;
+            color: var(--primary);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .login-wrapper h1 {
-            font-weight: 800;
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: 1px;
-            background: linear-gradient(45deg, #d4af37, #fdfbfb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        .login-wrapper p {
-            font-size: 0.9rem;
-            color: #b0b0b0;
-            margin-bottom: 2rem;
+        .animated-entry {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
         }
 
-        .input-group {
-            position: relative;
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-            color: #ccc;
-            letter-spacing: 0.5px;
-        }
-
-        .input-group input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 12px 15px;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            border-color: #d4af37;
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, #b8860b, #d4af37);
-            border: none;
-            border-radius: 8px;
-            color: #000;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        .btn-login:hover {
-            background: linear-gradient(45deg, #d4af37, #fdfbfb);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-        }
-
-        .btn-login:active {
-            transform: translateY(0);
-        }
-
-        .error-message {
-            color: #ff4c4c;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-            display: none;
-        }
     </style>
 </head>
 <body>
 
+    <nav>
+        <div class="logo">Punkt Cięcia</div>
+        <div class="nav-links">
+            <a href="login.html" class="btn btn-outline">Zaloguj się</a>
+            <a href="register.html" class="btn btn-filled">Zarejestruj</a>
+        </div>
+    </nav>
 
-    <div class="login-wrapper">
-        <h1>Studio Fryzur</h1>
-        <p>Zaloguj się do panelu zarządzania</p>
-        
-        <div class="error-message" id="error-msg">Nieprawidłowy login lub hasło.</div>
+    <div class="hero">
+        <h1>Odkryj Swój Nowy Styl</h1>
+        <p>Ekskluzywny salon fryzjerski, w którym pasja spotyka się z profesjonalizmem. Zarezerwuj wizytę u najlepszych stylistów w mieście.</p>
+        <a href="#cennik" class="btn btn-outline" style="padding: 15px 30px; font-size: 1.1rem;">Sprawdź Cennik</a>
+    </div>
 
-        <form id="login-form">
-            <div class="input-group">
-                <label for="username">Login użytkownika</label>
-                <input type="text" id="username" name="username" required placeholder="np. admin123">
-            </div>
-            
-            <div class="input-group">
-                <label for="password">Hasło</label>
-                <input type="password" id="password" name="password" required placeholder="••••••••">
-            </div>
-
-            <button type="submit" class="btn-login">Wejdź do systemu</button>
-        </form>
+    <div class="services-container" id="cennik">
+        <h2 class="section-title">Nasz Cennik</h2>
+        <div class="grid" id="services-grid">
+            <div class="loader">Trwa ładowanie cennika...</div>
+        </div>
     </div>
 
     <script>
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMsg = document.getElementById('error-msg');
-            
-            errorMsg.style.display = 'none'; // hide error initially
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('services-grid');
 
             try {
-                const response = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                const response = await fetch('/api/uslugi');
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const uslugi = await response.json();
+                
+                grid.innerHTML = ''; // wyczyszczenie loadera
+                
+                if(uslugi.length === 0) {
+                    grid.innerHTML = '<div class="loader">Brak usług w ofercie.</div>';
+                    return;
+                }
+
+                uslugi.forEach((usluga, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'service-card animated-entry';
+                    card.style.animationDelay = `${index * 0.1}s`;
+
+                    // Format ceny do 2 miejsc po przecinku
+                    const cena = usluga.cenaNetto ? Number(usluga.cenaNetto).toFixed(2) : "0.00";
+
+                    card.innerHTML = `
+                        <div>
+                            <h3 class="service-title">${usluga.nazwa}</h3>
+                            <p class="service-desc">${usluga.opis || 'Brak opisu dla tej usługi.'}</p>
+                        </div>
+                        <div class="service-meta">
+                            <span class="service-time">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                ${usluga.czasTrwaniaMin || 0} min
+                            </span>
+                            <span class="service-price">${cena} zł</span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    alert(`Zalogowano pomyślnie jako: ${data.rola}`);
-                    // Redirect to a dashboard or Swagger
-                    window.location.href = '/swagger-ui/index.html';
-                } else {
-                    errorMsg.style.display = 'block';
-                    errorMsg.textContent = 'Błędne dane logowania. Spróbuj ponownie.';
-                }
             } catch (error) {
-                errorMsg.style.display = 'block';
-                errorMsg.textContent = 'Błąd połączenia z serwerem.';
+                console.error("Failed to load services:", error);
+                grid.innerHTML = '<div class="loader" style="color: #ff4c4c;">Nie udało się pobrać cennika. Serwer jest niedostępny.</div>';
             }
         });
     </script>

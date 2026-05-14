@@ -50,6 +50,36 @@ public class CryptoDocumentService {
     }
 
     /**
+     * Podpisuje surowe bajty (np. zawartość pliku + nazwa pliku).
+     */
+    public String signBytes(byte[] data) {
+        try {
+            Signature signature = Signature.getInstance("SHA256withRSA");
+            signature.initSign(privateKey);
+            signature.update(data);
+            byte[] digitalSignatureBytes = signature.sign();
+            return Base64.getEncoder().encodeToString(digitalSignatureBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Nie udało się podpisać danych", e);
+        }
+    }
+
+    /**
+     * Weryfikuje podpis dla surowych bajtów.
+     */
+    public boolean verifyBytes(byte[] data, String base64Signature) {
+        try {
+            byte[] digitalSignatureBytes = Base64.getDecoder().decode(base64Signature);
+            Signature signature = Signature.getInstance("SHA256withRSA");
+            signature.initVerify(publicKey);
+            signature.update(data);
+            return signature.verify(digitalSignatureBytes);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
      * Weryfikuje integralność i autentyczność dokumentu.
      * Wylicza hash SHA-256 z tekstu i porównuje go z hashem odzyskanym z Podpisu (za pomocą Klucza Publicznego).
      */
