@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bezpieczeństwo Dokumentów - Punkt Cięcia</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --primary: #d4af37;
+            --primary-dark: #b8860b;
+            --bg-dark: #0f0f12;
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-hover: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #22c55e;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --text-muted: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: #fff;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: rgba(0,0,0,0.35);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .sidebar h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #ccc;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--glass-hover);
+            color: var(--primary);
+        }
+
+        /* ── Main Content ── */
+        .main-content {
+            flex: 1;
+            padding: 2.5rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* ── Info badges ── */
+        .badge-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+        }
+
+        .badge-gold  { background: rgba(212,175,55,0.12); color: var(--primary); border: 1px solid rgba(212,175,55,0.3); }
+        .badge-blue  { background: rgba(59,130,246,0.12); color: #60a5fa;        border: 1px solid rgba(59,130,246,0.3); }
+        .badge-green { background: rgba(34,197,94,0.12);  color: #4ade80;        border: 1px solid rgba(34,197,94,0.3);  }
+
+        /* ── Cards Grid ── */
+        .grid-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1100px) { .grid-two { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            transition: border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+        }
+
+        .card-sign::before  { background: linear-gradient(90deg, var(--primary-dark), var(--primary)); }
+        .card-verify::before { background: linear-gradient(90deg, var(--info), #818cf8); }
+
+        .card:hover { border-color: rgba(212,175,55,0.25); }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .icon-gold  { background: rgba(212,175,55,0.12); }
+        .icon-blue  { background: rgba(59,130,246,0.12); }
+
+        .card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* ── Form Elements ── */
+        label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #aaa;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            padding: 12px 14px;
+            resize: vertical;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            outline: none;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            border-color: rgba(212,175,55,0.5);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.08);
+        }
+
+        .form-group { margin-bottom: 1.2rem; }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.93rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #000;
+            box-shadow: 0 4px 14px rgba(212,175,55,0.25);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(212,175,55,0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-secondary {
+            background: rgba(59,130,246,0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59,130,246,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(59,130,246,0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+
+        .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* ── Result Box ── */
+        .result-box {
+            margin-top: 1.5rem;
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            font-size: 0.88rem;
+            display: none;
+            animation: fadeSlide 0.3s ease-out;
+        }
+
+        .result-box.success {
+            background: rgba(34,197,94,0.1);
+            border: 1px solid rgba(34,197,94,0.35);
+            color: #86efac;
+            display: block;
+        }
+
+        .result-box.error {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.35);
+            color: #fca5a5;
+            display: block;
+        }
+
+        .result-box.info {
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.35);
+            color: #93c5fd;
+            display: block;
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            margin-bottom: 6px;
+        }
+
+        .result-value {
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            background: rgba(0,0,0,0.25);
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-top: 6px;
+        }
+
+        .result-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .status-icon { font-size: 1.4rem; }
+
+        /* ── How it works section ── */
+        .how-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .how-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+        }
+
+        .step-num-gold { background: rgba(212,175,55,0.15); color: var(--primary); }
+        .step-num-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+        .step-title { font-size: 0.88rem; font-weight: 700; }
+        .step-desc  { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+        .divider {
+            width: 1px;
+            background: var(--border);
+            align-self: stretch;
+        }
+
+        /* ── Spinner ── */
+        .spinner {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(0,0,0,0.3);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin    { to { transform: rotate(360deg); } }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Loading state ── */
+        .btn.loading .spinner { display: inline-block; }
+        .btn.loading .btn-text { opacity: 0.7; }
+        .btn.loading { pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>PUNKT CIĘCIA</h2>
+        <a href="panel.html"       class="nav-item">📅 Terminarz</a>
+        <a href="uslugi.html"      class="nav-item">✂️ Usługi</a>
+        <a href="fryzjerzy.html"   class="nav-item">💈 Fryzjerzy</a>
+        <a href="klienci.html"     class="nav-item">👥 Klienci</a>
+        <a href="wizyty.html"      class="nav-item">📝 Rezerwacje</a>
+        <a href="bezpieczenstwo.html" class="nav-item active">🔐 Bezpieczeństwo</a>
+        <div style="margin-top: auto;">
+            <a href="index.html" class="nav-item">🚪 Wyloguj</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h1>🔐 Bezpieczeństwo Dokumentów</h1>
+            <p>Weryfikacja integralności i autentyczności dokumentów za pomocą podpisu cyfrowego SHA-256 + RSA</p>
+        </div>
+
+        <!-- Badges -->
+        <div class="badge-row">
+            <span class="badge badge-gold">🔑 RSA 2048-bit</span>
+            <span class="badge badge-blue">🔒 SHA-256 Hash</span>
+            <span class="badge badge-green">✅ Podpis Cyfrowy</span>
+        </div>
+
+        <!-- Two-column cards -->
+        <div class="grid-two">
+
+            <!-- SIGN CARD -->
+            <div class="card card-sign">
+                <div class="card-icon icon-gold">✍️</div>
+                <h2>Podpisz Dokument</h2>
+                <p class="card-subtitle">
+                    Wygeneruj cyfrowy podpis dla dokumentu.<br>
+                    Serwer oblicza hash SHA-256 i szyfruje go kluczem prywatnym RSA.
+                </p>
+
+                <div class="form-group">
+                    <label>Treść dokumentu</label>
+                    <textarea id="signContent" rows="6" placeholder="Wpisz lub wklej treść dokumentu do podpisania..."></textarea>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="signBtn" onclick="signDocument()">
+                        <span class="spinner" id="signSpinner"></span>
+                        <span class="btn-text">✍️ Podpisz dokument</span>
+                    </button>
+                    <button class="btn btn-ghost" onclick="clearSign()">Wyczyść</button>
+                </div>
+
+                <div class="result-box" id="signResult">
+                    <div class="result-label">📋 Podpis cyfrowy (Base64)</div>
+                    <div class="result-value" id="signatureValue"></div>
+                    <div class="btn-row" style="margin-top: 10px;">
+                        <button class="btn btn-ghost" onclick="copySignature()">📋 Kopiuj podpis</button>
+                        <button class="btn btn-ghost" onclick="sendToVerify()">➡️ Prześlij do weryfikacji</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VERIFY CARD -->
+            <div class="card card-verify">
+                <div class="card-icon icon-blue">🔍</div>
+                <h2>Weryfikuj Dokument</h2>
+                <p class="card-subtitle">
+                    Sprawdź integralność i autentyczność dokumentu.<br>
+                    Wykrywa modyfikację, podmianę lub nieautoryzowane źródło.
+                </p>
+
+                <div class="form-group">
+                    <label>Treść dokumentu do weryfikacji</label>
+                    <textarea id="verifyContent" rows="4" placeholder="Wklej treść dokumentu..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Podpis cyfrowy (Base64)</label>
+                    <textarea id="verifySignature" rows="3" placeholder="Wklej podpis cyfrowy..."></textarea>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn btn-secondary" id="verifyBtn" onclick="verifyDocument()">
+                        <span class="spinner" id="verifySpinner" style="border-top-color: #60a5fa;"></span>
+                        <span class="btn-text">🔍 Weryfikuj</span>
+                    </button>
+                    <button class="btn btn-ghost" onclick="clearVerify()">Wyczyść</button>
+                </div>
+
+                <div class="result-box" id="verifyResult">
+                    <div class="result-status">
+                        <span class="status-icon" id="verifyIcon"></span>
+                        <span id="verifyMessage"></span>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.8rem; color: inherit; opacity: 0.8;" id="verifyDetail"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- How it works -->
+        <div class="how-card">
+            <h3>⚙️ Jak to działa?</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num step-num-gold">1</div>
+                    <div class="step-title">Tworzenie hasha</div>
+                    <div class="step-desc">Algorytm SHA-256 wylicza unikalny 256-bitowy odcisk palca dokumentu. Nawet 1 zmieniony znak daje zupełnie inny hash.</div>
+                </div>
+                <div class="step">
+                    <div class="step-num step-num-gold">2</div>
+                    <div class="step-title">Podpisanie kluczem prywatnym</div>
+                    <div class="step-desc">Serwer szyfruje hash kluczem prywatnym RSA (2048-bit). Tylko serwer posiada ten klucz – gwarantuje autentyczność źródła.</div>
+                </div>
+                <div class="step">
+                    <div class="step-num step-num-blue">3</div>
+                    <div class="step-title">Weryfikacja kluczem publicznym</div>
+                    <div class="step-desc">Klucz publiczny odszyfrowuje podpis i ujawnia oryginał hasha. Nowy hash jest wyliczany z dokumentu i porównywany.</div>
+                </div>
+                <div class="step">
+                    <div class="step-num step-num-blue">4</div>
+                    <div class="step-title">Wykrywanie naruszeń</div>
+                    <div class="step-desc">Niezgodność hashów = modyfikacja lub podmiana dokumentu. Zły klucz = nieautoryzowane źródło. System wykrywa wszystkie 3 scenariusze.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let lastSignature = '';
+
+        // ── Helpers ──────────────────────────────────────────────────────────
+
+        function setLoading(btnId, spinnerId, on) {
+            const btn = document.getElementById(btnId);
+            const sp  = document.getElementById(spinnerId);
+            btn.classList.toggle('loading', on);
+            sp.style.display = on ? 'inline-block' : 'none';
+        }
+
+        function showResult(boxId, type, html) {
+            const box = document.getElementById(boxId);
+            box.className = 'result-box ' + type;
+            box.innerHTML = html;
+            box.style.display = 'block';
+        }
+
+        // ── Sign ─────────────────────────────────────────────────────────────
+
+        async function signDocument() {
+            const content = document.getElementById('signContent').value.trim();
+            if (!content) { alert('Wpisz treść dokumentu przed podpisaniem.'); return; }
+
+            setLoading('signBtn', 'signSpinner', true);
+
+            try {
+                const res = await fetch('/api/documents/sign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ documentContent: content })
+                });
+
+                if (!res.ok) throw new Error('Błąd serwera: ' + res.status);
+
+                const data = await res.json();
+                lastSignature = data.signature;
+
+                showResult('signResult', 'info', `
+                    <div class="result-label">📋 Podpis cyfrowy (Base64 / SHA256withRSA)</div>
+                    <div class="result-value" id="signatureValue">${lastSignature}</div>
+                    <div class="btn-row" style="margin-top:10px;">
+                        <button class="btn btn-ghost" onclick="copySignature()">📋 Kopiuj podpis</button>
+                        <button class="btn btn-ghost" onclick="sendToVerify()">➡️ Prześlij do weryfikacji</button>
+                    </div>
+                `);
+
+            } catch (err) {
+                showResult('signResult', 'error', `
+                    <div class="result-label">❌ Błąd</div>
+                    <div style="margin-top:4px;">${err.message}</div>
+                `);
+            } finally {
+                setLoading('signBtn', 'signSpinner', false);
+            }
+        }
+
+        // ── Verify ───────────────────────────────────────────────────────────
+
+        async function verifyDocument() {
+            const content   = document.getElementById('verifyContent').value.trim();
+            const signature = document.getElementById('verifySignature').value.trim();
+
+            if (!content)   { alert('Wpisz treść dokumentu do weryfikacji.'); return; }
+            if (!signature) { alert('Wklej podpis cyfrowy.'); return; }
+
+            setLoading('verifyBtn', 'verifySpinner', true);
+
+            try {
+                const res = await fetch('/api/documents/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ documentContent: content, signature: signature })
+                });
+
+                if (!res.ok) throw new Error('Błąd serwera: ' + res.status);
+
+                const data = await res.json();
+
+                if (data.valid) {
+                    showResult('verifyResult', 'success', `
+                        <div class="result-status">
+                            <span class="status-icon">✅</span>
+                            <span>Dokument AUTENTYCZNY i NIENARUSZONY</span>
+                        </div>
+                        <div style="margin-top:10px; font-size:0.82rem; opacity:0.85;">
+                            Hash SHA-256 zgodny z podpisem • Źródło zweryfikowane kluczem publicznym serwera
+                        </div>
+                    `);
+                } else {
+                    showResult('verifyResult', 'error', `
+                        <div class="result-status">
+                            <span class="status-icon">🚫</span>
+                            <span>Weryfikacja NIEUDANA</span>
+                        </div>
+                        <div style="margin-top:12px; font-size:0.82rem; line-height:1.7; opacity:0.9;">
+                            Możliwe przyczyny:<br>
+                            🔸 <strong>Modyfikacja pliku</strong> — treść dokumentu została zmieniona<br>
+                            🔸 <strong>Podmiana dokumentu</strong> — podpis pochodzi od innego dokumentu<br>
+                            🔸 <strong>Nieautoryzowane źródło</strong> — podpis nie pochodzi z tego serwera
+                        </div>
+                    `);
+                }
+
+            } catch (err) {
+                showResult('verifyResult', 'error', `
+                    <div class="result-label">❌ Błąd połączenia</div>
+                    <div style="margin-top:4px;">${err.message}</div>
+                `);
+            } finally {
+                setLoading('verifyBtn', 'verifySpinner', false);
+            }
+        }
+
+        // ── Utils ─────────────────────────────────────────────────────────────
+
+        function copySignature() {
+            if (!lastSignature) return;
+            navigator.clipboard.writeText(lastSignature).then(() => {
+                const btn = event.target;
+                const orig = btn.textContent;
+                btn.textContent = '✅ Skopiowano!';
+                setTimeout(() => btn.textContent = orig, 1800);
+            });
+        }
+
+        function sendToVerify() {
+            const content = document.getElementById('signContent').value.trim();
+            document.getElementById('verifyContent').value   = content;
+            document.getElementById('verifySignature').value = lastSignature;
+            document.getElementById('verifyContent').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearSign() {
+            document.getElementById('signContent').value = '';
+            document.getElementById('signResult').style.display = 'none';
+            lastSignature = '';
+        }
+
+        function clearVerify() {
+            document.getElementById('verifyContent').value   = '';
+            document.getElementById('verifySignature').value = '';
+            document.getElementById('verifyResult').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
