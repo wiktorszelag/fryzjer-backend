@@ -1,3 +1,6 @@
+ALTER TABLE uzytkownik ADD COLUMN IF NOT EXISTS email VARCHAR(255);
+ALTER TABLE uzytkownik ADD COLUMN IF NOT EXISTS telefon VARCHAR(255);
+
 INSERT INTO uzytkownik (username, password, rola) VALUES
 ('admin', 'admin123', 'ADMIN'),
 ('pracownik', 'pracownik', 'PRACOWNIK'),
