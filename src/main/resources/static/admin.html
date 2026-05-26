@@ -160,6 +160,12 @@
             
             <h3 style="margin-top: 20px;">Dodaj nowego pracownika</h3>
             <div style="display:flex; gap:10px; margin-top: 10px; flex-wrap:wrap; align-items: center;">
+                
+                <!-- NOWE: Wybór użytkownika z rolą PRACOWNIK -->
+                <select id="newUserSelect" style="width: 200px;" onchange="autoFillEmployee()">
+                    <option value="">-- Wybierz konto (PRACOWNIK) --</option>
+                </select>
+
                 <input type="text" id="newImie" placeholder="Imię" style="width: 150px;">
                 <input type="text" id="newNazwisko" placeholder="Nazwisko" style="width: 150px;">
                 
@@ -186,6 +192,8 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pl.js'></script>
     <script>
         const DEFAULT_SPECS = ["Strzyżenie Męskie", "Strzyżenie Damskie", "Koloryzacja", "Modelowanie", "Pielęgnacja Brody", "Trwała"];
+        let globalUsers = [];
+
         async function loadUsers() {
             const token = localStorage.getItem('token');
             const res = await fetch('/api/admin/users', {
@@ -193,10 +201,11 @@
                 credentials: 'include'
             });
             if (!res.ok) {
-                // Silently ignore or just return if not authorized
+                alert("BŁĄD 403: Serwer odrzucił dostęp. Upewnij się, że ZRESTARTOWAŁEŚ serwer Javy i ZALOGOWAŁEŚ SIĘ PONOWNIE!");
                 return;
             }
             const users = await res.json();
+            globalUsers = users;
             const tbody = document.querySelector('#usersTable tbody');
             tbody.innerHTML = '';
             users.forEach(u => {
@@ -216,6 +225,25 @@
                     </td>`;
                 tbody.appendChild(tr);
             });
+            updatePracownicyDropdown();
+        }
+
+        function updatePracownicyDropdown() {
+            const select = document.getElementById('newUserSelect');
+            select.innerHTML = '<option value="">-- Wybierz konto (PRACOWNIK) --</option>';
+            globalUsers.filter(u => u.rola === 'PRACOWNIK').forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u.username;
+                opt.innerText = u.username + (u.email ? ` (${u.email})` : '');
+                select.appendChild(opt);
+            });
+        }
+
+        function autoFillEmployee() {
+            const val = document.getElementById('newUserSelect').value;
+            if(val) {
+                document.getElementById('newImie').value = val;
+            }
         }
 
         async function deleteUser(id) {
