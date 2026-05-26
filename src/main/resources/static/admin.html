@@ -151,7 +151,7 @@
                 credentials: 'include'
             });
             if (!res.ok) {
-                if (res.status === 401 || res.status === 403) alert("Brak dostępu lub sesja wygasła.");
+                // Silently ignore or just return if not authorized
                 return;
             }
             const users = await res.json();
@@ -180,7 +180,6 @@
                 method: 'PUT', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({rola})
             });
-            alert('Rola zmieniona');
             loadUsers();
         }
 
@@ -210,7 +209,6 @@
                 method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({imie, nazwisko, specjalizacja: spec})
             });
-            alert('Pracownik dodany');
             loadFryzjerzy();
         }
 

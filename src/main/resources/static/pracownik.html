@@ -134,7 +134,9 @@
                 method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({imieKlientaZUlicy: imie, dataGodzinaRozpoczecia: czas, czasTrwaniaCalkowity: parseInt(duration)})
             });
-            alert('Dodano');
+            // Opcjonalnie wyczyść pola
+            document.getElementById('wName').value = '';
+            document.getElementById('wTime').value = '';
         }
 
         async function addUrlop() {
@@ -146,7 +148,9 @@
                 method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({fryzjerId: 1, dataOd: od, dataDo: doD})
             });
-            alert('Urlop zapisany');
+            // Opcjonalnie wyczyść daty
+            document.getElementById('uOd').value = '';
+            document.getElementById('uDo').value = '';
         }
 
         async function logout(e) {

@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/api/auth/me").authenticated()
-                .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "ADMINISTRATOR")
+                .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRATOR", "ADMIN", "ADMINISTRATOR")
                 // Do testów i łatwego korzystania z frontendu, zostawiamy resztę otwartą (albo zabezpieczamy wybrane)
                 .anyRequest().permitAll() 
             )
