@@ -63,4 +63,16 @@ public class AdminController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PutMapping("/fryzjerzy/{id}/specjalizacja")
+    public ResponseEntity<?> updateFryzjerSpecjalizacja(@PathVariable Long id, @RequestBody Fryzjer updateRequest) {
+        Optional<Fryzjer> fOpt = fryzjerRepository.findById(id);
+        if(fOpt.isPresent()) {
+            Fryzjer f = fOpt.get();
+            f.setSpecjalizacja(updateRequest.getSpecjalizacja());
+            fryzjerRepository.save(f);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

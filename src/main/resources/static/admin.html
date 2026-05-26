@@ -154,15 +154,19 @@
         <div class="card">
             <h2>Zarządzanie Pracownikami</h2>
             <table id="fryzjerzyTable">
-                <thead><tr><th>ID</th><th>Imię</th><th>Nazwisko</th><th>Specjalizacja</th></tr></thead>
+                <thead><tr><th>ID</th><th>Imię</th><th>Nazwisko</th><th>Zarządzaj Specjalizacją</th></tr></thead>
                 <tbody></tbody>
             </table>
             
             <h3 style="margin-top: 20px;">Dodaj nowego pracownika</h3>
-            <div style="display:flex; gap:10px; margin-top: 10px;">
-                <input type="text" id="newImie" placeholder="Imię">
-                <input type="text" id="newNazwisko" placeholder="Nazwisko">
-                <input type="text" id="newSpec" placeholder="Specjalizacja">
+            <div style="display:flex; gap:10px; margin-top: 10px; flex-wrap:wrap; align-items: center;">
+                <input type="text" id="newImie" placeholder="Imię" style="width: 150px;">
+                <input type="text" id="newNazwisko" placeholder="Nazwisko" style="width: 150px;">
+                
+                <div id="newSpecContainer" style="display:flex; gap:10px; flex-wrap:wrap; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; border: 1px solid var(--border);">
+                    <!-- Checkboxy generowane przez JS -->
+                </div>
+
                 <button onclick="addFryzjer()">Dodaj Pracownika</button>
             </div>
         </div>
@@ -181,6 +185,7 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pl.js'></script>
     <script>
+        const DEFAULT_SPECS = ["Strzyżenie Męskie", "Strzyżenie Damskie", "Koloryzacja", "Modelowanie", "Pielęgnacja Brody", "Trwała"];
         async function loadUsers() {
             const token = localStorage.getItem('token');
             const res = await fetch('/api/admin/users', {
@@ -248,7 +253,29 @@
             
             data.forEach(f => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${f.id}</td><td>${f.imie}</td><td>${f.nazwisko}</td><td>${f.specjalizacja}</td>`;
+                
+                // Generuj checkboxy dla każdego pracownika
+                const currentSpecs = f.specjalizacja ? f.specjalizacja.split(', ') : [];
+                let checkboxesHtml = DEFAULT_SPECS.map(spec => {
+                    const checked = currentSpecs.includes(spec) ? 'checked' : '';
+                    return `<label style="font-size:0.85rem; display:inline-block; margin-right:8px;">
+                                <input type="checkbox" class="edit-spec-cb-${f.id}" value="${spec}" ${checked}> ${spec}
+                            </label>`;
+                }).join('');
+
+                tr.innerHTML = `
+                    <td>${f.id}</td>
+                    <td>${f.imie}</td>
+                    <td>${f.nazwisko}</td>
+                    <td>
+                        <div style="display:flex; flex-direction:column; gap:5px;">
+                            <div style="display:flex; flex-wrap:wrap; gap:5px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 5px;">
+                                ${checkboxesHtml}
+                            </div>
+                            <button onclick="updateFryzjerSpec(${f.id})" style="align-self: flex-start; padding: 4px 10px; font-size: 0.8rem;">Zapisz Zmiany</button>
+                        </div>
+                    </td>
+                `;
                 tbody.appendChild(tr);
                 
                 const opt = document.createElement('option');
@@ -260,15 +287,46 @@
             loadSchedules();
         }
 
+        async function updateFryzjerSpec(id) {
+            const checkboxes = document.querySelectorAll(`.edit-spec-cb-${id}:checked`);
+            const selectedSpecs = Array.from(checkboxes).map(cb => cb.value).join(', ');
+            
+            const token = localStorage.getItem('token');
+            await fetch(`/api/admin/fryzjerzy/${id}/specjalizacja`, {
+                method: 'PUT', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+                credentials: 'include', body: JSON.stringify({ specjalizacja: selectedSpecs })
+            });
+            alert('Zaktualizowano specjalizację!');
+            loadFryzjerzy();
+        }
+
+        function renderNewSpecCheckboxes() {
+            const container = document.getElementById('newSpecContainer');
+            container.innerHTML = DEFAULT_SPECS.map(spec => 
+                `<label style="font-size:0.9rem; cursor:pointer;"><input type="checkbox" class="new-spec-cb" value="${spec}"> ${spec}</label>`
+            ).join('');
+        }
+
         async function addFryzjer() {
             const imie = document.getElementById('newImie').value;
             const nazwisko = document.getElementById('newNazwisko').value;
-            const spec = document.getElementById('newSpec').value;
+            
+            const checkboxes = document.querySelectorAll('.new-spec-cb:checked');
+            const spec = Array.from(checkboxes).map(cb => cb.value).join(', ');
+            
+            if(!imie || !nazwisko) return alert("Wpisz imię i nazwisko!");
+
             const token = localStorage.getItem('token');
             await fetch('/api/admin/fryzjerzy', {
                 method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({imie, nazwisko, specjalizacja: spec})
             });
+            
+            document.getElementById('newImie').value = '';
+            document.getElementById('newNazwisko').value = '';
+            // odznacz checkboxy
+            document.querySelectorAll('.new-spec-cb').forEach(cb => cb.checked = false);
+            
             loadFryzjerzy();
         }
 
@@ -371,7 +429,7 @@
             window.location.href = 'index.html';
         }
 
-        window.onload = () => { loadUsers(); loadFryzjerzy(); loadUslugi(); initCalendar(); };
+        window.onload = () => { renderNewSpecCheckboxes(); loadUsers(); loadFryzjerzy(); loadUslugi(); initCalendar(); };
     </script>
 </body>
 </html>
