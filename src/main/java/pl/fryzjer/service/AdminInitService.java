@@ -1,0 +1,61 @@
+package pl.fryzjer.service;
+
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import pl.fryzjer.entity.Uzytkownik;
+import pl.fryzjer.repository.UzytkownikRepository;
+
+@Service
+public class AdminInitService {
+
+    private final UzytkownikRepository uzytkownikRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public AdminInitService(UzytkownikRepository uzytkownikRepository, PasswordEncoder passwordEncoder) {
+        this.uzytkownikRepository = uzytkownikRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    /**
+     * Tworzy domyślne konto administratora przy starcie aplikacji,
+     * jeśli jeszcze nie istnieje. Login: admin, Hasło: admin123
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    public void initAdminAccount() {
+        if (uzytkownikRepository.findByUsername("admin").isEmpty()) {
+            Uzytkownik admin = new Uzytkownik();
+            admin.setUsername("admin");
+            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setRola("ADMINISTRATOR");
+            admin.setEmail("admin@punktciecia.pl");
+            admin.setTelefon("000000000");
+            
+            uzytkownikRepository.save(admin);
+            System.out.println(">>> Utworzono domyślne konto administratora: admin / admin123");
+        } else {
+            // Upewnij się, że stary admin ma zaktualizowaną rolę i pola, jeśli ich brakuje
+            Uzytkownik admin = uzytkownikRepository.findByUsername("admin").get();
+            boolean updated = false;
+            
+            if ("ADMIN".equals(admin.getRola())) {
+                admin.setRola("ADMINISTRATOR");
+                updated = true;
+            }
+            if (admin.getEmail() == null) {
+                admin.setEmail("admin@punktciecia.pl");
+                updated = true;
+            }
+            if (admin.getTelefon() == null) {
+                admin.setTelefon("000000000");
+                updated = true;
+            }
+            
+            if (updated) {
+                uzytkownikRepository.save(admin);
+                System.out.println(">>> Zaktualizowano istniejące konto administratora.");
+            }
+        }
+    }
+}
