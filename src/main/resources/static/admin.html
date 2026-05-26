@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administratora - Punkt Cięcia</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
@@ -100,6 +101,14 @@
             cursor: pointer;
             font-weight: bold;
         }
+        .fc {
+            --fc-border-color: rgba(255,255,255,0.1);
+            --fc-button-bg-color: transparent;
+            --fc-button-border-color: var(--primary);
+            --fc-button-hover-bg-color: rgba(212, 175, 55, 0.1);
+            --fc-button-active-bg-color: var(--primary);
+            --fc-today-bg-color: rgba(212, 175, 55, 0.05);
+        }
     </style>
 </head>
 <body>
@@ -121,9 +130,25 @@
         <div class="card">
             <h2>Zarządzanie Użytkownikami</h2>
             <table id="usersTable">
-                <thead><tr><th>ID</th><th>Login</th><th>E-mail</th><th>Telefon</th><th>Obecna Rola</th><th>Zmień Rolę</th></tr></thead>
+                <thead><tr><th>ID</th><th>Login</th><th>E-mail</th><th>Telefon</th><th>Obecna Rola</th><th>Zmień Rolę</th><th>Akcje</th></tr></thead>
                 <tbody></tbody>
             </table>
+        </div>
+
+        <div class="card">
+            <h2>Zarządzanie Usługami</h2>
+            <table id="uslugiTable">
+                <thead><tr><th>ID</th><th>Nazwa</th><th>Cena (netto)</th><th>Czas (min)</th><th>Akcje</th></tr></thead>
+                <tbody></tbody>
+            </table>
+            
+            <h3 style="margin-top: 20px;">Dodaj nową usługę</h3>
+            <div style="display:flex; gap:10px; margin-top: 10px;">
+                <input type="text" id="newUslugaNazwa" placeholder="Nazwa usługi">
+                <input type="number" id="newUslugaCena" placeholder="Cena netto">
+                <input type="number" id="newUslugaCzas" placeholder="Czas (min)">
+                <button onclick="addUsluga()">Dodaj Usługę</button>
+            </div>
         </div>
 
         <div class="card">
@@ -141,8 +166,20 @@
                 <button onclick="addFryzjer()">Dodaj Pracownika</button>
             </div>
         </div>
+        <div class="card">
+            <h2>Terminarz Pracy (Grafik)</h2>
+            <p style="color:#aaa; font-size: 0.9rem; margin-bottom: 15px;">Kliknij dzień, aby zaplanować pracę wybranemu fryzjerowi.</p>
+            <div style="margin-bottom: 15px;">
+                <select id="grafikFryzjerSelect">
+                    <option value="">-- Wybierz fryzjera --</option>
+                </select>
+            </div>
+            <div id="calendar"></div>
+        </div>
     </div>
 
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pl.js'></script>
     <script>
         async function loadUsers() {
             const token = localStorage.getItem('token');
@@ -168,9 +205,21 @@
                             <option value="PRACOWNIK">PRACOWNIK</option>
                             <option value="ADMINISTRATOR">ADMIN</option>
                         </select>
+                    </td>
+                    <td>
+                        <button onclick="deleteUser(${u.id})" style="background:#dc3545; color:white;">Usuń</button>
                     </td>`;
                 tbody.appendChild(tr);
             });
+        }
+
+        async function deleteUser(id) {
+            if (!confirm("Czy na pewno chcesz usunąć tego użytkownika?")) return;
+            const token = localStorage.getItem('token');
+            await fetch(`/api/admin/users/${id}`, {
+                method: 'DELETE', headers: {'Authorization': 'Bearer ' + token}, credentials: 'include'
+            });
+            loadUsers();
         }
 
         async function changeRole(id, rola) {
@@ -192,12 +241,23 @@
             if (!res.ok) return;
             const data = await res.json();
             const tbody = document.querySelector('#fryzjerzyTable tbody');
+            const grafikSelect = document.getElementById('grafikFryzjerSelect');
+            
             tbody.innerHTML = '';
+            grafikSelect.innerHTML = '<option value="">-- Wybierz fryzjera --</option>';
+            
             data.forEach(f => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td>${f.id}</td><td>${f.imie}</td><td>${f.nazwisko}</td><td>${f.specjalizacja}</td>`;
                 tbody.appendChild(tr);
+                
+                const opt = document.createElement('option');
+                opt.value = f.id;
+                opt.innerText = `${f.imie} ${f.nazwisko}`;
+                grafikSelect.appendChild(opt);
             });
+            
+            loadSchedules();
         }
 
         async function addFryzjer() {
@@ -212,6 +272,97 @@
             loadFryzjerzy();
         }
 
+        // USLUGI
+        async function loadUslugi() {
+            const res = await fetch('/api/uslugi');
+            if (!res.ok) return;
+            const data = await res.json();
+            const tbody = document.querySelector('#uslugiTable tbody');
+            tbody.innerHTML = '';
+            data.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${u.id}</td><td>${u.nazwa}</td><td>${u.cenaNetto} zł</td><td>${u.czasTrwaniaMin} min</td>
+                <td><button onclick="deleteUsluga(${u.id})" style="background:#dc3545; color:white;">Usuń</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function addUsluga() {
+            const nazwa = document.getElementById('newUslugaNazwa').value;
+            const cenaNetto = document.getElementById('newUslugaCena').value;
+            const czas = document.getElementById('newUslugaCzas').value;
+            if(!nazwa || !cenaNetto || !czas) return alert('Wypełnij wszystkie pola');
+            
+            const token = localStorage.getItem('token');
+            await fetch('/api/uslugi', {
+                method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+                body: JSON.stringify({nazwa, opis: nazwa, cenaNetto: parseFloat(cenaNetto), stawkaVat: 23.0, czasTrwaniaMin: parseInt(czas)})
+            });
+            
+            document.getElementById('newUslugaNazwa').value = '';
+            document.getElementById('newUslugaCena').value = '';
+            document.getElementById('newUslugaCzas').value = '';
+            loadUslugi();
+        }
+
+        async function deleteUsluga(id) {
+            if (!confirm("Na pewno usunąć usługę?")) return;
+            const token = localStorage.getItem('token');
+            await fetch(`/api/uslugi/${id}`, { method: 'DELETE', headers: {'Authorization': 'Bearer ' + token} });
+            loadUslugi();
+        }
+
+        // KALENDARZ HARMONOGRAMU
+        let calendar;
+        function initCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pl',
+                firstDay: 1,
+                headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
+                dateClick: async function(info) {
+                    const fryzjerId = document.getElementById('grafikFryzjerSelect').value;
+                    if (!fryzjerId) return alert('Najpierw wybierz fryzjera z listy powyżej!');
+                    
+                    const od = prompt("Godzina rozpoczęcia (np. 08:00)", "08:00");
+                    if (!od) return;
+                    const doG = prompt("Godzina zakończenia (np. 16:00)", "16:00");
+                    if (!doG) return;
+                    
+                    const token = localStorage.getItem('token');
+                    await fetch('/api/harmonogram', {
+                        method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+                        body: JSON.stringify({ fryzjerId: parseInt(fryzjerId), data: info.dateStr, godzinaOd: od + ':00', godzinaDo: doG + ':00' })
+                    });
+                    loadSchedules();
+                }
+            });
+            calendar.render();
+        }
+
+        async function loadSchedules() {
+            const fryzjerId = document.getElementById('grafikFryzjerSelect').value;
+            calendar.removeAllEvents();
+            if (!fryzjerId) return;
+
+            const res = await fetch(`/api/harmonogram/fryzjer/${fryzjerId}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            
+            const events = data.map(h => ({
+                id: h.id,
+                title: `${h.godzinaOd.substring(0,5)} - ${h.godzinaDo.substring(0,5)}`,
+                start: h.data,
+                allDay: true,
+                backgroundColor: '#28a745',
+                borderColor: '#28a745'
+            }));
+            calendar.addEventSource(events);
+        }
+
+        document.getElementById('grafikFryzjerSelect').addEventListener('change', loadSchedules);
+
         async function logout(e) {
             e.preventDefault();
             const token = localStorage.getItem('token');
@@ -220,7 +371,7 @@
             window.location.href = 'index.html';
         }
 
-        window.onload = () => { loadUsers(); loadFryzjerzy(); };
+        window.onload = () => { loadUsers(); loadFryzjerzy(); loadUslugi(); initCalendar(); };
     </script>
 </body>
 </html>

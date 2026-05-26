@@ -54,4 +54,13 @@ public class AdminController {
         Fryzjer saved = fryzjerRepository.save(fryzjer);
         return ResponseEntity.ok(saved);
     }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        if (uzytkownikRepository.existsById(id)) {
+            uzytkownikRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
