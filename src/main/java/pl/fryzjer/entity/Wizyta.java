@@ -30,4 +30,7 @@ public class Wizyta {
 
     @Column(name = "data_rezerwacji")
     private LocalDate dataRezerwacji;
+
+    @Column(name = "imie_klienta_z_ulicy")
+    private String imieKlientaZUlicy;
 }

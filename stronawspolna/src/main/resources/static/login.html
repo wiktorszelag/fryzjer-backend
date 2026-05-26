@@ -407,7 +407,15 @@
             if (res.ok) {
                 showMsg('loginMsg', data.komunikat || 'Zalogowano!', 'success');
                 document.getElementById('btnLogin').innerHTML = '✅ Zalogowano!';
-                setTimeout(() => { window.location.href = '/dashboard.html'; }, 800);
+                setTimeout(() => { 
+                    if (data.rola === 'ADMINISTRATOR' || data.rola === 'ADMIN') {
+                        window.location.href = '/admin.html';
+                    } else if (data.rola === 'PRACOWNIK') {
+                        window.location.href = '/pracownik.html';
+                    } else {
+                        window.location.href = '/dashboard.html'; 
+                    }
+                }, 800);
             } else {
                 showMsg('loginMsg', data.komunikat || 'Błąd logowania.', 'error');
                 document.getElementById('btnLogin').disabled = false;
@@ -480,7 +488,14 @@
         try {
             const res = await fetch(`${API}/me`, { credentials: 'include' });
             if (res.ok) {
-                window.location.href = '/dashboard.html';
+                const data = await res.json();
+                if (data.rola === 'ADMINISTRATOR' || data.rola === 'ADMIN') {
+                    window.location.href = '/admin.html';
+                } else if (data.rola === 'PRACOWNIK') {
+                    window.location.href = '/pracownik.html';
+                } else {
+                    window.location.href = '/dashboard.html';
+                }
             }
         } catch (_) { /* nie zalogowany – zostań na login */ }
     })();

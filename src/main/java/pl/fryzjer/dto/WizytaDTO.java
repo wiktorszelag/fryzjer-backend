@@ -12,4 +12,5 @@ public class WizytaDTO {
     private LocalDateTime dataGodzinaRozpoczecia;
     private Integer czasTrwaniaCalkowity;
     private List<Long> uslugiIds;
+    private String imieKlientaZUlicy;
 }

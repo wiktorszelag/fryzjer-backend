@@ -28,6 +28,7 @@ public class WizytaController {
         dto.setFryzjerId(w.getFryzjerId());
         dto.setDataGodzinaRozpoczecia(w.getDataGodzinaRozpoczecia());
         dto.setCzasTrwaniaCalkowity(w.getCzasTrwaniaCalkowity());
+        dto.setImieKlientaZUlicy(w.getImieKlientaZUlicy());
         // Upraszczamy zwrot same j wizyty dla labów
         return dto;
     }
@@ -48,6 +49,7 @@ public class WizytaController {
         wizyta.setDataGodzinaRozpoczecia(dto.getDataGodzinaRozpoczecia());
         wizyta.setCzasTrwaniaCalkowity(dto.getCzasTrwaniaCalkowity());
         wizyta.setDataRezerwacji(LocalDate.now());
+        wizyta.setImieKlientaZUlicy(dto.getImieKlientaZUlicy());
 
         wizyta = wizytaRepository.save(wizyta);
         dto.setId(wizyta.getId());
@@ -61,6 +63,7 @@ public class WizytaController {
             wizyta.setFryzjerId(dto.getFryzjerId());
             wizyta.setDataGodzinaRozpoczecia(dto.getDataGodzinaRozpoczecia());
             wizyta.setCzasTrwaniaCalkowity(dto.getCzasTrwaniaCalkowity());
+            wizyta.setImieKlientaZUlicy(dto.getImieKlientaZUlicy());
             
             wizytaRepository.save(wizyta);
             dto.setId(wizyta.getId());
