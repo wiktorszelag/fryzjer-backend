@@ -7,10 +7,10 @@ INSERT INTO uzytkownik (username, password, rola) VALUES
 ('klient', 'klient', 'KLIENT')
 ON CONFLICT (username) DO NOTHING;
 
-INSERT INTO klient (imie, nazwisko, telefon, data_rejestracji) VALUES
-('Jan', 'Kowalski', '123456789', '2024-01-15'),
-('Anna', 'Nowak', '987654321', '2024-02-20'),
-('Piotr', 'Wiśniewski', '555666777', '2024-03-10');
+INSERT INTO klient (imie, nazwisko, telefon, data_rejestracji, username) VALUES
+('Jan', 'Kowalski', '123456789', '2024-01-15', 'klient'),
+('Anna', 'Nowak', '987654321', '2024-02-20', null),
+('Piotr', 'Wiśniewski', '555666777', '2024-03-10', null);
 
 INSERT INTO fryzjer (imie, nazwisko, telefon, specjalizacja, data_zatrudnienia) VALUES
 ('Marta', 'Kaczmarek', '111222333', 'Koloryzacja', '2020-06-01'),

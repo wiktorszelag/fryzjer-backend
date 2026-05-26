@@ -7,6 +7,10 @@ import pl.fryzjer.repository.UrlopRepository;
 
 import java.util.List;
 
+// Kontroler zarządzania urlopami fryzjerów
+// - planowanie urlopów dla pracowników
+// - sprawdzanie aktywnych urlopów
+
 @RestController
 @RequestMapping("/api/urlopy")
 public class UrlopController {

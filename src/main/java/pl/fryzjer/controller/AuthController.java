@@ -16,16 +16,28 @@ import pl.fryzjer.config.JwtUtil;
 
 import java.util.Optional;
 
+import pl.fryzjer.entity.Klient;
+import pl.fryzjer.repository.KlientRepository;
+import java.time.LocalDate;
+
+// Kontroler uwierzytelniania i rejestracji
+// - logowanie użytkowników i weryfikacja haseł
+// - rejestracja kont użytkowników o roli KLIENT
+// - automatyczne tworzenie profilu klienta dla zarejestrowanego użytkownika
+// - pobieranie danych o zalogowanym użytkowniku
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final UzytkownikRepository uzytkownikRepository;
+    private final KlientRepository klientRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public AuthController(UzytkownikRepository uzytkownikRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthController(UzytkownikRepository uzytkownikRepository, KlientRepository klientRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.uzytkownikRepository = uzytkownikRepository;
+        this.klientRepository = klientRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
@@ -45,6 +57,16 @@ public class AuthController {
         uzytkownik.setTelefon(request.getTelefon());
         
         uzytkownikRepository.save(uzytkownik);
+
+        if ("KLIENT".equals(uzytkownik.getRola())) {
+            Klient klient = new Klient();
+            klient.setImie(uzytkownik.getUsername());
+            klient.setNazwisko("");
+            klient.setTelefon(uzytkownik.getTelefon());
+            klient.setUsername(uzytkownik.getUsername());
+            klient.setDataRejestracji(LocalDate.now());
+            klientRepository.save(klient);
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new AuthResponse(uzytkownik.getUsername(), uzytkownik.getRola(), "Zarejestrowano pomyślnie.", null));

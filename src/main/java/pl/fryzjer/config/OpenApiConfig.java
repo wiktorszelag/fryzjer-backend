@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+// Konfiguracja dokumentacji OpenAPI / Swagger
+// - definicja tytułu, wersji i opisu API
+
 @Configuration
 public class OpenApiConfig {
 

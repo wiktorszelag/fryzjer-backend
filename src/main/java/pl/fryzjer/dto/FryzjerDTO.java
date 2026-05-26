@@ -3,6 +3,9 @@ package pl.fryzjer.dto;
 import lombok.Data;
 import java.time.LocalDate;
 
+// Klasa DTO FryzjerDTO służąca do przesyłania danych
+// - enkapsulacja danych wejściowych i wyjściowych żądań API
+
 @Data
 public class FryzjerDTO {
     private Long id;

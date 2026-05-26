@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Klasa encji reprezentująca dane tabeli uzytkownik w bazie danych
+// - automatyczne mapowanie pól na kolumny bazodanowe
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

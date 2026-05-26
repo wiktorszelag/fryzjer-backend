@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Kontroler do zarządzania profilami klientów
+// - pobieranie listy klientów w salonie
+// - pobieranie profilu aktualnie zalogowanego klienta
+// - tworzenie i edycja danych klienta
+
 @RestController
 @RequestMapping("/api/klienci")
 public class KlientController {
@@ -69,5 +74,37 @@ public class KlientController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<KlientDTO> getMe(org.springframework.security.core.Authentication auth) {
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = auth.getName();
+        return klientRepository.findByUsername(username).map(k -> {
+            KlientDTO dto = new KlientDTO();
+            dto.setId(k.getId());
+            dto.setImie(k.getImie());
+            dto.setNazwisko(k.getNazwisko());
+            dto.setTelefon(k.getTelefon());
+            dto.setDataRejestracji(k.getDataRejestracji() != null ? k.getDataRejestracji().atStartOfDay() : null);
+            return ResponseEntity.ok(dto);
+        }).orElseGet(() -> {
+            Klient k = new Klient();
+            k.setImie(username);
+            k.setNazwisko("");
+            k.setUsername(username);
+            k.setDataRejestracji(java.time.LocalDate.now());
+            k = klientRepository.save(k);
+            
+            KlientDTO dto = new KlientDTO();
+            dto.setId(k.getId());
+            dto.setImie(k.getImie());
+            dto.setNazwisko(k.getNazwisko());
+            dto.setTelefon(k.getTelefon());
+            dto.setDataRejestracji(k.getDataRejestracji().atStartOfDay());
+            return ResponseEntity.ok(dto);
+        });
     }
 }

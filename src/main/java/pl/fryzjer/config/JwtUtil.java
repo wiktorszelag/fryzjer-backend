@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+// Narzędzie pomocnicze do obsługi tokenów JWT
+// - generowanie tokenów JWT dla zalogowanych użytkowników
+// - walidacja i dekodowanie danych z tokenów
+
 @Component
 public class JwtUtil {
 

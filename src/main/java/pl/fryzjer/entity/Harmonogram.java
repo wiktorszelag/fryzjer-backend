@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+// Klasa encji reprezentująca dane tabeli harmonogram w bazie danych
+// - automatyczne mapowanie pól na kolumny bazodanowe
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

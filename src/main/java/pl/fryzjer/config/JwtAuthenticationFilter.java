@@ -14,6 +14,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+// Filtr uwierzytelniający żądania API przy użyciu tokenów JWT
+// - odczytywanie nagłówka Authorization
+// - weryfikacja poprawności tokenu JWT
+// - ustawianie kontekstu bezpieczeństwa Spring Security
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

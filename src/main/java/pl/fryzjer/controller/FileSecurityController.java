@@ -26,6 +26,12 @@ import java.util.stream.Collectors;
  * Klucz jest powiązany zarówno z zawartością pliku, jak i z jego nazwą —
  * zmiana nazwy lub treści unieważnia klucz.
  */
+
+// Kontroler bezpieczeństwa dokumentów i podpisów cyfrowych
+// - podpisywanie plików certyfikatem cyfrowym
+// - weryfikacja podpisu cyfrowego plików
+// - walidacja certyfikatów i kluczy
+
 @RestController
 @RequestMapping("/api/files")
 public class FileSecurityController {

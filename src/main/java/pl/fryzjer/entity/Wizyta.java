@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 
+// Klasa encji reprezentująca dane tabeli wizyta w bazie danych
+// - automatyczne mapowanie pól na kolumny bazodanowe
+
 @Data
 @NoArgsConstructor
 @Entity

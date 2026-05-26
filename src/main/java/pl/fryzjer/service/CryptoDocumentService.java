@@ -5,6 +5,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.Base64;
 
+// Serwis odpowiedzialny za operacje kryptograficzne na plikach
+// - podpisywanie dokumentów kluczem prywatnym
+// - weryfikacja integralności i autorstwa plików
+
 @Service
 public class CryptoDocumentService {
 

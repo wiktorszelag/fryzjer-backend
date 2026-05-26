@@ -11,6 +11,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Kontroler do rezerwacji i zarządzania wizytami
+// - pobieranie wszystkich rezerwacji wizyt
+// - tworzenie nowej rezerwacji wizyty
+// - pobieranie historii rezerwacji zalogowanego klienta
+// - anulowanie zarezerwowanych wizyt
+
 @RestController
 @RequestMapping("/api/wizyty")
 public class WizytaController {

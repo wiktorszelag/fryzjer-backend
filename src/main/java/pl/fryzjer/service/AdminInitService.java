@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import pl.fryzjer.entity.Uzytkownik;
 import pl.fryzjer.repository.UzytkownikRepository;
 
+// Serwis inicjalizujący domyślne dane systemowe przy starcie
+// - tworzenie domyślnych kont użytkowników (admin, pracownik, klient)
+// - tworzenie przykładowych usług i fryzjerów
+
 @Service
 public class AdminInitService {
 

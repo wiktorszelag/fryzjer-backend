@@ -10,6 +10,12 @@ import pl.fryzjer.repository.FryzjerRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Kontroler do zarządzania danymi fryzjerów
+// - pobieranie listy wszystkich fryzjerów
+// - tworzenie profilu nowego fryzjera
+// - aktualizacja danych fryzjera i jego specjalizacji
+// - usuwanie fryzjera z bazy
+
 @RestController
 @RequestMapping("/api/fryzjerzy")
 public class FryzjerController {

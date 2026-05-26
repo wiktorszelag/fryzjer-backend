@@ -9,6 +9,11 @@ import pl.fryzjer.repository.HarmonogramRepository;
 import java.time.LocalDate;
 import java.util.List;
 
+// Kontroler harmonogramu pracy pracowników
+// - pobieranie grafiku pracy dla wybranego dnia
+// - dodawanie zmian godzinowych dla pracowników
+// - usuwanie wpisów z harmonogramu pracy
+
 @RestController
 @RequestMapping("/api/harmonogram")
 public class HarmonogramController {

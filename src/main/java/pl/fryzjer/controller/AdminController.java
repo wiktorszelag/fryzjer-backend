@@ -12,6 +12,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+// Kontroler administratora odpowiedzialny za akcje administracyjne
+// - pobieranie listy wszystkich użytkowników
+// - zmiana ról użytkowników w systemie
+// - usuwanie kont użytkowników
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {

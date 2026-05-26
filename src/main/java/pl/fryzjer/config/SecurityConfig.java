@@ -17,6 +17,11 @@ import org.springframework.security.config.Customizer;
 
 import java.util.List;
 
+// Konfiguracja zabezpieczeń sieciowych i dostępu Spring Security
+// - definiowanie reguł autoryzacji dla ścieżek URL
+// - konfiguracja CORS i wyłączenie CSRF
+// - rejestracja filtra JWT
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

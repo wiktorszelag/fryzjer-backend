@@ -20,7 +20,8 @@ CREATE TABLE klient (
     imie VARCHAR(100),
     nazwisko VARCHAR(100),
     telefon VARCHAR(20),
-    data_rejestracji DATE
+    data_rejestracji DATE,
+    username VARCHAR(100)
 );
 
 CREATE TABLE fryzjer (

@@ -6,6 +6,9 @@ import pl.fryzjer.entity.Uzytkownik;
 
 import java.util.Optional;
 
+// Interfejs repozytorium do obsługi zapytań bazodanowych dla Uzytkownik
+// - automatyczne zapytania CRUD za pomocą Spring Data JPA
+
 @Repository
 public interface UzytkownikRepository extends JpaRepository<Uzytkownik, Long> {
     Optional<Uzytkownik> findByUsername(String username);

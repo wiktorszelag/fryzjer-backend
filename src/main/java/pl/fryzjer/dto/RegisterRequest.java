@@ -3,6 +3,9 @@ package pl.fryzjer.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+// Klasa DTO RegisterRequest służąca do przesyłania danych
+// - enkapsulacja danych wejściowych i wyjściowych żądań API
+
 @Data
 public class RegisterRequest {
     

@@ -4,6 +4,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Klasa DTO WizytaDTO służąca do przesyłania danych
+// - enkapsulacja danych wejściowych i wyjściowych żądań API
+
 @Data
 public class WizytaDTO {
     private Long id;

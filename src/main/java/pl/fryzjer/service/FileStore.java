@@ -11,6 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * Przechowuje pliki w pamięci RAM (demonstrator technologii).
  * Klucz mapy = oryginalna nazwa pliku.
  */
+
+// Serwis do zapisywania i odczytywania plików certyfikatów z dysku
+// - odczyt kluczy prywatnych i publicznych
+// - zapis certyfikatów X.509
+
 @Component
 public class FileStore {
 
