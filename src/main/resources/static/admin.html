@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administratora - Punkt Cięcia</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --primary: #d4af37;
+            --bg-dark: #0f0f12;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-dark);
+            color: #fff;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(0, 0, 0, 0.3);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #ccc;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--glass);
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border-bottom: 1px solid var(--border); padding: 12px; text-align: left; }
+        th { color: var(--primary); font-weight: 600; }
+        select, input, button {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        button {
+            background: var(--primary);
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>PUNKT CIĘCIA</h2>
+        <a href="admin.html" class="nav-item active">👑 Panel Admina</a>
+        <a href="panel.html" class="nav-item">📅 Terminarz</a>
+        <div style="margin-top: auto;">
+            <a href="index.html" class="nav-item" onclick="logout(event)">🚪 Wyloguj</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Panel Administratora</h1>
+        </div>
+
+        <div class="card">
+            <h2>Zarządzanie Użytkownikami</h2>
+            <table id="usersTable">
+                <thead><tr><th>ID</th><th>Login</th><th>Obecna Rola</th><th>Zmień Rolę</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Zarządzanie Pracownikami</h2>
+            <table id="fryzjerzyTable">
+                <thead><tr><th>ID</th><th>Imię</th><th>Nazwisko</th><th>Specjalizacja</th></tr></thead>
+                <tbody></tbody>
+            </table>
+            
+            <h3 style="margin-top: 20px;">Dodaj nowego pracownika</h3>
+            <div style="display:flex; gap:10px; margin-top: 10px;">
+                <input type="text" id="newImie" placeholder="Imię">
+                <input type="text" id="newNazwisko" placeholder="Nazwisko">
+                <input type="text" id="newSpec" placeholder="Specjalizacja">
+                <button onclick="addFryzjer()">Dodaj Pracownika</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadUsers() {
+            const res = await fetch('/api/admin/users', {credentials: 'include'});
+            if (!res.ok) return;
+            const users = await res.json();
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = '';
+            users.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${u.id}</td><td>${u.username}</td><td>${u.rola}</td>
+                    <td>
+                        <select onchange="changeRole(${u.id}, this.value)">
+                            <option value="">Zmień...</option>
+                            <option value="KLIENT">KLIENT</option>
+                            <option value="PRACOWNIK">PRACOWNIK</option>
+                            <option value="ADMINISTRATOR">ADMIN</option>
+                        </select>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function changeRole(id, rola) {
+            if(!rola) return;
+            await fetch(`/api/admin/users/${id}/role`, {
+                method: 'PUT', headers: {'Content-Type': 'application/json'},
+                credentials: 'include', body: JSON.stringify({rola})
+            });
+            alert('Rola zmieniona');
+            loadUsers();
+        }
+
+        async function loadFryzjerzy() {
+            const res = await fetch('/api/admin/fryzjerzy', {credentials: 'include'});
+            if (!res.ok) return;
+            const data = await res.json();
+            const tbody = document.querySelector('#fryzjerzyTable tbody');
+            tbody.innerHTML = '';
+            data.forEach(f => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${f.id}</td><td>${f.imie}</td><td>${f.nazwisko}</td><td>${f.specjalizacja}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function addFryzjer() {
+            const imie = document.getElementById('newImie').value;
+            const nazwisko = document.getElementById('newNazwisko').value;
+            const spec = document.getElementById('newSpec').value;
+            await fetch('/api/admin/fryzjerzy', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                credentials: 'include', body: JSON.stringify({imie, nazwisko, specjalizacja: spec})
+            });
+            alert('Pracownik dodany');
+            loadFryzjerzy();
+        }
+
+        async function logout(e) {
+            e.preventDefault();
+            await fetch('/api/auth/logout', {method: 'POST', credentials: 'include'});
+            window.location.href = 'index.html';
+        }
+
+        window.onload = () => { loadUsers(); loadFryzjerzy(); };
+    </script>
+</body>
+</html>

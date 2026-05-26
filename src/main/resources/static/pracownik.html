@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Pracownika - Punkt Cięcia</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --primary: #d4af37;
+            --bg-dark: #0f0f12;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-dark);
+            color: #fff;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(0, 0, 0, 0.3);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #ccc;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--glass);
+            color: var(--primary);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        button {
+            background: var(--primary);
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>PUNKT CIĘCIA</h2>
+        <a href="pracownik.html" class="nav-item active">✂️ Panel Pracownika</a>
+        <a href="panel.html" class="nav-item">📅 Terminarz</a>
+        <div style="margin-top: auto;">
+            <a href="index.html" class="nav-item" onclick="logout(event)">🚪 Wyloguj</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>Panel Pracownika</h1>
+
+        <div class="card">
+            <h2>Dodaj rezerwację z ulicy</h2>
+            <div style="margin-top:15px; display:flex; gap:10px;">
+                <input type="text" id="wName" placeholder="Imię klienta">
+                <input type="datetime-local" id="wTime">
+                <input type="number" id="wDur" placeholder="Czas (min)" value="30">
+                <button onclick="addWalkIn()">Zapisz</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Zgłoś urlop</h2>
+            <div style="margin-top:15px; display:flex; gap:10px;">
+                <input type="date" id="uOd">
+                <input type="date" id="uDo">
+                <button onclick="addUrlop()">Zgłoś</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function addWalkIn() {
+            const imie = document.getElementById('wName').value;
+            const czas = document.getElementById('wTime').value;
+            const duration = document.getElementById('wDur').value;
+            if(!imie || !czas) return alert('Wypełnij pola');
+            await fetch('/api/wizyty', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                credentials: 'include', body: JSON.stringify({imieKlientaZUlicy: imie, dataGodzinaRozpoczecia: czas, czasTrwaniaCalkowity: parseInt(duration)})
+            });
+            alert('Dodano');
+        }
+
+        async function addUrlop() {
+            const od = document.getElementById('uOd').value;
+            const doD = document.getElementById('uDo').value;
+            if(!od || !doD) return alert('Wypełnij daty');
+            await fetch('/api/urlopy', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                credentials: 'include', body: JSON.stringify({fryzjerId: 1, dataOd: od, dataDo: doD})
+            });
+            alert('Urlop zapisany');
+        }
+
+        async function logout(e) {
+            e.preventDefault();
+            await fetch('/api/auth/logout', {method: 'POST', credentials: 'include'});
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
