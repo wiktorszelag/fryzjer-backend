@@ -41,6 +41,8 @@ public class AuthController {
         uzytkownik.setUsername(request.getUsername());
         uzytkownik.setPassword(passwordEncoder.encode(request.getPassword()));
         uzytkownik.setRola(request.getRola() != null ? request.getRola() : "KLIENT");
+        uzytkownik.setEmail(request.getEmail());
+        uzytkownik.setTelefon(request.getTelefon());
         
         uzytkownikRepository.save(uzytkownik);
 

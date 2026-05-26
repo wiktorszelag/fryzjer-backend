@@ -24,4 +24,10 @@ public class Uzytkownik {
 
     @Column(nullable = false)
     private String rola;
+
+    @Column
+    private String email;
+
+    @Column
+    private String telefon;
 }

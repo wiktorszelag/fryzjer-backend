@@ -121,7 +121,7 @@
         <div class="card">
             <h2>Zarządzanie Użytkownikami</h2>
             <table id="usersTable">
-                <thead><tr><th>ID</th><th>Login</th><th>Obecna Rola</th><th>Zmień Rolę</th></tr></thead>
+                <thead><tr><th>ID</th><th>Login</th><th>E-mail</th><th>Telefon</th><th>Obecna Rola</th><th>Zmień Rolę</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
@@ -145,15 +145,22 @@
 
     <script>
         async function loadUsers() {
-            const res = await fetch('/api/admin/users', {credentials: 'include'});
-            if (!res.ok) return;
+            const token = localStorage.getItem('token');
+            const res = await fetch('/api/admin/users', {
+                headers: { 'Authorization': 'Bearer ' + token },
+                credentials: 'include'
+            });
+            if (!res.ok) {
+                if (res.status === 401 || res.status === 403) alert("Brak dostępu lub sesja wygasła.");
+                return;
+            }
             const users = await res.json();
             const tbody = document.querySelector('#usersTable tbody');
             tbody.innerHTML = '';
             users.forEach(u => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${u.id}</td><td>${u.username}</td><td>${u.rola}</td>
+                    <td>${u.id}</td><td>${u.username}</td><td>${u.email || '-'}</td><td>${u.telefon || '-'}</td><td>${u.rola}</td>
                     <td>
                         <select onchange="changeRole(${u.id}, this.value)">
                             <option value="">Zmień...</option>
@@ -168,8 +175,9 @@
 
         async function changeRole(id, rola) {
             if(!rola) return;
+            const token = localStorage.getItem('token');
             await fetch(`/api/admin/users/${id}/role`, {
-                method: 'PUT', headers: {'Content-Type': 'application/json'},
+                method: 'PUT', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({rola})
             });
             alert('Rola zmieniona');
@@ -177,7 +185,11 @@
         }
 
         async function loadFryzjerzy() {
-            const res = await fetch('/api/admin/fryzjerzy', {credentials: 'include'});
+            const token = localStorage.getItem('token');
+            const res = await fetch('/api/admin/fryzjerzy', {
+                headers: { 'Authorization': 'Bearer ' + token },
+                credentials: 'include'
+            });
             if (!res.ok) return;
             const data = await res.json();
             const tbody = document.querySelector('#fryzjerzyTable tbody');
@@ -193,8 +205,9 @@
             const imie = document.getElementById('newImie').value;
             const nazwisko = document.getElementById('newNazwisko').value;
             const spec = document.getElementById('newSpec').value;
+            const token = localStorage.getItem('token');
             await fetch('/api/admin/fryzjerzy', {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({imie, nazwisko, specjalizacja: spec})
             });
             alert('Pracownik dodany');
@@ -203,7 +216,9 @@
 
         async function logout(e) {
             e.preventDefault();
-            await fetch('/api/auth/logout', {method: 'POST', credentials: 'include'});
+            const token = localStorage.getItem('token');
+            await fetch('/api/auth/logout', {method: 'POST', headers: {'Authorization': 'Bearer ' + token}, credentials: 'include'});
+            localStorage.removeItem('token');
             window.location.href = 'index.html';
         }
 

@@ -129,8 +129,9 @@
             const czas = document.getElementById('wTime').value;
             const duration = document.getElementById('wDur').value;
             if(!imie || !czas) return alert('Wypełnij pola');
+            const token = localStorage.getItem('token');
             await fetch('/api/wizyty', {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({imieKlientaZUlicy: imie, dataGodzinaRozpoczecia: czas, czasTrwaniaCalkowity: parseInt(duration)})
             });
             alert('Dodano');
@@ -140,8 +141,9 @@
             const od = document.getElementById('uOd').value;
             const doD = document.getElementById('uDo').value;
             if(!od || !doD) return alert('Wypełnij daty');
+            const token = localStorage.getItem('token');
             await fetch('/api/urlopy', {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
                 credentials: 'include', body: JSON.stringify({fryzjerId: 1, dataOd: od, dataDo: doD})
             });
             alert('Urlop zapisany');
@@ -149,7 +151,9 @@
 
         async function logout(e) {
             e.preventDefault();
-            await fetch('/api/auth/logout', {method: 'POST', credentials: 'include'});
+            const token = localStorage.getItem('token');
+            await fetch('/api/auth/logout', {method: 'POST', headers: {'Authorization': 'Bearer ' + token}, credentials: 'include'});
+            localStorage.removeItem('token');
             window.location.href = 'index.html';
         }
     </script>

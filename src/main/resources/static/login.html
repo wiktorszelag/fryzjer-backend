@@ -182,6 +182,7 @@
 
                 if (response.ok) {
                     const data = await response.json();
+                    localStorage.setItem('token', data.token);
                     alert(`Zalogowano pomyślnie jako: ${data.rola}`);
                     // Redirect to the management panel based on role
                     if (data.rola === 'ADMINISTRATOR' || data.rola === 'ADMIN') {
