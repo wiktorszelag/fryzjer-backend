@@ -332,13 +332,137 @@
             color: #fff;
         }
 
-        .summary-badge {
-            background: rgba(212,175,55,0.1);
-            border: 1px solid rgba(212,175,55,0.2);
+        /* Custom Premium Booking Form Styling */
+        .booking-step {
+            border-left: 3px solid rgba(255, 255, 255, 0.1);
+            padding-left: 20px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .booking-step.active {
+            border-left-color: var(--primary);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.8rem;
+        }
+
+        .step-num {
+            background: rgba(255, 255, 255, 0.05);
+            color: #aaa;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .booking-step.active .step-num {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .step-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+
+        .booking-step.active .step-title {
+            color: #fff;
+        }
+
+        .step-content {
+            transition: all 0.3s;
+        }
+
+        .selected-date-badge {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             color: var(--primary);
-            padding: 10px;
+            padding: 8px 12px;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .premium-select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px;
+            border-radius: 10px;
+            outline: none;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .premium-select:focus:not(:disabled) {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+        }
+
+        .premium-select:disabled {
+            background: rgba(255, 255, 255, 0.02);
+            color: #666;
+            cursor: not-allowed;
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 1.5rem;
+        }
+
+        .summary-title {
+            font-size: 0.85rem;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .summary-details {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .summary-item span {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .summary-item strong {
+            font-size: 1.05rem;
+            font-weight: 600;
         }
 
     </style>
@@ -367,40 +491,79 @@
                 <div id="calendar"></div>
             </div>
 
-            <div class="card" id="reservationFormCard" style="display: none;">
-                <h2>2. Szczegóły Wizyty</h2>
+            <div class="card" id="reservationFormCard" style="display: none; padding: 2rem;">
+                <h2 style="font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                    ✨ Kreator Rezerwacji
+                </h2>
                 
-                <div class="form-group">
-                    <label>Wybrany Dzień:</label>
-                    <div style="font-weight: bold; font-size: 1.1rem; color: var(--primary);" id="selectedDateText">Wybierz dzień z kalendarza po lewej</div>
+                <!-- Step 1: Wybrany Dzień -->
+                <div class="booking-step active" id="step-date">
+                    <div class="step-header">
+                        <span class="step-num">1</span>
+                        <span class="step-title">Wybrany Termin</span>
+                    </div>
+                    <div class="step-content">
+                        <div id="selectedDateText" class="selected-date-badge">Wybierz dzień z kalendarza</div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Wybierz Usługę:</label>
-                    <select id="serviceSelect">
-                        <option value="">-- Wybierz usługę --</option>
-                    </select>
+                <!-- Step 2: Usługa -->
+                <div class="booking-step" id="step-service">
+                    <div class="step-header">
+                        <span class="step-num">2</span>
+                        <span class="step-title">Wybierz Usługę</span>
+                    </div>
+                    <div class="step-content">
+                        <select id="serviceSelect" class="premium-select">
+                            <option value="">-- Wybierz usługę z oferty --</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Wybierz Fryzjera:</label>
-                    <select id="fryzjerSelect" disabled>
-                        <option value="">-- Najpierw wybierz usługę --</option>
-                    </select>
+                <!-- Step 3: Fryzjer -->
+                <div class="booking-step" id="step-stylist">
+                    <div class="step-header">
+                        <span class="step-num">3</span>
+                        <span class="step-title">Wybierz Stylistę</span>
+                    </div>
+                    <div class="step-content">
+                        <select id="fryzjerSelect" class="premium-select" disabled>
+                            <option value="">-- Najpierw wybierz usługę --</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Wybierz Wolną Godzinę:</label>
-                    <select id="timeSelect" disabled>
-                        <option value="">-- Najpierw wybierz fryzjera --</option>
-                    </select>
+                <!-- Step 4: Godzina -->
+                <div class="booking-step" id="step-time">
+                    <div class="step-header">
+                        <span class="step-num">4</span>
+                        <span class="step-title">Wybierz Godzinę</span>
+                    </div>
+                    <div class="step-content">
+                        <select id="timeSelect" class="premium-select" disabled>
+                            <option value="">-- Najpierw wybierz stylistę --</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="summary-badge" id="summaryBadge" style="display:none;">
-                    Czas trwania: <strong id="totalDuration">0</strong> min &nbsp;|&nbsp; Koszt: <strong id="totalPrice">0.00</strong> PLN
+                <!-- Podsumowanie -->
+                <div class="summary-card" id="summaryBadge" style="display:none;">
+                    <div class="summary-title">Podsumowanie Rezerwacji</div>
+                    <div class="summary-details">
+                        <div class="summary-item">
+                            <span>Czas usługi:</span>
+                            <strong><span id="totalDuration">0</span> min</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Do zapłaty:</span>
+                            <strong style="color: var(--primary); font-size: 1.2rem;"><span id="totalPrice">0.00</span> PLN</strong>
+                        </div>
+                    </div>
                 </div>
 
-                <button class="submit-btn" id="bookBtn" disabled onclick="submitBooking()">Rezerwuj Wizytę</button>
+                <button class="submit-btn" id="bookBtn" disabled onclick="submitBooking()" style="margin-top: 1.5rem; width: 100%;">
+                    Potwierdź i Rezerwuj
+                </button>
             </div>
             
             <div class="card" id="placeholderCard">

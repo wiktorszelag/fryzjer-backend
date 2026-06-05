@@ -147,6 +147,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             // Fetch schedules for the selected date
             const schedRes = await fetch(`${API_URL}/harmonogram/data/${selectedDate}`);
             scheduledWorkHours = await schedRes.json();
+
+            // Set active steps
+            document.getElementById('step-date').classList.add('active');
+            document.getElementById('step-service').classList.add('active');
+            document.getElementById('step-stylist').classList.remove('active');
+            document.getElementById('step-time').classList.remove('active');
         } catch (err) {
             console.error("Błąd pobierania harmonogramu:", err);
         }
@@ -162,6 +168,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
             timeSelect.disabled = true;
             summaryBadge.style.display = 'none';
+            
+            document.getElementById('step-stylist').classList.remove('active');
+            document.getElementById('step-time').classList.remove('active');
+            
             validateBookingState();
             return;
         }
@@ -193,6 +203,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             opt.innerText = "Brak fryzjerów ze specjalizacją na ten dzień";
             fryzjerSelect.appendChild(opt);
             fryzjerSelect.disabled = true;
+            document.getElementById('step-stylist').classList.remove('active');
         } else {
             matchingFryzjerzy.forEach(f => {
                 const sch = scheduledWorkHours.find(s => s.fryzjerId === f.id);
@@ -202,11 +213,13 @@ document.addEventListener('DOMContentLoaded', async function () {
                 fryzjerSelect.appendChild(opt);
             });
             fryzjerSelect.disabled = false;
+            document.getElementById('step-stylist').classList.add('active');
         }
 
         // Reset and disable time selection
         timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
         timeSelect.disabled = true;
+        document.getElementById('step-time').classList.remove('active');
         selectedSlot = null;
         validateBookingState();
     });
@@ -217,6 +230,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         selectedSlot = null;
         timeSelect.innerHTML = '<option value="">-- Ładowanie godzin... --</option>';
         timeSelect.disabled = true;
+        document.getElementById('step-time').classList.remove('active');
 
         if (!selectedFryzjerId) {
             timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
@@ -236,6 +250,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             existingBookings = await bookingsRes.json();
             
             generateTimeSlots();
+            document.getElementById('step-time').classList.add('active');
         } catch (err) {
             console.error("Błąd pobierania wizyt:", err);
             timeSelect.innerHTML = '<option value="">Błąd połączenia z serwerem</option>';
