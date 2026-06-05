@@ -19,10 +19,10 @@ public class Wizyta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "klient_id")
+    @Column(name = "klientid")
     private Long klientId;
 
-    @Column(name = "fryzjer_id")
+    @Column(name = "fryzjerid")
     private Long fryzjerId;
 
     @Column(name = "data_godzina_rozpoczecia")
