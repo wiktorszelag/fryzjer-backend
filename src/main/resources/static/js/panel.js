@@ -244,6 +244,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (!bookingsRes.ok) {
+                const errData = await bookingsRes.json().catch(() => ({}));
+                console.error("Błąd pobierania wizyt fryzjera:", errData.message || bookingsRes.statusText);
                 timeSelect.innerHTML = '<option value="">Błąd ładowania wolnych terminów</option>';
                 return;
             }
@@ -418,7 +420,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (!res.ok) {
-                console.error("Błąd pobierania wizyt klienta:", res.statusText);
+                const errData = await res.json().catch(() => ({}));
+                console.error("Błąd pobierania wizyt klienta:", errData.message || res.statusText);
                 myAppointmentsTable.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #ff4d4d;">Nie udało się załadować listy rezerwacji.</td></tr>`;
                 return;
             }
