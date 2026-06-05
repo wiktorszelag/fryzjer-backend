@@ -57,11 +57,11 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/auth/me").authenticated()
                 .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRATOR", "ADMIN", "ADMINISTRATOR")
-                // Do testów i łatwego korzystania z frontendu, zostawiamy resztę otwartą (albo zabezpieczamy wybrane)
-                .anyRequest().permitAll() 
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/uslugi/**", "/api/fryzjerzy/**", "/api/harmonogram/**").permitAll()
+                .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Bezstanowa autoryzacja (JWT)

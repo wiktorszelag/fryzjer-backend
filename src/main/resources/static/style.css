@@ -1,291 +1,270 @@
-/* --- BLOKADA DARK MODE – działa na wszystkich stronach --- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
 :root {
-    color-scheme: light;
+    --primary: #d4af37;
+    --primary-hover: #fdfbfb;
+    --bg-dark: #0f0f12;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-card: rgba(20, 20, 25, 0.65);
+    --border: rgba(255, 255, 255, 0.1);
+    --text-muted: #aaa;
 }
 
-/* --- OGÓLNE STYLE --- */
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #cacecc !important;
+* {
+    box-sizing: border-box;
     margin: 0;
-    color: #333 !important;
+    padding: 0;
 }
 
+body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-dark) !important;
+    color: #fff !important;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar navigation */
+.sidebar, nav {
+    width: 260px;
+    min-width: 260px;
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    backdrop-filter: blur(10px);
+}
+
+/* For pages still using <nav> tag as sidebar */
 nav {
-    background-color: #343a40 !important;
-    padding: 15px;
-    text-align: center;
+    border-bottom: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100vh;
 }
 
-nav a {
-    color: white;
+nav a, .nav-item {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 10px;
     text-decoration: none;
-    margin: 0 15px;
-    font-size: 18px;
+    color: #ccc !important;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
 }
 
-nav b {
-    color: #ffc107;
-    text-decoration: underline;
-    margin: 0 15px;
-    font-size: 18px;
+nav a:hover, nav b, .nav-item:hover, .nav-item.active {
+    background: var(--glass);
+    color: var(--primary) !important;
+    text-decoration: none !important;
 }
 
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+/* Adjust page containers to account for fixed/flex nav */
+.container, .main-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-left: 260px; /* offset for fixed nav */
 }
 
-/* --- FORMULARZ --- */
-.panel-dodawania {
-    background-color: #e9ecef;
-    padding: 20px;
-    border-radius: 5px;
+/* Headings */
+h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, var(--primary), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
 }
 
+h2, h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Glass cards and forms */
+.panel-dodawania, .card {
+    background: var(--glass-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 20px !important;
+    padding: 1.5rem !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-bottom: 20px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 10px 0;
+}
+
+/* Form controls */
 label {
-    font-weight: bold;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ccc;
     display: block;
-    margin-top: 15px;
     margin-bottom: 5px;
 }
 
-/* Wszystkie inputy i selecty */
 input[type="text"],
+input[type="number"],
 input[type="datetime-local"],
-select {
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    /* Ważne! */
-    font-size: 14px;
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid var(--border) !important;
+    color: #fff !important;
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+    outline: none;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+    margin-bottom: 10px;
 }
 
-button {
-    background-color: #28a745;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary) !important;
+}
+
+/* Buttons */
+button, input[type="submit"] {
+    background: linear-gradient(45deg, var(--primary), #b8860b) !important;
+    border: none !important;
+    color: #000 !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+    text-align: center;
     width: 100%;
+    margin-top: 10px;
 }
 
-button:hover {
-    background-color: #218838;
+button:hover, input[type="submit"]:hover {
+    background: linear-gradient(45deg, #fff, var(--primary)) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
-/* --- TABELA --- */
-/* --- TABELA --- */
-.content-table {
+/* Tables */
+.content-table, table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 30px;
+    margin-top: 15px;
+    background: transparent;
 }
 
-.content-table th,
-.content-table td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
+.content-table th, .content-table td, th, td {
+    padding: 12px 15px;
     text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
 }
 
-.content-table th {
-    background-color: #f1f1f1;
+.content-table th, th {
+    color: var(--primary) !important;
+    background: transparent !important;
+    font-weight: 600;
+    font-size: 0.95rem;
 }
 
-.btn-usun {
-    background-color: #dc3545;
-    width: auto;
-    padding: 5px 10px;
-    margin: 0;
-    font-size: 14px;
+.content-table td, td {
+    font-size: 0.9rem;
+    color: #ddd !important;
+    background: transparent !important;
 }
 
-
-/* Pudełko główne */
-.multiselect-wrapper {
-    position: relative;
-    /* Dzięki temu lista wie, gdzie się pojawić */
-    user-select: none;
+/* Table action buttons */
+.btn-table, .btn-usun {
+    width: auto !important;
+    display: inline-block !important;
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+    margin-top: 0 !important;
 }
 
-/* Przycisk, który udaje Selecta */
-.select-btn {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: white;
-    cursor: pointer;
+.btn-delete, .btn-usun {
+    background: rgba(220, 53, 69, 0.15) !important;
+    border: 1px solid #dc3545 !important;
+    color: #ff4d4d !important;
+    box-shadow: none !important;
 }
 
-/* Lista, która jest ukryta */
-.list-items {
-    display: none;
-    /* Domyślnie niewidoczna */
-    position: absolute;
-    /* Unosi się nad resztą */
-    top: 100%;
-    left: 0;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    background: white;
-    border: 1px solid #ccc;
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    z-index: 999;
-    /* Musi być na wierzchu! */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.btn-delete:hover, .btn-usun:hover {
+    background: #dc3545 !important;
+    color: #fff !important;
 }
 
-/* Kiedy dodamy klasę 'open', lista się pokazuje */
-.multiselect-wrapper.open .list-items {
-    display: block;
-}
-
-/* Pojedyncza opcja na liście */
-.item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    transition: 0.2s;
-}
-
-.item:hover {
-    background-color: #f8f9fa;
-}
-
-/* Checkbox w środku */
-.item .checkbox {
-    width: 18px;
-    height: 18px;
-    margin-right: 12px;
-    accent-color: #007bff;
-}
-
-.item-text {
-    font-size: 14px;
-}
-
-.item-price {
-    font-size: 12px;
-    color: #666;
-    margin-left: auto;
-    /* Pcha cenę do prawej */
-}
-
-.content-table td .actions {
-    display: flex;
-    gap: 5px;
-    /* Odstęp między przyciskami */
-    justify-content: flex-start;
-    /* Wyrównaj do lewej */
-}
-
-/* Wspólny styl dla małych przycisków w tabeli */
-.btn-table {
-    width: auto;
-    /* Nie rozciągaj na 100% */
-    margin: 0;
-    /* Usuń marginesy z góry */
-    padding: 6px 12px;
-    /* Mniejszy padding */
-    font-size: 14px;
-    /* Mniejsza czcionka */
-    font-weight: 500;
-}
-
-/* Kolor dla Edycji */
 .btn-edit {
-    background-color: #ffc107;
-    /* Żółty */
-    color: #212529;
-    /* Ciemny tekst dla kontrastu */
+    background: rgba(255, 193, 7, 0.15) !important;
+    border: 1px solid #ffc107 !important;
+    color: #ffc107 !important;
+    box-shadow: none !important;
 }
 
 .btn-edit:hover {
-    background-color: #e0a800;
+    background: #ffc107 !important;
+    color: #000 !important;
 }
 
-/* Kolor dla Usuwania (nadpisujemy wcześniejszy .btn-usun) */
-.btn-delete {
-    background-color: #dc3545;
-    /* Czerwony */
-    color: white;
+/* Multiselect styling compatibility */
+.multiselect-wrapper {
+    margin-bottom: 10px;
 }
 
-.btn-delete:hover {
-    background-color: #c82333;
+.select-btn {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    color: #fff !important;
 }
 
-/* --- STYLE KALENDARZA --- */
-#calendar {
-    max-width: 1100px;
-    margin: 0 auto;
-    background: white;
-    padding: 0;
-    /* Usunięto padding */
+.list-items {
+    background: #1a1a24 !important;
+    border: 1px solid var(--border) !important;
 }
 
-/* Dostosowanie czcionki w kalendarzu */
+.item:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.item-price {
+    color: var(--primary) !important;
+}
+
+/* FullCalendar unified style */
 .fc {
-    font-family: 'Segoe UI', sans-serif;
+    --fc-border-color: rgba(255,255,255,0.1);
+    --fc-button-bg-color: transparent;
+    --fc-button-border-color: var(--primary);
+    --fc-button-hover-bg-color: rgba(212, 175, 55, 0.1);
+    --fc-button-active-bg-color: var(--primary);
+    --fc-today-bg-color: rgba(212, 175, 55, 0.05);
+    background: transparent !important;
 }
-
-.fc-toolbar-title {
-    font-size: 1.2em !important;
-    /* Mniejszy tytuł */
-}
-
-/* Poprawa układu przycisków */
-.fc-header-toolbar {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    /* Wymuś jedną linię */
-    justify-content: space-between !important;
-    align-items: center !important;
-    margin-bottom: 1.5em !important;
-    gap: 10px;
-}
-
-/* Wymuś, aby grupy przycisków też były w jednej linii */
-.fc-header-toolbar .fc-toolbar-chunk:first-child {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    /* Odstęp między grupą strzałek a przyciskiem Dzisiaj */
-}
-
-
-.fc-event {
-    cursor: pointer;
-}
-
-/* Usuń pustą przestrzeń nad 10:00 i napraw brakującą linię */
-.fc-timegrid-slots tr:first-child td {
-    border-top: 1px solid #ddd !important;
-    /* Wymuś górną linię dla pierwszego wiersza */
-}
-
-.fc-timegrid-axis-frame,
-.fc-timegrid-slots table {
-    height: 100% !important;
-}
-
-.fc-scroller {
-    overflow: hidden !important;
+.fc-theme-standard td, .fc-theme-standard th {
+    border: 1px solid rgba(255,255,255,0.1) !important;
 }

@@ -4,56 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="992382e4-c6eb-4b18-aaaf-9ac54513f3de" name="Changes" comment="sttyle">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/FryzjerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/FryzjerApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/OpenApiConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/OpenApiConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/FileSecurityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/FileSecurityController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/FryzjerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/FryzjerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/HarmonogramController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/HarmonogramController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/KlientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/KlientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/UrlopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/UrlopController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/UslugaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/UslugaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/WizytaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/controller/WizytaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/AuthResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/FryzjerDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/FryzjerDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/KlientDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/KlientDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/LoginRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/RegisterRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/RoleUpdateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/RoleUpdateRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/SignRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/SignRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/SignResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/SignResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/UslugaDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/UslugaDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/VerifyRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/VerifyRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/VerifyResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/VerifyResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/WizytaDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/dto/WizytaDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Fryzjer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Fryzjer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Harmonogram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Harmonogram.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Klient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Klient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Urlop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Urlop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Usluga.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Usluga.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Uzytkownik.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Uzytkownik.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Wizyta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/entity/Wizyta.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/FryzjerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/FryzjerRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/HarmonogramRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/HarmonogramRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/KlientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/KlientRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/UrlopRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/UrlopRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/UslugaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/UslugaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/UzytkownikRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/UzytkownikRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/WizytaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/repository/WizytaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/AdminInitService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/AdminInitService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/CryptoDocumentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/CryptoDocumentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/FileStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/fryzjer/service/FileStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/panel.html" afterDir="false" />
-    </list>
+    <list default="true" id="992382e4-c6eb-4b18-aaaf-9ac54513f3de" name="Changes" comment="sttyle" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
