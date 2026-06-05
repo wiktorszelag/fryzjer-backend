@@ -9,22 +9,27 @@ document.addEventListener('DOMContentLoaded', async function () {
     let selectedDate = null;
     let selectedFryzjerId = null;
     let selectedSlot = null;
+    let selectedService = null;
+    
     let services = [];
     let scheduledWorkHours = []; // Harmonogram na wybrany dzień
-    let existingBookings = []; // Wszystkie wizyty
+    let existingBookings = []; // Wszystkie wizyty wybranego fryzjera
     let fryzjerzyList = [];
 
     // Elements
     const welcomeUser = document.getElementById('welcomeUser');
     const selectedDateText = document.getElementById('selectedDateText');
-    const servicesList = document.getElementById('servicesList');
+    const serviceSelect = document.getElementById('serviceSelect');
     const fryzjerSelect = document.getElementById('fryzjerSelect');
-    const slotsContainer = document.getElementById('slotsContainer');
+    const timeSelect = document.getElementById('timeSelect');
     const totalDurationText = document.getElementById('totalDuration');
     const totalPriceText = document.getElementById('totalPrice');
     const summaryBadge = document.getElementById('summaryBadge');
     const bookBtn = document.getElementById('bookBtn');
     const myAppointmentsTable = document.getElementById('myAppointmentsTable');
+    
+    const reservationFormCard = document.getElementById('reservationFormCard');
+    const placeholderCard = document.getElementById('placeholderCard');
 
     // 1. Fetch Client Profile (Me)
     try {
@@ -33,7 +38,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             credentials: 'include'
         });
         if (!meRes.ok) {
-            // Token expired or invalid
             localStorage.removeItem('token');
             window.location.href = 'login.html';
             return;
@@ -49,16 +53,16 @@ document.addEventListener('DOMContentLoaded', async function () {
         return;
     }
 
-    // 2. Fetch Services
+    // 2. Fetch Services and Populate Dropdown
     try {
         const servicesRes = await fetch(`${API_URL}/uslugi`);
         services = await servicesRes.json();
-        renderServices();
+        populateServices();
     } catch (err) {
         console.error("Błąd ładowania usług:", err);
     }
 
-    // 3. Fetch Fryzjerzy
+    // 3. Fetch All Hairdressers (for metadata)
     try {
         const fRes = await fetch(`${API_URL}/fryzjerzy`);
         fryzjerzyList = await fRes.json();
@@ -66,68 +70,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.error("Błąd pobierania fryzjerów:", err);
     }
 
-    // Render list of services
-    function renderServices() {
-        servicesList.innerHTML = '';
+    // Populate services select dropdown
+    function populateServices() {
+        serviceSelect.innerHTML = '<option value="">-- Wybierz usługę --</option>';
         services.forEach(u => {
-            const item = document.createElement('div');
-            item.className = 'service-item';
-            item.innerHTML = `
-                <div style="display:flex; align-items:center;">
-                    <input type="checkbox" value="${u.id}" class="service-checkbox" data-duration="${u.czasTrwaniaMin}" data-price="${u.cenaNetto}">
-                    <span class="service-info"><strong>${u.nazwa}</strong><br><small style="color:#aaa;">${u.opis || ''}</small></span>
-                </div>
-                <span class="service-meta">${u.cenaNetto.toFixed(2)} zł (${u.czasTrwaniaMin} min)</span>
-            `;
-            
-            // Allow clicking the item to toggle checkbox
-            item.addEventListener('click', (e) => {
-                if (e.target.tagName !== 'INPUT') {
-                    const cb = item.querySelector('input');
-                    cb.checked = !cb.checked;
-                }
-                updateSummary();
-            });
-            servicesList.appendChild(item);
+            const opt = document.createElement('option');
+            opt.value = u.id;
+            opt.innerText = `${u.nazwa} (${u.cenaNetto.toFixed(2)} zł | ${u.czasTrwaniaMin} min)`;
+            serviceSelect.appendChild(opt);
         });
     }
 
-    // Update selected services summary
-    function updateSummary() {
-        const checkboxes = document.querySelectorAll('.service-checkbox:checked');
-        let totalDuration = 0;
-        let totalPrice = 0;
-
-        checkboxes.forEach(cb => {
-            totalDuration += parseInt(cb.dataset.duration);
-            totalPrice += parseFloat(cb.dataset.price);
-        });
-
-        totalDurationText.innerText = totalDuration;
-        totalPriceText.innerText = totalPrice.toFixed(2);
-
-        if (checkboxes.length > 0) {
-            summaryBadge.style.display = 'block';
-        } else {
-            summaryBadge.style.display = 'none';
-        }
-
-        // Recalculate slots if hairdresser and day are selected
-        if (selectedDate && selectedFryzjerId) {
-            generateTimeSlots();
-        } else {
-            validateBookingState();
-        }
-    }
-
-    function getSelectedDuration() {
-        const checkboxes = document.querySelectorAll('.service-checkbox:checked');
-        let duration = 0;
-        checkboxes.forEach(cb => duration += parseInt(cb.dataset.duration));
-        return duration;
-    }
-
-    // 4. Initialize Calendar
+    // Initialize Calendar
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -140,7 +94,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         },
         selectable: true,
         selectAllow: function (selectInfo) {
-            // Block selecting days in the past
             const today = new Date();
             today.setHours(0,0,0,0);
             return selectInfo.start >= today;
@@ -159,88 +112,152 @@ document.addEventListener('DOMContentLoaded', async function () {
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
 
-            // Highlight selected day on FullCalendar
+            // Highlight selected day
             document.querySelectorAll('.fc-daygrid-day').forEach(el => {
                 el.style.backgroundColor = '';
             });
             info.dayEl.style.backgroundColor = 'rgba(212, 175, 55, 0.15)';
 
-            // Fetch schedules and bookings for this day
+            // Reset and show reservation form
             onDateSelected();
         }
     });
     calendar.render();
 
-    // Triggered when a valid day is clicked
+    // Reset workflow state when a new date is clicked
     async function onDateSelected() {
         try {
-            // Disable hairdresser selection initially
-            fryzjerSelect.disabled = true;
-            fryzjerSelect.innerHTML = '<option value="">-- Ładowanie grafiku... --</option>';
-            slotsContainer.innerHTML = '<span style="color:#aaa;">Wybierz fryzjera, aby zobaczyć wolne godziny.</span>';
-            selectedSlot = null;
+            placeholderCard.style.display = 'none';
+            reservationFormCard.style.display = 'block';
 
-            // Fetch schedule for the selected date
+            // Reset inputs
+            serviceSelect.value = "";
+            fryzjerSelect.innerHTML = '<option value="">-- Najpierw wybierz usługę --</option>';
+            fryzjerSelect.disabled = true;
+            timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
+            timeSelect.disabled = true;
+            
+            selectedFryzjerId = null;
+            selectedSlot = null;
+            selectedService = null;
+            
+            summaryBadge.style.display = 'none';
+            validateBookingState();
+
+            // Fetch schedules for the selected date
             const schedRes = await fetch(`${API_URL}/harmonogram/data/${selectedDate}`);
             scheduledWorkHours = await schedRes.json();
-
-            // Fetch all bookings
-            const bookingsRes = await fetch(`${API_URL}/wizyty`);
-            existingBookings = await bookingsRes.json();
-
-            if (scheduledWorkHours.length === 0) {
-                fryzjerSelect.innerHTML = '<option value="">Brak pracujących fryzjerów w tym dniu</option>';
-                slotsContainer.innerHTML = '<span style="color:#ff4d4d;">Brak dostępnych terminów w tym dniu. Spróbuj wybrać inną datę.</span>';
-                validateBookingState();
-                return;
-            }
-
-            // Populate fryzjer select
-            fryzjerSelect.innerHTML = '<option value="">-- Wybierz fryzjera --</option>';
-            scheduledWorkHours.forEach(sch => {
-                const fryzjer = fryzjerzyList.find(f => f.id === sch.fryzjerId);
-                if (fryzjer) {
-                    const opt = document.createElement('option');
-                    opt.value = fryzjer.id;
-                    opt.innerText = `${fryzjer.imie} ${fryzjer.nazwisko} (${sch.godzinaOd.slice(0, 5)} - ${sch.godzinaDo.slice(0, 5)})`;
-                    fryzjerSelect.appendChild(opt);
-                }
-            });
-
-            fryzjerSelect.disabled = false;
         } catch (err) {
-            console.error("Błąd pobierania danych na dany dzień:", err);
+            console.error("Błąd pobierania harmonogramu:", err);
         }
     }
 
-    // Fryzjer selection change
-    fryzjerSelect.addEventListener('change', function () {
-        selectedFryzjerId = this.value ? parseInt(this.value) : null;
+    // Service Select Listener
+    serviceSelect.addEventListener('change', function () {
+        const serviceId = this.value ? parseInt(this.value) : null;
+        if (!serviceId) {
+            selectedService = null;
+            fryzjerSelect.innerHTML = '<option value="">-- Najpierw wybierz usługę --</option>';
+            fryzjerSelect.disabled = true;
+            timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
+            timeSelect.disabled = true;
+            summaryBadge.style.display = 'none';
+            validateBookingState();
+            return;
+        }
+
+        selectedService = services.find(s => s.id === serviceId);
+        
+        // Update summary
+        totalDurationText.innerText = selectedService.czasTrwaniaMin;
+        totalPriceText.innerText = selectedService.cenaNetto.toFixed(2);
+        summaryBadge.style.display = 'block';
+
+        // Filter hairdressers by selected service name match in specialization & check if they work today
+        const matchingFryzjerzy = fryzjerzyList.filter(f => {
+            // Check if hairdresser has a work schedule on this date
+            const worksToday = scheduledWorkHours.some(sch => sch.fryzjerId === f.id);
+            if (!worksToday) return false;
+
+            // Check specialization
+            if (!f.specjalizacja) return true; // fallback if empty
+            const specList = f.specjalizacja.split(',').map(s => s.trim().toLowerCase());
+            return specList.some(spec => spec.includes(selectedService.nazwa.toLowerCase()) || selectedService.nazwa.toLowerCase().includes(spec));
+        });
+
+        // Populate hairdresser select
+        fryzjerSelect.innerHTML = '<option value="">-- Wybierz fryzjera --</option>';
+        if (matchingFryzjerzy.length === 0) {
+            const opt = document.createElement('option');
+            opt.value = "";
+            opt.innerText = "Brak fryzjerów ze specjalizacją na ten dzień";
+            fryzjerSelect.appendChild(opt);
+            fryzjerSelect.disabled = true;
+        } else {
+            matchingFryzjerzy.forEach(f => {
+                const sch = scheduledWorkHours.find(s => s.fryzjerId === f.id);
+                const opt = document.createElement('option');
+                opt.value = f.id;
+                opt.innerText = `${f.imie} ${f.nazwisko} (${sch.godzinaOd.slice(0, 5)} - ${sch.godzinaDo.slice(0, 5)})`;
+                fryzjerSelect.appendChild(opt);
+            });
+            fryzjerSelect.disabled = false;
+        }
+
+        // Reset and disable time selection
+        timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
+        timeSelect.disabled = true;
         selectedSlot = null;
-        generateTimeSlots();
+        validateBookingState();
     });
 
-    // Generate dynamic available time slots
+    // Fryzjer Select Listener
+    fryzjerSelect.addEventListener('change', async function () {
+        selectedFryzjerId = this.value ? parseInt(this.value) : null;
+        selectedSlot = null;
+        timeSelect.innerHTML = '<option value="">-- Ładowanie godzin... --</option>';
+        timeSelect.disabled = true;
+
+        if (!selectedFryzjerId) {
+            timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
+            validateBookingState();
+            return;
+        }
+
+        try {
+            // Fetch appointments of the selected hairdresser using authentication token!
+            const bookingsRes = await fetch(`${API_URL}/wizyty/fryzjer/${selectedFryzjerId}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!bookingsRes.ok) {
+                timeSelect.innerHTML = '<option value="">Błąd ładowania wolnych terminów</option>';
+                return;
+            }
+            existingBookings = await bookingsRes.json();
+            
+            generateTimeSlots();
+        } catch (err) {
+            console.error("Błąd pobierania wizyt:", err);
+            timeSelect.innerHTML = '<option value="">Błąd połączenia z serwerem</option>';
+        }
+    });
+
+    // Generate Dynamic Time Slots Dropdown
     function generateTimeSlots() {
-        slotsContainer.innerHTML = '';
+        timeSelect.innerHTML = '<option value="">-- Wybierz godzinę --</option>';
         
-        if (!selectedDate || !selectedFryzjerId) {
-            slotsContainer.innerHTML = '<span style="color:#aaa;">Wybierz fryzjera, aby zobaczyć wolne godziny.</span>';
+        if (!selectedDate || !selectedFryzjerId || !selectedService) {
+            timeSelect.innerHTML = '<option value="">-- Najpierw uzupełnij pola powyżej --</option>';
             validateBookingState();
             return;
         }
 
-        const duration = getSelectedDuration();
-        if (duration <= 0) {
-            slotsContainer.innerHTML = '<span style="color:#ffc107;">Wybierz przynajmniej jedną usługę, aby obliczyć wolne godziny.</span>';
-            validateBookingState();
-            return;
-        }
+        const duration = selectedService.czasTrwaniaMin;
 
-        // Find employee schedule for this day
+        // Find work schedule
         const schedule = scheduledWorkHours.find(s => s.fryzjerId === selectedFryzjerId);
         if (!schedule) {
-            slotsContainer.innerHTML = '<span style="color:#ff4d4d;">Wybrany pracownik nie pracuje w tym dniu.</span>';
+            timeSelect.innerHTML = '<option value="">Pracownik nie pracuje w tym dniu</option>';
             validateBookingState();
             return;
         }
@@ -254,8 +271,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Parse existing bookings for this hairdresser on this date
         const dayBookings = existingBookings.filter(b => {
-            if (b.fryzjerId !== selectedFryzjerId) return false;
-            // Compare dates
             const bookingDate = b.dataGodzinaRozpoczecia.slice(0, 10);
             return bookingDate === selectedDate;
         }).map(b => {
@@ -277,6 +292,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Generate 30-min intervals rounded up to the nearest 30 mins
         let slotsCount = 0;
         const roundedDuration = Math.ceil(duration / 30) * 30;
+
         for (let time = workStartMinutes; time <= workEndMinutes - roundedDuration; time += 30) {
             // If today, filter out past times
             if (isToday && time <= currentMinutes + 15) { // 15 mins buffer
@@ -295,37 +311,36 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
             if (!hasOverlap) {
-                // Render slot button
                 const hour = String(Math.floor(time / 60)).padStart(2, '0');
                 const minute = String(time % 60).padStart(2, '0');
                 const timeString = `${hour}:${minute}`;
 
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'slot-btn';
-                btn.innerText = timeString;
-                btn.addEventListener('click', function () {
-                    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    selectedSlot = timeString;
-                    validateBookingState();
-                });
-
-                slotsContainer.appendChild(btn);
+                const opt = document.createElement('option');
+                opt.value = timeString;
+                opt.innerText = timeString;
+                timeSelect.appendChild(opt);
                 slotsCount++;
             }
         }
 
         if (slotsCount === 0) {
-            slotsContainer.innerHTML = '<span style="color:#ff4d4d;">Brak wolnych godzin u tego pracownika w tym dniu. Wybierz inną datę lub innego fryzjera.</span>';
+            timeSelect.innerHTML = '<option value="">Brak wolnych terminów w tym dniu</option>';
+            timeSelect.disabled = true;
+        } else {
+            timeSelect.disabled = false;
         }
         
         validateBookingState();
     }
 
+    // Time Select Listener
+    timeSelect.addEventListener('change', function () {
+        selectedSlot = this.value || null;
+        validateBookingState();
+    });
+
     function validateBookingState() {
-        const duration = getSelectedDuration();
-        if (selectedDate && selectedFryzjerId && selectedSlot && duration > 0) {
+        if (selectedDate && selectedFryzjerId && selectedSlot && selectedService) {
             bookBtn.disabled = false;
         } else {
             bookBtn.disabled = true;
@@ -334,8 +349,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Submit booking
     window.submitBooking = async function () {
-        const duration = getSelectedDuration();
-        if (!selectedDate || !selectedFryzjerId || !selectedSlot || duration <= 0) return;
+        if (!selectedDate || !selectedFryzjerId || !selectedSlot || !selectedService) return;
 
         bookBtn.disabled = true;
         bookBtn.innerText = 'Rezerwowanie...';
@@ -346,7 +360,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             klientId: currentKlient.id,
             fryzjerId: selectedFryzjerId,
             dataGodzinaRozpoczecia: dataGodzina,
-            czasTrwaniaCalkowity: duration,
+            czasTrwaniaCalkowity: selectedService.czasTrwaniaMin,
             imieKlientaZUlicy: null
         };
 
@@ -385,7 +399,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (!currentKlient) return;
 
         try {
-            const res = await fetch(`${API_URL}/wizyty/klient/${currentKlient.id}`);
+            const res = await fetch(`${API_URL}/wizyty/klient/${currentKlient.id}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) {
+                console.error("Błąd pobierania wizyt klienta:", res.statusText);
+                myAppointmentsTable.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #ff4d4d;">Nie udało się załadować listy rezerwacji.</td></tr>`;
+                return;
+            }
             const wizyty = await res.json();
             
             // Fetch fryzjerzy to map IDs to names

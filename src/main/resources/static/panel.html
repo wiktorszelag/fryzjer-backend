@@ -367,33 +367,33 @@
                 <div id="calendar"></div>
             </div>
 
-            <div class="card">
+            <div class="card" id="reservationFormCard" style="display: none;">
                 <h2>2. Szczegóły Wizyty</h2>
                 
                 <div class="form-group">
                     <label>Wybrany Dzień:</label>
-                    <div style="font-weight: bold; font-size: 1.1rem;" id="selectedDateText">Wybierz dzień z kalendarza po lewej</div>
+                    <div style="font-weight: bold; font-size: 1.1rem; color: var(--primary);" id="selectedDateText">Wybierz dzień z kalendarza po lewej</div>
                 </div>
 
                 <div class="form-group">
-                    <label>Wybierz Usługi:</label>
-                    <div class="services-list" id="servicesList">
-                        <!-- Generowane dynamicznie -->
-                    </div>
+                    <label>Wybierz Usługę:</label>
+                    <select id="serviceSelect">
+                        <option value="">-- Wybierz usługę --</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label>Wybierz Fryzjera:</label>
                     <select id="fryzjerSelect" disabled>
-                        <option value="">-- Najpierw wybierz dzień i usługi --</option>
+                        <option value="">-- Najpierw wybierz usługę --</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>Wybierz Wolną Godzinę:</label>
-                    <div id="slotsContainer" class="slots-container">
-                        <span style="color:#888; font-size:0.9rem;">Brak wolnych godzin dla wybranej daty i fryzjera.</span>
-                    </div>
+                    <select id="timeSelect" disabled>
+                        <option value="">-- Najpierw wybierz fryzjera --</option>
+                    </select>
                 </div>
 
                 <div class="summary-badge" id="summaryBadge" style="display:none;">
@@ -401,6 +401,14 @@
                 </div>
 
                 <button class="submit-btn" id="bookBtn" disabled onclick="submitBooking()">Rezerwuj Wizytę</button>
+            </div>
+            
+            <div class="card" id="placeholderCard">
+                <h2>2. Szczegóły Wizyty</h2>
+                <div style="text-align: center; padding: 2rem 0; color: #888;">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">📅</span>
+                    Wybierz dzień z kalendarza, aby rozpocząć rezerwację.
+                </div>
             </div>
         </div>
 
