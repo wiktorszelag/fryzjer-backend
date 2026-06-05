@@ -28,7 +28,7 @@ public class Wizyta {
     @Column(name = "data_godzina_rozpoczecia")
     private LocalDateTime dataGodzinaRozpoczecia;
 
-    @Column(name = "czas_trwania_calkowity")
+    @Column(name = "czas_trwania_całkowity")
     private Integer czasTrwaniaCalkowity;
 
     @Column(name = "data_rezerwacji")
