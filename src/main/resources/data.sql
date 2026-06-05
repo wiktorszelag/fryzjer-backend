@@ -24,7 +24,7 @@ INSERT INTO usluga (nazwa, opis, czas_trwania_min, cena_netto, stawkavat) VALUES
 ('Modelowanie', 'Stylizacja i modelowanie włosów', 30, 40.00, 23.00),
 ('Trwała ondulacja', 'Trwała ondulacja włosów', 90, 120.00, 23.00);
 
-INSERT INTO wizyta (klientid, fryzjerid, data_godzina_rozpoczecia, czas_trwania_całkowity, data_rezerwacji) VALUES
+INSERT INTO wizyta (klient_id, fryzjer_id, data_godzina_rozpoczecia, czas_trwania_calkowity, data_rezerwacji) VALUES
 (1, 1, '2024-12-05 10:00:00', 45, '2024-12-01'),
 (2, 2, '2024-12-05 11:00:00', 30, '2024-12-02'),
 (3, 3, '2024-12-06 14:00:00', 120, '2024-12-03');

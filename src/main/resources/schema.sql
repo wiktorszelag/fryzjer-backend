@@ -45,9 +45,9 @@ CREATE TABLE usluga (
 
 CREATE TABLE wizyta (
     id BIGSERIAL PRIMARY KEY,
-    klientid BIGINT REFERENCES klient(id),
-    fryzjerid BIGINT REFERENCES fryzjer(id),
+    klient_id BIGINT REFERENCES klient(id) ON DELETE CASCADE,
+    fryzjer_id BIGINT REFERENCES fryzjer(id) ON DELETE CASCADE,
     data_godzina_rozpoczecia TIMESTAMP,
-    czas_trwania_całkowity INT,
+    czas_trwania_calkowity INT,
     data_rezerwacji DATE
 );
