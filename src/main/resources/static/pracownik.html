@@ -149,14 +149,6 @@
             </div>
         </div>
 
-        <div class="card">
-            <h2>Zgłoś urlop</h2>
-            <div style="margin-top:15px; display:flex; gap:10px;">
-                <input type="date" id="uOd">
-                <input type="date" id="uDo">
-                <button onclick="addUrlop()">Zgłoś</button>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -358,19 +350,6 @@
             }
         }
 
-        async function addUrlop() {
-            const od = document.getElementById('uOd').value;
-            const doD = document.getElementById('uDo').value;
-            if(!od || !doD) return alert('Wypełnij daty');
-            const token = localStorage.getItem('token');
-            await fetch('/api/urlopy', {
-                method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-                credentials: 'include', body: JSON.stringify({fryzjerId: currentFryzjer.id, dataOd: od, dataDo: doD})
-            });
-            document.getElementById('uOd').value = '';
-            document.getElementById('uDo').value = '';
-            alert('Urlop został zgłoszony.');
-        }
 
         async function logout(e) {
             e.preventDefault();
