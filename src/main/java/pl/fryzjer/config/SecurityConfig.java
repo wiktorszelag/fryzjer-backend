@@ -61,7 +61,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/me").authenticated()
                 .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRATOR", "ADMIN", "ADMINISTRATOR")
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/uslugi/**", "/api/fryzjerzy/**", "/api/harmonogram/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/api/**").authenticated() // Wszystkie inne ścieżki API wymagają tokenu JWT
+                .anyRequest().permitAll() // Wszystkie pliki statyczne (HTML, CSS, JS, obrazy) są publiczne
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Bezstanowa autoryzacja (JWT)
