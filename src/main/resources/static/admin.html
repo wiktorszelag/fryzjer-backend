@@ -154,14 +154,12 @@
         <div class="card">
             <h2>Zarządzanie Pracownikami</h2>
             <table id="fryzjerzyTable">
-                <thead><tr><th>ID</th><th>Imię</th><th>Nazwisko</th><th>Zarządzaj Specjalizacją</th></tr></thead>
+                <thead><tr><th>ID</th><th>Imię</th><th>Nazwisko</th><th>Konto (username)</th><th>Zarządzaj Specjalizacją</th><th>Akcje</th></tr></thead>
                 <tbody></tbody>
             </table>
             
             <h3 style="margin-top: 20px;">Dodaj nowego pracownika</h3>
             <div style="display:flex; gap:10px; margin-top: 10px; flex-wrap:wrap; align-items: center;">
-                
-                <!-- NOWE: Wybór użytkownika z rolą PRACOWNIK -->
                 <select id="newUserSelect" style="width: 200px;" onchange="autoFillEmployee()">
                     <option value="">-- Wybierz konto (PRACOWNIK) --</option>
                 </select>
@@ -170,20 +168,43 @@
                 <input type="text" id="newNazwisko" placeholder="Nazwisko" style="width: 150px;">
                 
                 <div id="newSpecContainer" style="display:flex; gap:10px; flex-wrap:wrap; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; border: 1px solid var(--border);">
-                    <!-- Checkboxy generowane przez JS -->
                 </div>
 
                 <button onclick="addFryzjer()">Dodaj Pracownika</button>
             </div>
         </div>
+
         <div class="card">
             <h2>Terminarz Pracy (Grafik)</h2>
-            <p style="color:#aaa; font-size: 0.9rem; margin-bottom: 15px;">Kliknij dzień, aby zaplanować pracę wybranemu fryzjerowi.</p>
+            <p style="color:#aaa; font-size: 0.9rem; margin-bottom: 15px;">Kliknij dzień, aby zaplanować pracę, lub skorzystaj z masowego przypisania poniżej.</p>
+            
             <div style="margin-bottom: 15px;">
                 <select id="grafikFryzjerSelect">
                     <option value="">-- Wybierz fryzjera --</option>
                 </select>
             </div>
+
+            <!-- Masowe przypisywanie grafiku -->
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 25px; align-items:flex-end; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 10px; border: 1px solid var(--border);">
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label style="font-size:0.8rem; font-weight:bold; color:#aaa;">Data początkowa:</label>
+                    <input type="date" id="grafikDataOd" style="width:160px;">
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label style="font-size:0.8rem; font-weight:bold; color:#aaa;">Data końcowa:</label>
+                    <input type="date" id="grafikDataDo" style="width:160px;">
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label style="font-size:0.8rem; font-weight:bold; color:#aaa;">Godzina Od:</label>
+                    <input type="text" id="grafikGodzinaOd" placeholder="np. 08:00" value="08:00" style="width:100px;">
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label style="font-size:0.8rem; font-weight:bold; color:#aaa;">Godzina Do:</label>
+                    <input type="text" id="grafikGodzinaDo" placeholder="np. 16:00" value="16:00" style="width:100px;">
+                </div>
+                <button onclick="saveBulkSchedule()" style="padding:10px 15px;">Zapisz dla zakresu dat</button>
+            </div>
+
             <div id="calendar"></div>
         </div>
     </div>
@@ -201,7 +222,7 @@
                 credentials: 'include'
             });
             if (!res.ok) {
-                alert("BŁĄD 403: Serwer odrzucił dostęp. Upewnij się, że ZRESTARTOWAŁEŚ serwer Javy i ZALOGOWAŁEŚ SIĘ PONOWNIE!");
+                alert("Błąd pobierania użytkowników.");
                 return;
             }
             const users = await res.json();
@@ -221,11 +242,44 @@
                         </select>
                     </td>
                     <td>
-                        <button onclick="deleteUser(${u.id})" style="background:#dc3545; color:white;">Usuń</button>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="editUser(${u.id}, '${u.username}', '${u.email || ''}', '${u.telefon || ''}', '${u.rola}')" style="background:#ffc107; color:black;">Edytuj</button>
+                            <button onclick="deleteUser(${u.id})" style="background:#dc3545; color:white;">Usuń</button>
+                        </div>
                     </td>`;
                 tbody.appendChild(tr);
             });
             updatePracownicyDropdown();
+        }
+
+        async function editUser(id, currentUsername, currentEmail, currentTelefon, currentRola) {
+            const newUsername = prompt("Wpisz nowy login użytkownika:", currentUsername);
+            if (newUsername === null) return;
+            const newEmail = prompt("Wpisz nowy e-mail:", currentEmail);
+            if (newEmail === null) return;
+            const newTelefon = prompt("Wpisz nowy telefon:", currentTelefon);
+            if (newTelefon === null) return;
+
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/admin/users/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    username: newUsername,
+                    email: newEmail,
+                    telefon: newTelefon,
+                    rola: currentRola
+                })
+            });
+            if (res.ok) {
+                alert("Dane użytkownika zostały zaktualizowane.");
+                loadUsers();
+            } else {
+                alert("Błąd podczas aktualizacji danych.");
+            }
         }
 
         function updatePracownicyDropdown() {
@@ -282,7 +336,6 @@
             data.forEach(f => {
                 const tr = document.createElement('tr');
                 
-                // Generuj checkboxy dla każdego pracownika
                 const currentSpecs = f.specjalizacja ? f.specjalizacja.split(', ') : [];
                 let checkboxesHtml = DEFAULT_SPECS.map(spec => {
                     const checked = currentSpecs.includes(spec) ? 'checked' : '';
@@ -295,12 +348,19 @@
                     <td>${f.id}</td>
                     <td>${f.imie}</td>
                     <td>${f.nazwisko}</td>
+                    <td>${f.username || '-'}</td>
                     <td>
                         <div style="display:flex; flex-direction:column; gap:5px;">
                             <div style="display:flex; flex-wrap:wrap; gap:5px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 5px;">
                                 ${checkboxesHtml}
                             </div>
                             <button onclick="updateFryzjerSpec(${f.id})" style="align-self: flex-start; padding: 4px 10px; font-size: 0.8rem;">Zapisz Zmiany</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="editFryzjer(${f.id}, '${f.imie}', '${f.nazwisko}', '${f.username || ''}', '${f.telefon || ''}', '${f.specjalizacja || ''}')" style="background:#ffc107; color:black;">Edytuj</button>
+                            <button onclick="deleteFryzjer(${f.id})" style="background:#dc3545; color:white;">Usuń</button>
                         </div>
                     </td>
                 `;
@@ -313,6 +373,54 @@
             });
             
             loadSchedules();
+        }
+
+        async function editFryzjer(id, currentImie, currentNazwisko, currentUsername, currentTelefon, currentSpec) {
+            const newImie = prompt("Wpisz nowe imię pracownika:", currentImie);
+            if (newImie === null) return;
+            const newNazwisko = prompt("Wpisz nowe nazwisko:", currentNazwisko);
+            if (newNazwisko === null) return;
+            const newUsername = prompt("Wpisz konto systemowe (username):", currentUsername);
+            if (newUsername === null) return;
+            const newTelefon = prompt("Wpisz numer telefonu:", currentTelefon);
+            if (newTelefon === null) return;
+
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/fryzjerzy/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    imie: newImie,
+                    nazwisko: newNazwisko,
+                    username: newUsername,
+                    telefon: newTelefon,
+                    specjalizacja: currentSpec
+                })
+            });
+            if (res.ok) {
+                alert("Dane pracownika zostały zaktualizowane.");
+                loadFryzjerzy();
+            } else {
+                alert("Błąd aktualizacji danych pracownika.");
+            }
+        }
+
+        async function deleteFryzjer(id) {
+            if (!confirm("Czy na pewno chcesz usunąć tego pracownika?")) return;
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/fryzjerzy/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.ok) {
+                alert("Pracownik usunięty.");
+                loadFryzjerzy();
+            } else {
+                alert("Błąd usuwania pracownika.");
+            }
         }
 
         async function updateFryzjerSpec(id) {
@@ -338,21 +446,21 @@
         async function addFryzjer() {
             const imie = document.getElementById('newImie').value;
             const nazwisko = document.getElementById('newNazwisko').value;
-            
             const checkboxes = document.querySelectorAll('.new-spec-cb:checked');
             const spec = Array.from(checkboxes).map(cb => cb.value).join(', ');
+            const username = document.getElementById('newUserSelect').value;
             
             if(!imie || !nazwisko) return alert("Wpisz imię i nazwisko!");
 
             const token = localStorage.getItem('token');
             await fetch('/api/admin/fryzjerzy', {
                 method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-                credentials: 'include', body: JSON.stringify({imie, nazwisko, specjalizacja: spec})
+                credentials: 'include', body: JSON.stringify({imie, nazwisko, specjalizacja: spec, username})
             });
             
             document.getElementById('newImie').value = '';
             document.getElementById('newNazwisko').value = '';
-            // odznacz checkboxy
+            document.getElementById('newUserSelect').value = '';
             document.querySelectorAll('.new-spec-cb').forEach(cb => cb.checked = false);
             
             loadFryzjerzy();
@@ -368,9 +476,44 @@
             data.forEach(u => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td>${u.id}</td><td>${u.nazwa}</td><td>${u.cenaNetto} zł</td><td>${u.czasTrwaniaMin} min</td>
-                <td><button onclick="deleteUsluga(${u.id})" style="background:#dc3545; color:white;">Usuń</button></td>`;
+                <td>
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="editUsluga(${u.id}, '${u.nazwa}', ${u.cenaNetto}, ${u.czasTrwaniaMin})" style="background:#ffc107; color:black;">Edytuj</button>
+                        <button onclick="deleteUsluga(${u.id})" style="background:#dc3545; color:white;">Usuń</button>
+                    </div>
+                </td>`;
                 tbody.appendChild(tr);
             });
+        }
+
+        async function editUsluga(id, currentNazwa, currentCena, currentCzas) {
+            const newNazwa = prompt("Wpisz nową nazwę usługi:", currentNazwa);
+            if (newNazwa === null) return;
+            const newCena = prompt("Wpisz nową cenę netto:", currentCena);
+            if (newCena === null) return;
+            const newCzas = prompt("Wpisz nowy czas trwania (min):", currentCzas);
+            if (newCzas === null) return;
+
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/uslugi/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    nazwa: newNazwa,
+                    cenaNetto: parseFloat(newCena),
+                    czasTrwaniaMin: parseInt(newCzas),
+                    stawkaVat: 23.0
+                })
+            });
+            if (res.ok) {
+                alert("Usługa została zaktualizowana.");
+                loadUslugi();
+            } else {
+                alert("Błąd aktualizacji usługi.");
+            }
         }
 
         async function addUsluga() {
@@ -425,6 +568,52 @@
                 }
             });
             calendar.render();
+        }
+
+        async function saveBulkSchedule() {
+            const fryzjerId = document.getElementById('grafikFryzjerSelect').value;
+            if (!fryzjerId) return alert('Najpierw wybierz fryzjera z listy powyżej!');
+            const odDateStr = document.getElementById('grafikDataOd').value;
+            const doDateStr = document.getElementById('grafikDataDo').value;
+            const odTime = document.getElementById('grafikGodzinaOd').value;
+            const doTime = document.getElementById('grafikGodzinaDo').value;
+
+            if(!odDateStr || !doDateStr || !odTime || !doTime) {
+                return alert('Wypełnij wszystkie pola dla zakresu dat i godzin.');
+            }
+
+            const start = new Date(odDateStr);
+            const end = new Date(doDateStr);
+
+            if(start > end) {
+                return alert('Data początkowa nie może być po dacie końcowej.');
+            }
+
+            const token = localStorage.getItem('token');
+            let currentDate = new Date(start);
+
+            while(currentDate <= end) {
+                const dateISO = currentDate.toISOString().slice(0, 10);
+                
+                await fetch('/api/harmonogram', {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json', 
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ 
+                        fryzjerId: parseInt(fryzjerId), 
+                        data: dateISO, 
+                        godzinaOd: odTime + ':00', 
+                        godzinaDo: doTime + ':00' 
+                    })
+                });
+
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            alert("Harmonogram został zapisany dla wybranego zakresu dni.");
+            loadSchedules();
         }
 
         async function loadSchedules() {

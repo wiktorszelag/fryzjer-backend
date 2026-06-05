@@ -25,4 +25,6 @@ public class Fryzjer {
 
     @Column(name = "data_zatrudnienia")
     private LocalDate dataZatrudnienia;
+
+    private String username;
 }

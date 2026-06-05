@@ -262,9 +262,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             const timePart = b.dataGodzinaRozpoczecia.slice(11, 16);
             const [h, m] = timePart.split(':').map(Number);
             const startMin = h * 60 + m;
+            const roundedBookingDuration = Math.ceil(b.czasTrwaniaCalkowity / 30) * 30;
             return {
                 start: startMin,
-                end: startMin + b.czasTrwaniaCalkowity
+                end: startMin + roundedBookingDuration
             };
         });
 
@@ -273,15 +274,16 @@ document.addEventListener('DOMContentLoaded', async function () {
         const isToday = (selectedDate === now.toISOString().slice(0, 10));
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-        // Generate 30-min intervals
+        // Generate 30-min intervals rounded up to the nearest 30 mins
         let slotsCount = 0;
-        for (let time = workStartMinutes; time <= workEndMinutes - duration; time += 30) {
+        const roundedDuration = Math.ceil(duration / 30) * 30;
+        for (let time = workStartMinutes; time <= workEndMinutes - roundedDuration; time += 30) {
             // If today, filter out past times
             if (isToday && time <= currentMinutes + 15) { // 15 mins buffer
                 continue;
             }
 
-            const candidateEnd = time + duration;
+            const candidateEnd = time + roundedDuration;
 
             // Check overlap with existing bookings
             let hasOverlap = false;

@@ -12,10 +12,10 @@ INSERT INTO klient (imie, nazwisko, telefon, data_rejestracji, username) VALUES
 ('Anna', 'Nowak', '987654321', '2024-02-20', null),
 ('Piotr', 'Wiśniewski', '555666777', '2024-03-10', null);
 
-INSERT INTO fryzjer (imie, nazwisko, telefon, specjalizacja, data_zatrudnienia) VALUES
-('Marta', 'Kaczmarek', '111222333', 'Koloryzacja', '2020-06-01'),
-('Tomasz', 'Lewandowski', '444555666', 'Strzyżenie męskie', '2019-03-15'),
-('Karolina', 'Dąbrowska', '777888999', 'Stylizacja', '2021-09-01');
+INSERT INTO fryzjer (imie, nazwisko, telefon, specjalizacja, data_zatrudnienia, username) VALUES
+('Marta', 'Kaczmarek', '111222333', 'Koloryzacja', '2020-06-01', 'pracownik'),
+('Tomasz', 'Lewandowski', '444555666', 'Strzyżenie męskie', '2019-03-15', null),
+('Karolina', 'Dąbrowska', '777888999', 'Stylizacja', '2021-09-01', null);
 
 INSERT INTO usluga (nazwa, opis, czas_trwania_min, cena_netto, stawkavat) VALUES
 ('Strzyżenie damskie', 'Strzyżenie włosów damskich', 45, 80.00, 23.00),

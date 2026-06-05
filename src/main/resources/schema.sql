@@ -30,7 +30,8 @@ CREATE TABLE fryzjer (
     nazwisko VARCHAR(100),
     telefon VARCHAR(20),
     specjalizacja VARCHAR(100),
-    data_zatrudnienia DATE
+    data_zatrudnienia DATE,
+    username VARCHAR(100)
 );
 
 CREATE TABLE usluga (

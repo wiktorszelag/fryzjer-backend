@@ -14,4 +14,5 @@ public class FryzjerDTO {
     private String telefon;
     private String specjalizacja;
     private LocalDate dataZatrudnienia;
+    private String username;
 }

@@ -104,6 +104,24 @@
         <h1>Panel Pracownika</h1>
 
         <div class="card">
+            <h2>Twoje zaplanowane wizyty</h2>
+            <div style="overflow-x: auto; margin-top: 15px;">
+                <table style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="border-bottom: 1px solid var(--border); padding: 10px; text-align: left; color: var(--primary);">Data i Godzina</th>
+                            <th style="border-bottom: 1px solid var(--border); padding: 10px; text-align: left; color: var(--primary);">Klient (lub opis z ulicy)</th>
+                            <th style="border-bottom: 1px solid var(--border); padding: 10px; text-align: left; color: var(--primary);">Czas (min)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myAppointmentsTable">
+                        <tr><td colspan="3" style="padding: 10px; text-align: center; color: #888;">Ładowanie wizyt...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
             <h2>Dodaj rezerwację z ulicy</h2>
             <div style="margin-top:15px; display:flex; gap:10px;">
                 <input type="text" id="wName" placeholder="Imię klienta">
@@ -124,6 +142,81 @@
     </div>
 
     <script>
+        let currentFryzjer = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if(!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                // 1. Pobierz profil fryzjera
+                const meRes = await fetch('/api/fryzjerzy/me', {
+                    headers: {'Authorization': 'Bearer ' + token},
+                    credentials: 'include'
+                });
+                if(!meRes.ok) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                currentFryzjer = await meRes.json();
+                
+                document.querySelector('h1').innerText = `Panel Pracownika - ${currentFryzjer.imie} ${currentFryzjer.nazwisko || ''}`;
+
+                // 2. Pobierz wizyty
+                loadWizyty();
+            } catch(e) {
+                console.error(e);
+            }
+        });
+
+        async function loadWizyty() {
+            if(!currentFryzjer) return;
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`/api/wizyty/fryzjer/${currentFryzjer.id}`, {
+                    headers: {'Authorization': 'Bearer ' + token},
+                    credentials: 'include'
+                });
+                const wizyty = await res.json();
+                
+                const kRes = await fetch('/api/klienci');
+                const klienci = await kRes.json();
+                const kMap = {};
+                klienci.forEach(k => kMap[k.id] = `${k.imie} ${k.nazwisko}`);
+
+                const tbody = document.getElementById('myAppointmentsTable');
+                tbody.innerHTML = '';
+                if(wizyty.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="padding: 10px; text-align: center; color: #888;">Brak przypisanych wizyt.</td></tr>`;
+                    return;
+                }
+
+                wizyty.sort((a,b) => new Date(a.dataGodzinaRozpoczecia) - new Date(b.dataGodzinaRozpoczecia));
+
+                wizyty.forEach(w => {
+                    const tr = document.createElement('tr');
+                    const d = new Date(w.dataGodzinaRozpoczecia);
+                    const dStr = d.toLocaleString('pl-PL', {
+                        year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+                    });
+                    const klientName = w.imieKlientaZUlicy ? `${w.imieKlientaZUlicy} (Z ulicy)` : (kMap[w.klientId] || `Klient #${w.klientId}`);
+                    
+                    tr.innerHTML = `
+                        <td style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px;">${dStr}</td>
+                        <td style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px;">${klientName}</td>
+                        <td style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px;">${w.czasTrwaniaCalkowity} min</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
         async function addWalkIn() {
             const imie = document.getElementById('wName').value;
             const czas = document.getElementById('wTime').value;
@@ -132,11 +225,16 @@
             const token = localStorage.getItem('token');
             await fetch('/api/wizyty', {
                 method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-                credentials: 'include', body: JSON.stringify({imieKlientaZUlicy: imie, dataGodzinaRozpoczecia: czas, czasTrwaniaCalkowity: parseInt(duration)})
+                credentials: 'include', body: JSON.stringify({
+                    imieKlientaZUlicy: imie, 
+                    dataGodzinaRozpoczecia: czas, 
+                    czasTrwaniaCalkowity: parseInt(duration),
+                    fryzjerId: currentFryzjer.id
+                })
             });
-            // Opcjonalnie wyczyść pola
             document.getElementById('wName').value = '';
             document.getElementById('wTime').value = '';
+            loadWizyty();
         }
 
         async function addUrlop() {
@@ -146,11 +244,11 @@
             const token = localStorage.getItem('token');
             await fetch('/api/urlopy', {
                 method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-                credentials: 'include', body: JSON.stringify({fryzjerId: 1, dataOd: od, dataDo: doD})
+                credentials: 'include', body: JSON.stringify({fryzjerId: currentFryzjer.id, dataOd: od, dataDo: doD})
             });
-            // Opcjonalnie wyczyść daty
             document.getElementById('uOd').value = '';
             document.getElementById('uDo').value = '';
+            alert('Urlop został zgłoszony.');
         }
 
         async function logout(e) {

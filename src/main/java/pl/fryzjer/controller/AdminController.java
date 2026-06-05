@@ -80,4 +80,18 @@ public class AdminController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Uzytkownik updateRequest) {
+        return uzytkownikRepository.findById(id).map(user -> {
+            user.setUsername(updateRequest.getUsername());
+            user.setEmail(updateRequest.getEmail());
+            user.setTelefon(updateRequest.getTelefon());
+            if (updateRequest.getRola() != null && !updateRequest.getRola().isEmpty()) {
+                user.setRola(updateRequest.getRola());
+            }
+            uzytkownikRepository.save(user);
+            return ResponseEntity.ok(user);
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }
