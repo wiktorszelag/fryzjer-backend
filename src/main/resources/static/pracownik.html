@@ -183,8 +183,10 @@
                 });
                 const wizyty = await res.json();
                 
-                const kRes = await fetch('/api/klienci');
-                const klienci = await kRes.json();
+                const kRes = await fetch('/api/klienci', {
+                     headers: {'Authorization': 'Bearer ' + token}
+                 });
+                 const klienci = await kRes.json();
                 const kMap = {};
                 klienci.forEach(k => kMap[k.id] = `${k.imie} ${k.nazwisko}`);
 
