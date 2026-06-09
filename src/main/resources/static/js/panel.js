@@ -15,6 +15,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     let scheduledWorkHours = []; // Harmonogram na wybrany dzień
     let existingBookings = []; // Wszystkie wizyty wybranego fryzjera
     let fryzjerzyList = [];
+    let publicHolidays = [];
+
+    try {
+        const year = new Date().getFullYear();
+        const swietaRes = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/PL`);
+        if (swietaRes.ok) publicHolidays = await swietaRes.json();
+    } catch(err) {
+        console.warn("API Nager.Date niedostępne", err);
+    }
 
     // Elements
     const welcomeUser = document.getElementById('welcomeUser');
@@ -29,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const myAppointmentsTable = document.getElementById('myAppointmentsTable');
     
     const reservationFormCard = document.getElementById('reservationFormCard');
-    const placeholderCard = document.getElementById('placeholderCard');
+    const calendarOverlay = document.getElementById('calendarOverlay');
 
     // 1. Fetch Client Profile (Me)
     try {
@@ -94,48 +103,45 @@ document.addEventListener('DOMContentLoaded', async function () {
         },
         contentHeight: 'auto',
         selectable: true,
+        dayCellDidMount: function(info) {
+            const localDate = new Date(info.date.getTime() - (info.date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+            const isWeekend = info.date.getDay() === 0 || info.date.getDay() === 6;
+            const holiday = publicHolidays.find(h => h.date === localDate);
+            
+            if (isWeekend || holiday) {
+                info.el.classList.add('holiday-cell');
+                info.el.title = holiday ? holiday.localName : "Weekend (Zamknięte)";
+            }
+        },
         selectAllow: function (selectInfo) {
             const today = new Date();
             today.setHours(0,0,0,0);
             return selectInfo.start >= today;
         },
         dateClick: async function (info) {
+            if (!selectedFryzjerId) return;
+
             const today = new Date();
             today.setHours(0,0,0,0);
             const clickedDate = new Date(info.dateStr);
             if (clickedDate < today) {
-                alert("Nie możesz zarezerwować wizyty w przeszłości.");
+                Swal.fire({icon: 'error', title: 'Błąd', text: 'Nie możesz zarezerwować wizyty w przeszłości!', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#d4af37'});
                 return;
             }
             
-            // --- WALIDACJA WEEKENDÓW ---
-            const dzienTygodnia = clickedDate.getDay();
-            if (dzienTygodnia === 0 || dzienTygodnia === 6) {
-                alert("BŁĄD: W weekendy (sobota, niedziela) salon jest zamknięty!");
+            if (info.dayEl.classList.contains('holiday-cell')) {
+                const reason = info.dayEl.title;
+                Swal.fire({icon: 'warning', title: 'Dzień Wolny', text: `Ten dzień to: ${reason}. Salon jest w tym dniu nieczynny!`, background: '#1a1a1a', color: '#fff', confirmButtonColor: '#d4af37'});
                 return;
             }
-            
-            // --- WALIDACJA ŚWIĄT (Nager.Date API) ---
-            const rok = clickedDate.getFullYear();
-            try {
-                const swietaRes = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${rok}/PL`);
-                if (swietaRes.ok) {
-                    const swieta = await swietaRes.json();
-                    const czySwieto = swieta.find(s => s.date === info.dateStr);
-                    if (czySwieto) {
-                        alert(`BŁĄD: Wybrana data (${info.dateStr}) to święto państwowe: ${czySwieto.localName}.\nW tym dniu salon jest nieczynny!`);
-                        return;
-                    }
-                }
-            } catch (err) {
-                console.warn("Nie udało się sprawdzić świąt (API niedostępne), kontynuuję mimo to...", err);
-            }
-            // ----------------------------------------
             
             selectedDate = info.dateStr;
-            selectedDateText.innerText = new Date(selectedDate).toLocaleDateString('pl-PL', {
+            const dateTextDisplay = document.getElementById('selectedDateText');
+            dateTextDisplay.innerText = new Date(selectedDate).toLocaleDateString('pl-PL', {
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
+            dateTextDisplay.style.color = '#fff';
+            document.getElementById('step-date').classList.add('active');
 
             // Highlight selected day
             document.querySelectorAll('.fc-daygrid-day').forEach(el => {
@@ -143,60 +149,42 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
             info.dayEl.style.backgroundColor = 'rgba(212, 175, 55, 0.15)';
 
-            // Reset and show reservation form
-            onDateSelected();
+            // Fetch daily schedule
+            try {
+                const schedRes = await fetch(`${API_URL}/harmonogram/data/${selectedDate}`);
+                scheduledWorkHours = await schedRes.json();
+                
+                document.getElementById('step-time').classList.add('active');
+                generateTimeSlots();
+            } catch(e) { 
+                console.error(e); 
+            }
         }
     });
     calendar.render();
 
-    // Reset workflow state when a new date is clicked
-    async function onDateSelected() {
-        try {
-            placeholderCard.style.display = 'none';
-            reservationFormCard.style.display = 'block';
-
-            // Reset inputs
-            serviceSelect.value = "";
-            fryzjerSelect.innerHTML = '<option value="">-- Najpierw wybierz usługę --</option>';
-            fryzjerSelect.disabled = true;
-            timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
-            timeSelect.disabled = true;
-            
-            selectedFryzjerId = null;
-            selectedSlot = null;
-            selectedService = null;
-            
-            summaryBadge.style.display = 'none';
-            validateBookingState();
-
-            // Fetch schedules for the selected date
-            const schedRes = await fetch(`${API_URL}/harmonogram/data/${selectedDate}`);
-            scheduledWorkHours = await schedRes.json();
-
-            // Set active steps
-            document.getElementById('step-date').classList.add('active');
-            document.getElementById('step-service').classList.add('active');
-            document.getElementById('step-stylist').classList.remove('active');
-            document.getElementById('step-time').classList.remove('active');
-        } catch (err) {
-            console.error("Błąd pobierania harmonogramu:", err);
-        }
-    }
-
-    // Service Select Listener
+    // Reset UI state when Service changes
     serviceSelect.addEventListener('change', function () {
         const serviceId = this.value ? parseInt(this.value) : null;
+        
+        // Reset sub-steps
+        fryzjerSelect.innerHTML = '<option value="">-- Najpierw wybierz usługę --</option>';
+        fryzjerSelect.disabled = true;
+        document.getElementById('step-stylist').classList.remove('active');
+        
+        lockCalendar();
+        
+        timeSelect.innerHTML = '<option value="">-- Najpierw wybierz dzień z kalendarza --</option>';
+        timeSelect.disabled = true;
+        document.getElementById('step-time').classList.remove('active');
+        
+        selectedFryzjerId = null;
+        selectedDate = null;
+        selectedSlot = null;
+        selectedService = null;
+        summaryBadge.style.display = 'none';
+
         if (!serviceId) {
-            selectedService = null;
-            fryzjerSelect.innerHTML = '<option value="">-- Najpierw wybierz usługę --</option>';
-            fryzjerSelect.disabled = true;
-            timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
-            timeSelect.disabled = true;
-            summaryBadge.style.display = 'none';
-            
-            document.getElementById('step-stylist').classList.remove('active');
-            document.getElementById('step-time').classList.remove('active');
-            
             validateBookingState();
             return;
         }
@@ -208,79 +196,73 @@ document.addEventListener('DOMContentLoaded', async function () {
         totalPriceText.innerText = selectedService.cenaNetto.toFixed(2);
         summaryBadge.style.display = 'block';
 
-        // Filter hairdressers by selected service name match in specialization & check if they work today
+        // Filter hairdressers
         const matchingFryzjerzy = fryzjerzyList.filter(f => {
-            // Check if hairdresser has a work schedule on this date
-            const worksToday = scheduledWorkHours.some(sch => sch.fryzjerId === f.id);
-            if (!worksToday) return false;
-
-            // Check specialization
-            if (!f.specjalizacja) return true; // fallback if empty
+            if (!f.specjalizacja) return true;
             const specList = f.specjalizacja.split(',').map(s => s.trim().toLowerCase());
             return specList.some(spec => spec.includes(selectedService.nazwa.toLowerCase()) || selectedService.nazwa.toLowerCase().includes(spec));
         });
 
-        // Populate hairdresser select
         fryzjerSelect.innerHTML = '<option value="">-- Wybierz fryzjera --</option>';
         if (matchingFryzjerzy.length === 0) {
             const opt = document.createElement('option');
             opt.value = "";
-            opt.innerText = "Brak fryzjerów ze specjalizacją na ten dzień";
+            opt.innerText = "Brak fryzjerów wykonujących tę usługę";
             fryzjerSelect.appendChild(opt);
-            fryzjerSelect.disabled = true;
-            document.getElementById('step-stylist').classList.remove('active');
         } else {
             matchingFryzjerzy.forEach(f => {
-                const sch = scheduledWorkHours.find(s => s.fryzjerId === f.id);
                 const opt = document.createElement('option');
                 opt.value = f.id;
-                opt.innerText = `${f.imie} ${f.nazwisko} (${sch.godzinaOd.slice(0, 5)} - ${sch.godzinaDo.slice(0, 5)})`;
+                opt.innerText = `${f.imie} ${f.nazwisko}`;
                 fryzjerSelect.appendChild(opt);
             });
             fryzjerSelect.disabled = false;
             document.getElementById('step-stylist').classList.add('active');
         }
 
-        // Reset and disable time selection
-        timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
-        timeSelect.disabled = true;
-        document.getElementById('step-time').classList.remove('active');
-        selectedSlot = null;
         validateBookingState();
     });
+
+    function lockCalendar() {
+        calendarEl.classList.add('calendar-disabled');
+        calendarOverlay.style.display = 'block';
+        document.getElementById('selectedDateText').innerText = "Oczekiwanie na wybór w kalendarzu...";
+        document.getElementById('selectedDateText').style.color = '#888';
+        document.getElementById('step-date').classList.remove('active');
+        document.querySelectorAll('.fc-daygrid-day').forEach(el => el.style.backgroundColor = '');
+    }
 
     // Fryzjer Select Listener
     fryzjerSelect.addEventListener('change', async function () {
         selectedFryzjerId = this.value ? parseInt(this.value) : null;
-        selectedSlot = null;
-        timeSelect.innerHTML = '<option value="">-- Ładowanie godzin... --</option>';
+        
+        lockCalendar();
+        timeSelect.innerHTML = '<option value="">-- Najpierw wybierz dzień z kalendarza --</option>';
         timeSelect.disabled = true;
         document.getElementById('step-time').classList.remove('active');
+        selectedDate = null;
+        selectedSlot = null;
 
         if (!selectedFryzjerId) {
-            timeSelect.innerHTML = '<option value="">-- Najpierw wybierz fryzjera --</option>';
             validateBookingState();
             return;
         }
 
         try {
-            // Fetch appointments of the selected hairdresser using authentication token!
+            // Fetch appointments of the selected hairdresser
             const bookingsRes = await fetch(`${API_URL}/wizyty/fryzjer/${selectedFryzjerId}`, {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
-            if (!bookingsRes.ok) {
-                const errData = await bookingsRes.json().catch(() => ({}));
-                console.error("Błąd pobierania wizyt fryzjera:", errData.message || bookingsRes.statusText);
-                timeSelect.innerHTML = '<option value="">Błąd ładowania wolnych terminów</option>';
-                return;
+            if (bookingsRes.ok) {
+                existingBookings = await bookingsRes.json();
             }
-            existingBookings = await bookingsRes.json();
             
-            generateTimeSlots();
-            document.getElementById('step-time').classList.add('active');
+            // Unlock calendar
+            calendarEl.classList.remove('calendar-disabled');
+            calendarOverlay.style.display = 'none';
         } catch (err) {
             console.error("Błąd pobierania wizyt:", err);
-            timeSelect.innerHTML = '<option value="">Błąd połączenia z serwerem</option>';
+            Swal.fire({icon: 'error', title: 'Błąd sieci', text: 'Błąd połączenia z serwerem', background: '#1a1a1a', color: '#fff'});
         }
     });
 
@@ -417,22 +399,31 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
 
             if (res.ok) {
-                alert("Rezerwacja zakończona sukcesem!");
-                // Clear selection
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukces!',
+                    text: 'Rezerwacja zakończona pomyślnie.',
+                    background: '#1a1a1a', color: '#fff', confirmButtonColor: '#d4af37'
+                });
+                
                 selectedSlot = null;
-                // Reload
-                onDateSelected();
+                selectedDate = null;
+                lockCalendar();
+                timeSelect.innerHTML = '<option value="">-- Najpierw wybierz dzień z kalendarza --</option>';
+                timeSelect.disabled = true;
+                document.getElementById('step-time').classList.remove('active');
+                
                 loadClientAppointments();
             } else {
-                alert("Nie udało się utworzyć rezerwacji. Spróbuj ponownie.");
-                bookBtn.disabled = false;
-                bookBtn.innerText = 'Rezerwuj Wizytę';
+                Swal.fire({icon: 'error', title: 'Błąd', text: 'Nie udało się utworzyć rezerwacji.', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#d4af37'});
             }
+            bookBtn.disabled = false;
+            bookBtn.innerText = 'Potwierdź i Rezerwuj';
         } catch (err) {
             console.error("Błąd podczas rezerwacji:", err);
-            alert("Błąd połączenia z serwerem.");
+            Swal.fire({icon: 'error', title: 'Błąd sieci', text: 'Brak połączenia z serwerem.', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#d4af37'});
             bookBtn.disabled = false;
-            bookBtn.innerText = 'Rezerwuj Wizytę';
+            bookBtn.innerText = 'Potwierdź i Rezerwuj';
         }
     };
 
@@ -494,26 +485,42 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Cancel appointment
     window.cancelAppointment = async function (id) {
-        if (!confirm("Czy na pewno chcesz anulować tę rezerwację?")) return;
+        Swal.fire({
+            title: 'Czy na pewno?',
+            text: "Chcesz anulować tę rezerwację?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#444',
+            confirmButtonText: 'Tak, anuluj!',
+            cancelButtonText: 'Wróć',
+            background: '#1a1a1a', color: '#fff'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await fetch(`${API_URL}/wizyty/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
 
-        try {
-            const res = await fetch(`${API_URL}/wizyty/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-
-            if (res.ok) {
-                alert("Wizyta została pomyślnie anulowana.");
-                loadClientAppointments();
-                if (selectedDate) {
-                    onDateSelected();
+                    if (res.ok) {
+                        Swal.fire({icon: 'success', title: 'Anulowano', text: 'Wizyta została odwołana.', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#d4af37'});
+                        loadClientAppointments();
+                        
+                        // If same date is selected, refresh slots
+                        if (selectedDate && selectedFryzjerId) {
+                            // Fetch bookings again
+                            const bRes = await fetch(`${API_URL}/wizyty/fryzjer/${selectedFryzjerId}`, { headers: { 'Authorization': 'Bearer ' + token } });
+                            if (bRes.ok) existingBookings = await bRes.json();
+                            generateTimeSlots();
+                        }
+                    } else {
+                        Swal.fire({icon: 'error', title: 'Błąd', text: 'Nie udało się anulować wizyty.', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#d4af37'});
+                    }
+                } catch (err) {
+                    Swal.fire({icon: 'error', title: 'Błąd sieci', text: 'Błąd połączenia z serwerem.', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#d4af37'});
                 }
-            } else {
-                alert("Nie udało się anulować wizyty.");
             }
-        } catch (err) {
-            console.error("Błąd podczas usuwania wizyty:", err);
-            alert("Błąd połączenia z serwerem.");
-        }
+        });
     };
 });
