@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             center: 'title',
             right: ''
         },
+        contentHeight: 'auto',
         selectable: true,
         selectAllow: function (selectInfo) {
             const today = new Date();
