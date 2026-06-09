@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             today.setHours(0,0,0,0);
             return selectInfo.start >= today;
         },
-        dateClick: function (info) {
+        dateClick: async function (info) {
             const today = new Date();
             today.setHours(0,0,0,0);
             const clickedDate = new Date(info.dateStr);
@@ -107,6 +107,30 @@ document.addEventListener('DOMContentLoaded', async function () {
                 alert("Nie możesz zarezerwować wizyty w przeszłości.");
                 return;
             }
+            
+            // --- WALIDACJA WEEKENDÓW ---
+            const dzienTygodnia = clickedDate.getDay();
+            if (dzienTygodnia === 0 || dzienTygodnia === 6) {
+                alert("BŁĄD: W weekendy (sobota, niedziela) salon jest zamknięty!");
+                return;
+            }
+            
+            // --- WALIDACJA ŚWIĄT (Nager.Date API) ---
+            const rok = clickedDate.getFullYear();
+            try {
+                const swietaRes = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${rok}/PL`);
+                if (swietaRes.ok) {
+                    const swieta = await swietaRes.json();
+                    const czySwieto = swieta.find(s => s.date === info.dateStr);
+                    if (czySwieto) {
+                        alert(`BŁĄD: Wybrana data (${info.dateStr}) to święto państwowe: ${czySwieto.localName}.\nW tym dniu salon jest nieczynny!`);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn("Nie udało się sprawdzić świąt (API niedostępne), kontynuuję mimo to...", err);
+            }
+            // ----------------------------------------
             
             selectedDate = info.dateStr;
             selectedDateText.innerText = new Date(selectedDate).toLocaleDateString('pl-PL', {
