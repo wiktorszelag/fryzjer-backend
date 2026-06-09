@@ -232,9 +232,9 @@ form.addEventListener('submit', async (e) => {
 
     const godzina = dataStart.getHours();
 
-    // SPRAWDZENIE: Czy godzina jest między 10 a 18?
-    if (godzina < 10 || godzina >= 18) {
-        alert("BŁĄD: Zakład jest otwarty w godzinach 10:00 - 18:00.\nWybrałeś godzinę: " + godzina + ":00.\nProszę zmienić czas wizyty.");
+    // SPRAWDZENIE: Czy godzina jest między 8 a 16?
+    if (godzina < 8 || godzina >= 16) {
+        alert("BŁĄD: Zakład jest otwarty od poniedziałku do piątku w godzinach 8:00 - 16:00.\nWybrałeś godzinę: " + godzina + ":00.\nProszę zmienić czas wizyty.");
         return; // Zatrzymujemy funkcję, nic się nie wyśle!
     }
 
@@ -242,9 +242,16 @@ form.addEventListener('submit', async (e) => {
     const czasTrwania = parseInt(totalCzas.innerText);
     const dataKoniec = new Date(dataStart.getTime() + czasTrwania * 60000);
 
-    // Jeśli koniec jest po 18:00 LUB jest równo 18:00 ale są jakieś minuty (np 18:05)
-    if (dataKoniec.getHours() > 18 || (dataKoniec.getHours() === 18 && dataKoniec.getMinutes() > 0)) {
-        alert(`BŁĄD: Ta wizyta skończyłaby się o ${dataKoniec.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.\nZamykamy o 18:00!`);
+    // Jeśli koniec jest po 16:00 LUB jest równo 16:00 ale są jakieś minuty (np 16:05)
+    if (dataKoniec.getHours() > 16 || (dataKoniec.getHours() === 16 && dataKoniec.getMinutes() > 0)) {
+        alert(`BŁĄD: Ta wizyta skończyłaby się o ${dataKoniec.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.\nZamykamy o 16:00!`);
+        return;
+    }
+    
+    // SPRAWDZENIE WEEKENDÓW:
+    const dzienTygodnia = dataStart.getDay();
+    if (dzienTygodnia === 0 || dzienTygodnia === 6) {
+        alert("BŁĄD: W weekendy (sobota, niedziela) salon jest zamknięty!");
         return;
     }
     // ----------------------------------------------------
