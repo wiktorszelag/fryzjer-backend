@@ -203,6 +203,27 @@ form.addEventListener('submit', async (e) => {
     }
 
     const dataStart = new Date(dataInput);
+    const rok = dataStart.getFullYear();
+    const miesiac = String(dataStart.getMonth() + 1).padStart(2, '0');
+    const dzien = String(dataStart.getDate()).padStart(2, '0');
+    const dataFormatowana = `${rok}-${miesiac}-${dzien}`;
+
+    // ZAPYTANIE DO ZEWNĘTRZNEGO API (Nager.Date) O ŚWIĘTA PAŃSTWOWE
+    try {
+        const swietaRes = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${rok}/PL`);
+        if (swietaRes.ok) {
+            const swieta = await swietaRes.json();
+            const czySwieto = swieta.find(s => s.date === dataFormatowana);
+            
+            if (czySwieto) {
+                alert(`BŁĄD: Wybrana data (${dataFormatowana}) to święto państwowe: ${czySwieto.localName}.\nW tym dniu salon jest nieczynny!`);
+                return;
+            }
+        }
+    } catch (err) {
+        console.warn("Nie udało się sprawdzić świąt (API niedostępne), kontynuuję mimo to...", err);
+    }
+
     const godzina = dataStart.getHours();
 
     // SPRAWDZENIE: Czy godzina jest między 10 a 18?
