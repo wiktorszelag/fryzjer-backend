@@ -20,7 +20,8 @@ CREATE TABLE klient (
     imie VARCHAR(100),
     nazwisko VARCHAR(100),
     telefon VARCHAR(20),
-    data_rejestracji DATE
+    data_rejestracji DATE,
+    username VARCHAR(100)
 );
 
 CREATE TABLE fryzjer (
@@ -29,7 +30,8 @@ CREATE TABLE fryzjer (
     nazwisko VARCHAR(100),
     telefon VARCHAR(20),
     specjalizacja VARCHAR(100),
-    data_zatrudnienia DATE
+    data_zatrudnienia DATE,
+    username VARCHAR(100)
 );
 
 CREATE TABLE usluga (
@@ -43,9 +45,9 @@ CREATE TABLE usluga (
 
 CREATE TABLE wizyta (
     id BIGSERIAL PRIMARY KEY,
-    klientid BIGINT REFERENCES klient(id),
-    fryzjerid BIGINT REFERENCES fryzjer(id),
+    klient_id BIGINT REFERENCES klient(id) ON DELETE CASCADE,
+    fryzjer_id BIGINT REFERENCES fryzjer(id) ON DELETE CASCADE,
     data_godzina_rozpoczecia TIMESTAMP,
-    czas_trwania_całkowity INT,
+    czas_trwania_calkowity INT,
     data_rezerwacji DATE
 );

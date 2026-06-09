@@ -10,6 +10,13 @@ import pl.fryzjer.repository.FryzjerRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Kontroler do zarządzania danymi fryzjerów
+// - pobieranie listy wszystkich fryzjerów
+// - tworzenie profilu nowego fryzjera
+// - aktualizacja danych fryzjera i jego specjalizacji
+// - usuwanie fryzjera z bazy
+// - pobieranie profilu zalogowanego fryzjera (/me)
+
 @RestController
 @RequestMapping("/api/fryzjerzy")
 public class FryzjerController {
@@ -30,6 +37,7 @@ public class FryzjerController {
             dto.setTelefon(f.getTelefon());
             dto.setSpecjalizacja(f.getSpecjalizacja());
             dto.setDataZatrudnienia(f.getDataZatrudnienia());
+            dto.setUsername(f.getUsername());
             return dto;
         }).collect(Collectors.toList());
         return ResponseEntity.ok(fryzjerzy);
@@ -43,6 +51,7 @@ public class FryzjerController {
         fryzjer.setTelefon(dto.getTelefon());
         fryzjer.setSpecjalizacja(dto.getSpecjalizacja());
         fryzjer.setDataZatrudnienia(dto.getDataZatrudnienia());
+        fryzjer.setUsername(dto.getUsername());
 
         fryzjer = fryzjerRepository.save(fryzjer);
         dto.setId(fryzjer.getId());
@@ -56,6 +65,7 @@ public class FryzjerController {
             fryzjer.setNazwisko(dto.getNazwisko());
             fryzjer.setTelefon(dto.getTelefon());
             fryzjer.setSpecjalizacja(dto.getSpecjalizacja());
+            fryzjer.setUsername(dto.getUsername());
             if (dto.getDataZatrudnienia() != null) {
                 fryzjer.setDataZatrudnienia(dto.getDataZatrudnienia());
             }
@@ -72,5 +82,24 @@ public class FryzjerController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<FryzjerDTO> getMe(org.springframework.security.core.Authentication auth) {
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = auth.getName();
+        return fryzjerRepository.findByUsername(username).map(f -> {
+            FryzjerDTO dto = new FryzjerDTO();
+            dto.setId(f.getId());
+            dto.setImie(f.getImie());
+            dto.setNazwisko(f.getNazwisko());
+            dto.setTelefon(f.getTelefon());
+            dto.setSpecjalizacja(f.getSpecjalizacja());
+            dto.setDataZatrudnienia(f.getDataZatrudnienia());
+            dto.setUsername(f.getUsername());
+            return ResponseEntity.ok(dto);
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

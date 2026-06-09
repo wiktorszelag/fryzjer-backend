@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 
+// Klasa encji reprezentująca dane tabeli wizyta w bazie danych
+// - automatyczne mapowanie pól na kolumny bazodanowe
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -16,18 +19,21 @@ public class Wizyta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "klientid")
+    @Column(name = "klient_id")
     private Long klientId;
 
-    @Column(name = "fryzjerid")
+    @Column(name = "fryzjer_id")
     private Long fryzjerId;
 
     @Column(name = "data_godzina_rozpoczecia")
     private LocalDateTime dataGodzinaRozpoczecia;
 
-    @Column(name = "czas_trwania_całkowity")
+    @Column(name = "czas_trwania_calkowity")
     private Integer czasTrwaniaCalkowity;
 
     @Column(name = "data_rezerwacji")
     private LocalDate dataRezerwacji;
+
+    @Column(name = "imie_klienta_z_ulicy")
+    private String imieKlientaZUlicy;
 }

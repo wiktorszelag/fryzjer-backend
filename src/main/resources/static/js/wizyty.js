@@ -202,6 +202,12 @@ form.addEventListener('submit', async (e) => {
         return;
     }
 
+    const fryzjerId = parseInt(selectFryzjer.value);
+    if (!fryzjerId) {
+        alert("Wybierz fryzjera! Jeśli lista jest pusta, nikt nie pracuje tego dnia.");
+        return;
+    }
+
     const dataStart = new Date(dataInput);
     const rok = dataStart.getFullYear();
     const miesiac = String(dataStart.getMonth() + 1).padStart(2, '0');
@@ -244,7 +250,6 @@ form.addEventListener('submit', async (e) => {
     // ----------------------------------------------------
 
     // --- 3. SPRAWDZENIE KONFLIKTÓW (Czy fryzjer jest wolny?) ---
-    const fryzjerId = parseInt(selectFryzjer.value);
 
     try {
         // Pobieramy aktualne wizyty, żeby sprawdzić kolizje
@@ -323,3 +328,42 @@ window.usunWizyte = async (id) => {
         else alert("Nie udało się usunąć.");
     } catch (err) { console.error(err); }
 };
+
+// --- ŁADOWANIE DOSTĘPNYCH FRYZJERÓW NA PODSTAWIE DATY ---
+document.getElementById('dataWizyty').addEventListener('change', async (e) => {
+    const dataCzas = e.target.value;
+    if (!dataCzas) return;
+    
+    // Bierzemy tylko date (YYYY-MM-DD)
+    const dataStr = dataCzas.split('T')[0]; 
+    
+    try {
+        const res = await fetch(`${API_URL}/harmonogram/data/${dataStr}`);
+        if (!res.ok) return;
+        const harmonogramy = await res.json();
+        
+        // Wyciągamy ID fryzjerów, którzy mają wpis w harmonogramie na ten dzień
+        const dostepniIds = harmonogramy.map(h => h.fryzjerId);
+        
+        // Zaktualizuj select
+        selectFryzjer.innerHTML = '';
+        if (dostepniIds.length === 0) {
+            const opt = document.createElement('option');
+            opt.value = "";
+            opt.innerText = "Brak fryzjerów w tym dniu";
+            selectFryzjer.appendChild(opt);
+        } else {
+            // Dodajemy tylko dostępnych
+            Object.keys(mapaFryzjerow).forEach(fid => {
+                if (dostepniIds.includes(parseInt(fid))) {
+                    const opt = document.createElement('option');
+                    opt.value = fid;
+                    opt.innerText = mapaFryzjerow[fid];
+                    selectFryzjer.appendChild(opt);
+                }
+            });
+        }
+    } catch(err) {
+        console.error("Błąd pobierania harmonogramu", err);
+    }
+});

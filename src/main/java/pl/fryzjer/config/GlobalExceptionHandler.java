@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+// Klasa odpowiedzialna za globalną obsługę wyjątków i błędów w API
+// - przechwytywanie wyjątków walidacji i wyjątków biznesowych
+// - zwracanie spójnych komunikatów o błędach
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

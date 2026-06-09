@@ -190,21 +190,42 @@
             <div class="input-group">
                 <label for="password">Hasło</label>
                 <input type="password" id="password" name="password" required placeholder="••••••••">
+                <small style="color: #bbb; display: block; margin-top: 5px; font-size: 0.75rem; line-height: 1.2;">
+                    Wymagania: minimum 8 znaków, w tym wielka litera, cyfra i znak specjalny.
+                </small>
             </div>
 
+            <div class="input-group">
+                <label for="confirm-password">Powtórz hasło</label>
+                <input type="password" id="confirm-password" name="confirm-password" required placeholder="••••••••">
+            </div>
+ 
+            <div class="input-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required placeholder="np. janek@example.com">
+            </div>
+ 
+            <div class="input-group">
+                <label for="telefon">Numer telefonu</label>
+                <input type="tel" id="telefon" name="telefon" required placeholder="np. 123456789">
+            </div>
+ 
             <!-- Ukryte pole wyboru roli - dla potrzeb laboratorium, tworzymy domyślnie Klienta -->
             <input type="hidden" id="rola" name="rola" value="KLIENT">
-
+ 
             <button type="submit" class="btn-register">Zarejestruj się</button>
         </form>
     </div>
-
+ 
     <script>
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const email = document.getElementById('email').value;
+            const telefon = document.getElementById('telefon').value;
             const rola = document.getElementById('rola').value;
             
             const errorMsg = document.getElementById('error-msg');
@@ -213,15 +234,35 @@
             
             errorMsg.style.display = 'none';
             successMsg.style.display = 'none';
-            btnSubmit.disabled = true;
 
+            // 1. Walidacja zgodności haseł
+            if (password !== confirmPassword) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Hasła nie są identyczne!';
+                return;
+            }
+
+            // 2. Walidacja wymagań hasła
+            const hasMinLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[^A-Za-z0-9]/.test(password);
+
+            if (!hasMinLength || !hasUppercase || !hasNumber || !hasSpecial) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Hasło nie spełnia wymagań (min. 8 znaków, wielka litera, cyfra i znak specjalny)!';
+                return;
+            }
+            
+            btnSubmit.disabled = true;
+ 
             try {
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password, rola, kodDostepu: "" })
+                    body: JSON.stringify({ username, password, email, telefon, rola })
                 });
-
+ 
                 if (response.ok) {
                     successMsg.style.display = 'block';
                     setTimeout(() => {

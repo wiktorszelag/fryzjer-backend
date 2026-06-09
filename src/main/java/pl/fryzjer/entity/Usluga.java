@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
+// Klasa encji reprezentująca dane tabeli usluga w bazie danych
+// - automatyczne mapowanie pól na kolumny bazodanowe
+
 @Data
 @NoArgsConstructor
 @Entity

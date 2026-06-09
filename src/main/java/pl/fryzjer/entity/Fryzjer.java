@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
+// Klasa encji reprezentująca dane tabeli fryzjer w bazie danych
+// - automatyczne mapowanie pól na kolumny bazodanowe
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -22,4 +25,6 @@ public class Fryzjer {
 
     @Column(name = "data_zatrudnienia")
     private LocalDate dataZatrudnienia;
+
+    private String username;
 }

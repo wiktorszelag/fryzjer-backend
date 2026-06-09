@@ -182,9 +182,15 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    alert(`Zalogowano pomyślnie jako: ${data.rola}`);
-                    // Redirect to the management panel
-                    window.location.href = 'panel.html';
+                    localStorage.setItem('token', data.token);
+                    // Redirect to the management panel based on role
+                    if (data.rola === 'ADMINISTRATOR' || data.rola === 'ADMIN') {
+                        window.location.href = 'admin.html';
+                    } else if (data.rola === 'PRACOWNIK') {
+                        window.location.href = 'pracownik.html';
+                    } else {
+                        window.location.href = 'panel.html';
+                    }
                 } else {
                     errorMsg.style.display = 'block';
                     errorMsg.textContent = 'Błędne dane logowania. Spróbuj ponownie.';

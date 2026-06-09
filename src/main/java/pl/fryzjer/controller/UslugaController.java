@@ -10,6 +10,12 @@ import pl.fryzjer.repository.UslugaRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Kontroler do zarządzania usługami salonu
+// - pobieranie cennika usług
+// - dodawanie nowych usług
+// - aktualizacja cen i czasu trwania usług
+// - usuwanie usług z oferty
+
 @RestController
 @RequestMapping("/api/uslugi")
 public class UslugaController {
