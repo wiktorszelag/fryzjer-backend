@@ -22,10 +22,7 @@ public class AdminInitService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Tworzy domyślne konto administratora przy starcie aplikacji,
-     * jeśli jeszcze nie istnieje. Login: admin, Hasło: admin123
-     */
+
     @EventListener(ApplicationReadyEvent.class)
     public void initAdminAccount() {
         if (uzytkownikRepository.findByUsername("admin").isEmpty()) {
