@@ -22,5 +22,6 @@ public class RegisterRequest {
     private String email;
 
     @Schema(description = "Numer telefonu", example = "123456789")
+    @jakarta.validation.constraints.Pattern(regexp = "^\\d{9}$", message = "Numer telefonu musi składać się z dokładnie 9 cyfr")
     private String telefon;
 }

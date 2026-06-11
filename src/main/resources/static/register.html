@@ -207,7 +207,7 @@
  
             <div class="input-group">
                 <label for="telefon">Numer telefonu</label>
-                <input type="tel" id="telefon" name="telefon" required placeholder="np. 123456789">
+                <input type="tel" id="telefon" name="telefon" required placeholder="np. 123456789" pattern="^\d{9}$" title="Numer musi składać się z 9 cyfr">
             </div>
  
             <!-- Ukryte pole wyboru roli - dla potrzeb laboratorium, tworzymy domyślnie Klienta -->
@@ -251,6 +251,14 @@
             if (!hasMinLength || !hasUppercase || !hasNumber || !hasSpecial) {
                 errorMsg.style.display = 'block';
                 errorMsg.textContent = 'Hasło nie spełnia wymagań (min. 8 znaków, wielka litera, cyfra i znak specjalny)!';
+                return;
+            }
+
+            // 3. Walidacja numeru telefonu
+            const phoneRegex = /^\d{9}$/;
+            if (!phoneRegex.test(telefon)) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Numer telefonu musi składać się z dokładnie 9 cyfr!';
                 return;
             }
             
